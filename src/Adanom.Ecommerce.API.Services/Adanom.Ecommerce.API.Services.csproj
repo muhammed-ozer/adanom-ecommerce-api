@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Adanom.Ecommerce.API.Services.Azure\Adanom.Ecommerce.API.Services.Azure.csproj" />
+    <ProjectReference Include="..\Adanom.Ecommerce.API.Services.Mail\Adanom.Ecommerce.API.Services.Mail.csproj" />
+  </ItemGroup>
+
+</Project>
