@@ -1,13 +1,4 @@
-﻿using System.Security.Claims;
-using Adanom.Ecommerce.API.Commands;
-using Adanom.Ecommerce.API.Commands.Models;
-using Adanom.Ecommerce.API.Graphql.Attributes;
-using HotChocolate;
-using HotChocolate.Authorization;
-using HotChocolate.Types;
-using MediatR;
-
-namespace Adanom.Ecommerce.API.Graphql.Backend.Queries
+﻿namespace Adanom.Ecommerce.API.Graphql.Backend.Queries
 {
     [ExtendObjectType(OperationTypeNames.Query)]
     public class TestQueries

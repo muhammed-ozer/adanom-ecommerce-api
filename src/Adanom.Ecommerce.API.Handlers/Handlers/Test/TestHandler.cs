@@ -1,7 +1,4 @@
-﻿using Adanom.Ecommerce.API.Commands;
-using MediatR;
-
-namespace Adanom.Ecommerce.API.Handlers
+﻿namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class TestHandler : IRequestHandler<Test, bool>
     {
