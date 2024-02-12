@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Adanom.Ecommerce.API.Data\Adanom.Ecommerce.API.Data.csproj" />
+    <ProjectReference Include="..\Adanom.Ecommerce.API.Logging\Adanom.Ecommerce.API.Logging.csproj" />
   </ItemGroup>
 
 </Project>

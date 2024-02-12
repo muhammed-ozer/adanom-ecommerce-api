@@ -132,3 +132,5 @@ pnpm-debug.log*
 *.ntvs*
 *.njsproj
 *.sw?
+
+Logs/

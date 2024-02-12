@@ -6,6 +6,8 @@
         {
             applicationBuilder.UseApplicationData();
 
+            applicationBuilder.UseApplicationLogging();
+
             applicationBuilder.UseApplicationServices();
 
             applicationBuilder.UseApplicationSecurity();

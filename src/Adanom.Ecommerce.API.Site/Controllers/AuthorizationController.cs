@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
+using Serilog;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace Adanom.Ecommerce.API.Site.Controllers
@@ -54,6 +55,8 @@ namespace Adanom.Ecommerce.API.Site.Controllers
 
             if (application is null)
             {
+                Log.Error("Openiddict: Application Not Found!");
+
                 throw new InvalidOperationException("The application cannot be found.");
             }
 

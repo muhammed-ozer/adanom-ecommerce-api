@@ -6,6 +6,8 @@
         {
             services.AddApplicationData(configuration);
 
+            services.AddApplicationLogging(configuration);
+
             services.AddApplicationServices(configuration);
 
             services.AddApplicationSecurity(configuration);
