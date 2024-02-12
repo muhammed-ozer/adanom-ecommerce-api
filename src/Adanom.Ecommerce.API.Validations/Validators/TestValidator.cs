@@ -1,8 +1,4 @@
-﻿using Adanom.Ecommerce.API.Commands;
-using FluentValidation;
-using MediatR;
-
-namespace Adanom.Ecommerce.API.Validation.Validators
+﻿namespace Adanom.Ecommerce.API.Validation.Validators
 {
     public sealed class TestValidator : AbstractValidator<Test>
     {

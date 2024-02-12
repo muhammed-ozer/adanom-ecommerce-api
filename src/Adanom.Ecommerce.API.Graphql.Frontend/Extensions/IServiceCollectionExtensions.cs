@@ -1,7 +1,6 @@
-﻿using Adanom.Ecommerce.API.Graphql.Frontend;
+﻿using Microsoft.Extensions.Configuration;
+using Adanom.Ecommerce.API.Graphql.Frontend;
 using Adanom.Ecommerce.API.Graphql.Frontend.Queries;
-using HotChocolate.Types;
-using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
