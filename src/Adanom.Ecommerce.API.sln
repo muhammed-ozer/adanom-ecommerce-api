@@ -43,6 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{8E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Business", "Business", "{BF108A32-E63A-4DFC-955E-AE51D16C2C05}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adanom.Ecommerce.API.Logging", "Adanom.Ecommerce.API.Logging\Adanom.Ecommerce.API.Logging.csproj", "{06F9C4DA-4859-4790-9B39-D47D465A60EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,10 @@ Global
 		{304C7BFE-7FE6-4281-9049-046D3A5C6145}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{304C7BFE-7FE6-4281-9049-046D3A5C6145}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{304C7BFE-7FE6-4281-9049-046D3A5C6145}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06F9C4DA-4859-4790-9B39-D47D465A60EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06F9C4DA-4859-4790-9B39-D47D465A60EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06F9C4DA-4859-4790-9B39-D47D465A60EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06F9C4DA-4859-4790-9B39-D47D465A60EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

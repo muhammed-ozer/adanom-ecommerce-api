@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Adanom.Ecommerce.API.Graphql.Frontend\Adanom.Ecommerce.API.Graphql.Frontend.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Logs\" />
+  </ItemGroup>
+
 </Project>

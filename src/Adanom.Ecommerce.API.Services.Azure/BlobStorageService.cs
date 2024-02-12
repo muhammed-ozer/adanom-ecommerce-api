@@ -3,6 +3,7 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
 using Adanom.Ecommerce.API.Data.Models;
 using Adanom.Ecommerce.API.Shared;
+using Serilog;
 
 namespace Adanom.Ecommerce.API.Services.Azure
 {
@@ -70,8 +71,10 @@ namespace Adanom.Ecommerce.API.Services.Azure
 
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Error($"Azure:BlobStorage: {ex.Message}");
+
                 return false;
             }
         }
@@ -124,8 +127,10 @@ namespace Adanom.Ecommerce.API.Services.Azure
 
                 return true;
             }
-            catch
+            catch (Exception ex) 
             {
+                Log.Error($"Azure:BlobStorage: {ex.Message}");
+
                 return false;
             }
         }
@@ -151,8 +156,10 @@ namespace Adanom.Ecommerce.API.Services.Azure
 
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Error($"Azure:BlobStorage: {ex.Message}");
+
                 return false;
             }
         }
