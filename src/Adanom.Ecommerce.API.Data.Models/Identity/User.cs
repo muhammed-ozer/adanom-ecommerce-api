@@ -5,10 +5,55 @@ namespace Adanom.Ecommerce.API.Data.Models
 {
     public class User : IdentityUser<Guid>
     {
-        [StringLength(50)]
+        public User()
+        {
+            FavoriteItems = new List<FavoriteItem>();
+            StockNotificationItems = new List<StockNotificationItem>();
+            ShippingAddresses = new List<ShippingAddress>();
+            BillingAddresses = new List<BillingAddress>();
+            Orders = new List<Order>();
+            ProductReviews = new List<ProductReview>();
+            ReturnRequests = new List<ReturnRequest>();
+        }
+
+        [StringLength(100)]
         public string FirstName { get; set; } = null!;
 
-        [StringLength(50)]
+        [StringLength(100)]
         public string LastName { get; set; } = null!;
+
+        public byte DefaultDiscountRate { get; set; }
+
+        public bool AllowCommercialEmails { get; set; }
+
+        public DateTime? AllowCommercialEmailsUpdatedAtUtc { get; set; }
+
+        public bool AllowCommercialSMS { get; set; }
+
+        public DateTime? AllowCommercialSMSUpdatedAtUtc { get; set; }
+
+        public DateTime CreatedAtUtc { get; set; }
+
+        public DateTime? UpdatedAtUtc { get; set; }
+
+        public Guid? UpdatedByUserId { get; set; }
+
+        public DateTime? DeletedAtUtc { get; set; }
+
+        public Guid? DeletedByUserId { get; set; }
+
+        public ICollection<FavoriteItem> FavoriteItems { get; set; }
+
+        public ICollection<StockNotificationItem> StockNotificationItems { get; set; }
+
+        public ICollection<ShippingAddress> ShippingAddresses { get; set; }
+
+        public ICollection<BillingAddress> BillingAddresses { get; set; }
+
+        public ICollection<Order> Orders { get; set; }
+
+        public ICollection<ProductReview> ProductReviews { get; set; }
+
+        public ICollection<ReturnRequest> ReturnRequests { get; set; }
     }
 }

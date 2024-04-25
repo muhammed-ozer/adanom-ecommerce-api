@@ -2,10 +2,8 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class MailTemplate
+    public class MailTemplate : IBaseEntity<long>
     {
-        public long Id { get; set; }
-
         public MailTemplateKey Key { get; set; }
 
         [StringLength(500)]
@@ -14,6 +12,7 @@ namespace Adanom.Ecommerce.API.Data.Models
         [StringLength(150)]
         public string Subject { get; set; } = null!;
 
+        [StringLength(5000)]
         public string Content { get; set; } = null!;
     }
 }
