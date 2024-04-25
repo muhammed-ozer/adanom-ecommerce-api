@@ -21,8 +21,9 @@
             services.AddApplicationScheduler(configuration);
 
             services.AddApplicationGraphql(configuration);
-            services.AddApplicationGraphqlBackend(configuration);
-            services.AddApplicationGraphqlFrontend(configuration);
+            services.AddApplicationGraphqlAdmin(configuration);
+            services.AddApplicationGraphqlAuth(configuration);
+            services.AddApplicationGraphqlStore(configuration);
 
             return services;
         }

@@ -1,12 +1,12 @@
-﻿namespace Adanom.Ecommerce.API.Graphql.Backend.Queries
+﻿namespace Adanom.Ecommerce.API.Graphql.Store.Queries
 {
     [ExtendObjectType(OperationTypeNames.Query)]
-    public class TestQueries
+    public sealed class TestQueries
     {
         #region TestAsync
 
         [GraphQLDescription("Test")]
-        public async Task<bool> GetTestAsync(TestModel model, [Service] IMediator mediator, [Identity] ClaimsPrincipal identity)
+        public async Task<bool> GetTestAsync(TestModel model, [Service] IMediator mediator)
         {
             await mediator.Send(new Test());
             return true;

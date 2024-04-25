@@ -15,8 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Adanom.Ecommerce.API.Graphql.Backend\Adanom.Ecommerce.API.Graphql.Backend.csproj" />
-    <ProjectReference Include="..\Adanom.Ecommerce.API.Graphql.Frontend\Adanom.Ecommerce.API.Graphql.Frontend.csproj" />
+    <ProjectReference Include="..\Adanom.Ecommerce.API.Graphql.Admin\Adanom.Ecommerce.API.Graphql.Admin.csproj" />
+    <ProjectReference Include="..\Adanom.Ecommerce.API.Graphql.Auth\Adanom.Ecommerce.API.Graphql.Auth.csproj" />
+    <ProjectReference Include="..\Adanom.Ecommerce.API.Graphql.Store\Adanom.Ecommerce.API.Graphql.Store.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -6,8 +6,9 @@
         {
             applicationBuilder.UseEndpoints(endpoints =>
             {
-                endpoints.MapGraphQL("/backend/graphql", schemaName: "backend");
-                endpoints.MapGraphQL("/frontend/graphql", schemaName: "frontend");
+                endpoints.MapGraphQL("/admin/graphql", schemaName: "admin");
+                endpoints.MapGraphQL("/auth/graphql", schemaName: "auth");
+                endpoints.MapGraphQL("/store/graphql", schemaName: "store");
                 endpoints.MapBananaCakePop();
             });
 

@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Adanom.Ecommerce.API.Backend.Graphql;
-using Adanom.Ecommerce.API.Graphql.Backend.Queries;
+using Adanom.Ecommerce.API.Graphql.Store;
+using Adanom.Ecommerce.API.Graphql.Store.Queries;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IServiceCollectionExtensions
     {
-        public static IServiceCollection AddApplicationGraphqlBackend(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddApplicationGraphqlStore(this IServiceCollection services, IConfiguration configuration)
         {
-            var graphqlServices = services.AddGraphQLServer(schemaName: "backend", maxAllowedRequestSize: int.MaxValue)
+            var graphqlServices = services.AddGraphQLServer(schemaName: "store", maxAllowedRequestSize: int.MaxValue)
                 .AddAuthorization()
                 .AddHttpRequestInterceptor<HttpRequestInterceptor>()
                 .AddType<UploadType>();
