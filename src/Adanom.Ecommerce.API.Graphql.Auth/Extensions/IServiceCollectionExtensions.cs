@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
-using Adanom.Ecommerce.API.Graphql.Frontend;
-using Adanom.Ecommerce.API.Graphql.Frontend.Queries;
+﻿using Adanom.Ecommerce.API.Graphql.Auth;
+using Adanom.Ecommerce.API.Graphql.Auth.Queries;
+using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IServiceCollectionExtensions
     {
-        public static IServiceCollection AddApplicationGraphqlFrontend(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddApplicationGraphqlAuth(this IServiceCollection services, IConfiguration configuration)
         {
-            var graphqlServices = services.AddGraphQLServer(schemaName: "frontend", maxAllowedRequestSize: int.MaxValue)
+            var graphqlServices = services.AddGraphQLServer(schemaName: "auth", maxAllowedRequestSize: int.MaxValue)
                 .AddAuthorization()
                 .AddHttpRequestInterceptor<HttpRequestInterceptor>()
                 .AddType<UploadType>();

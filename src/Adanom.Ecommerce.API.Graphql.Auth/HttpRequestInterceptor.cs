@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using OpenIddict.Validation.AspNetCore;
 
-namespace Adanom.Ecommerce.API.Backend.Graphql
+namespace Adanom.Ecommerce.API.Graphql.Auth
 {
     internal sealed class HttpRequestInterceptor : DefaultHttpRequestInterceptor
     {
