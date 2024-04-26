@@ -1,5 +1,4 @@
 ﻿using Adanom.Ecommerce.API.Validation.Validators;
-using FluentValidation;
 using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -8,7 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddApplicationValidations(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddValidatorsFromAssemblyContaining<TestValidator>();
+            services.AddValidatorsFromAssemblyContaining<RegisterUserValidator>();
 
             return services;
         }

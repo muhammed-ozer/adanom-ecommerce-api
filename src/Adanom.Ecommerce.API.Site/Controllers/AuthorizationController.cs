@@ -1,4 +1,6 @@
 ﻿using System.Security.Claims;
+using Adanom.Ecommerce.API.Commands;
+using Adanom.Ecommerce.API.Commands.Models;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore;
@@ -62,58 +64,38 @@ namespace Adanom.Ecommerce.API.Site.Controllers
 
             if (request.IsPasswordGrantType())
             {
-                // TODO: Change here
-                //var loginCommand = _mapper.Map<Login>(new LoginRequest()
-                //{
-                //    Email = request.Username!,
-                //    Password = request.Password!
-                //});
+                var loginCommand = _mapper.Map<Login>(new LoginRequest()
+                {
+                    Email = request.Username!,
+                    Password = request.Password!
+                });
 
-                //var userResponse = await _mediator.Send(loginCommand);
+                var userResponse = await _mediator.Send(loginCommand);
 
-                //if (userResponse is null)
-                //{
-                //    return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-                //}
-
-                //var identity = new ClaimsIdentity(
-                //    TokenValidationParameters.DefaultAuthenticationType,
-                //    Claims.Name,
-                //    Claims.Role);
-
-                //identity.AddClaim(Claims.Subject, userResponse.Id.ToString(), Destinations.AccessToken);
-                //identity.AddClaim(Claims.Email, userResponse.Email, Destinations.AccessToken);
-                //identity.AddClaim(Claims.Name, userResponse.FirstName, Destinations.AccessToken);
-                //identity.AddClaim(Claims.EmailVerified, userResponse.EmailConfirmed.ToString(), Destinations.AccessToken);
-                //identity.AddClaim(Claims.FamilyName, userResponse.LastName, Destinations.AccessToken);
-
-                //if (userResponse.Roles.Any())
-                //{
-                //    foreach (var role in userResponse.Roles)
-                //    {
-                //        identity.AddClaim(Claims.Role, role, Destinations.AccessToken);
-                //    }
-                //}
-
-                //identity.SetDestinations(static claim => claim.Type switch
-                //{
-                //    Claims.Name when claim.Subject!.HasScope(Scopes.Profile)
-                //        => new[] { Destinations.AccessToken, Destinations.IdentityToken },
-
-                //    _ => new[] { Destinations.AccessToken }
-                //});
+                if (userResponse is null)
+                {
+                    return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                }
 
                 var identity = new ClaimsIdentity(
                     TokenValidationParameters.DefaultAuthenticationType,
                     Claims.Name,
                     Claims.Role);
 
-                identity.AddClaim(Claims.Subject, "hello", Destinations.AccessToken);
-                identity.AddClaim(Claims.Email, "hello", Destinations.AccessToken);
-                identity.AddClaim(Claims.Name, "hello", Destinations.AccessToken);
-                identity.AddClaim(Claims.EmailVerified, true.ToString(), Destinations.AccessToken);
-                identity.AddClaim(Claims.FamilyName, "hello", Destinations.AccessToken);
-                identity.AddClaim(Claims.Role, "Admin", Destinations.AccessToken);
+                identity.AddClaim(Claims.Subject, userResponse.Id.ToString(), Destinations.AccessToken);
+                identity.AddClaim(Claims.Email, userResponse.Email, Destinations.AccessToken);
+                identity.AddClaim(Claims.Name, userResponse.FirstName, Destinations.AccessToken);
+                identity.AddClaim(Claims.FamilyName, userResponse.LastName, Destinations.AccessToken);
+                identity.AddClaim(Claims.EmailVerified, userResponse.EmailConfirmed.ToString(), Destinations.AccessToken);
+                identity.AddClaim(Claims.PhoneNumber, userResponse.PhoneNumber, Destinations.AccessToken);
+
+                if (userResponse.Roles.Any())
+                {
+                    foreach (var role in userResponse.Roles)
+                    {
+                        identity.AddClaim(Claims.Role, role, Destinations.AccessToken);
+                    }
+                }
 
                 identity.SetDestinations(static claim => claim.Type switch
                 {
@@ -122,7 +104,6 @@ namespace Adanom.Ecommerce.API.Site.Controllers
 
                     _ => new[] { Destinations.AccessToken }
                 });
-
 
                 var claimsPrincipal = new ClaimsPrincipal(identity);
 
@@ -141,12 +122,12 @@ namespace Adanom.Ecommerce.API.Site.Controllers
 
                 var userId = claimsPrincipal.GetUserId();
 
-                //var canUserLogin = await _mediator.Send(new CanUserLogin(userId));
+                var canUserLogin = await _mediator.Send(new CanUserLogin(userId));
 
-                //if (!canUserLogin)
-                //{
-                //    return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
-                //}
+                if (!canUserLogin)
+                {
+                    return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                }
 
                 return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
             }
@@ -175,6 +156,7 @@ namespace Adanom.Ecommerce.API.Site.Controllers
                 FirstName = claimsPrincipal.GetClaim(Claims.Name),
                 LastName = claimsPrincipal.GetClaim(Claims.FamilyName),
                 EmailConfirmed = claimsPrincipal.GetClaim(Claims.EmailVerified),
+                PhoneNumber = claimsPrincipal.GetClaim(Claims.PhoneNumber),
                 Roles = claimsPrincipal.GetClaims(Claims.Role)
             });
         }
