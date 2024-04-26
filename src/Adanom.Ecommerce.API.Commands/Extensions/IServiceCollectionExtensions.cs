@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddAutoMapper(e =>
             {
-                e.AddMaps(Assembly.GetAssembly(typeof(TestModel)));
+                e.AddMaps(Assembly.GetAssembly(typeof(UserResponse)));
             });
 
             return services;

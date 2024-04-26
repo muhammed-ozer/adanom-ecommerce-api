@@ -1,6 +1,4 @@
-﻿using Adanom.Ecommerce.API.Commands;
-using Adanom.Ecommerce.API.Handlers;
-using MediatR;
+﻿using Adanom.Ecommerce.API.Handlers;
 using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -15,7 +13,14 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 options.Lifetime = ServiceLifetime.Scoped;
 
-                options.RegisterServicesFromAssemblies(typeof(TestHandler).Assembly, typeof(Test).Assembly);
+                options.RegisterServicesFromAssemblies(typeof(LoginHandler).Assembly, typeof(Login).Assembly);
+
+                #region CreateAccount
+
+                options.AddBehavior<IPipelineBehavior<RegisterUser, bool>, RegisterUser_SendMailsBehavior>();
+                options.AddBehavior<IPipelineBehavior<RegisterUser, bool>, RegisterUser_CreateNotificationBehavior>();
+
+                #endregion
             });
 
             return services;

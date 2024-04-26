@@ -6,9 +6,8 @@
         #region TestAsync
 
         [GraphQLDescription("Test")]
-        public async Task<bool> GetTestAsync(TestModel model, [Service] IMediator mediator, [Identity] ClaimsPrincipal identity)
+        public bool GetTestAsync([Service] IMediator mediator, [Identity] ClaimsPrincipal identity)
         {
-            await mediator.Send(new Test());
             return true;
         }
 

@@ -1,4 +1,5 @@
 ﻿using Adanom.Ecommerce.API.Graphql.Auth;
+using Adanom.Ecommerce.API.Graphql.Auth.Mutations;
 using Adanom.Ecommerce.API.Graphql.Auth.Queries;
 using Microsoft.Extensions.Configuration;
 
@@ -16,6 +17,9 @@ namespace Microsoft.Extensions.DependencyInjection
             graphqlServices
                 .AddQueryType(e => e.Name(OperationTypeNames.Query))
                 .AddType<TestQueries>();
+
+            graphqlServices.AddMutationType(e => e.Name(OperationTypeNames.Mutation))
+                .AddType<AuthMutations>();
 
             return services;
         }
