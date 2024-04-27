@@ -13,5 +13,7 @@
         public byte TaxRate { get; set; }
 
         public byte ShippingInDays { get; set; }
+
+        public ShippingType ShippingType { get; set; }
     }
 }
