@@ -22,6 +22,9 @@ namespace Adanom.Ecommerce.API.Data.Models
         [StringLength(100)]
         public string LastName { get; set; } = null!;
 
+        [StringLength(10)]
+        public new string PhoneNumber { get; set; } = null!;
+
         public byte DefaultDiscountRate { get; set; }
 
         public bool AllowCommercialEmails { get; set; }
