@@ -4,6 +4,8 @@ namespace Adanom.Ecommerce.API.Data.Models
 {
     public class ShippingProvider : IBaseEntity<long>
     {
+        public long ShippingSettingsId { get; set; }
+
         [StringLength(250)]
         public string DisplayName { get; set; } = null!;
 
@@ -11,6 +13,9 @@ namespace Adanom.Ecommerce.API.Data.Models
         public string LogoPath { get; set; } = null!;
 
         public bool IsActive { get; set; }
+
+        [StringLength(500)]
+        public string? Address { get; set; }
 
         public DateTime CreatedAtUtc { get; set; }
 
@@ -23,5 +28,7 @@ namespace Adanom.Ecommerce.API.Data.Models
         public DateTime? DeletedAtUtc { get; set; }
 
         public Guid? DeletedByUserId { get; set; }
+
+        public ShippingSettings ShippingSettings { get; set; } = null!;
     }
 }

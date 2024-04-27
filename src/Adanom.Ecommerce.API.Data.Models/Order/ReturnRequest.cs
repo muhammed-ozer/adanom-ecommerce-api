@@ -23,7 +23,7 @@ namespace Adanom.Ecommerce.API.Data.Models
         public decimal GrandTotal { get; set; }
 
         [StringLength(250)]
-        public string ShippingTransactionCode { get; set; } = null!;
+        public string? ShippingTransactionCode { get; set; }
 
         public DateTime CreatedAtUtc { get; set; }
 
