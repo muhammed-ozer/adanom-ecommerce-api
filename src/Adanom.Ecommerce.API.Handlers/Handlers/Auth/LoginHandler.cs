@@ -59,7 +59,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email!,
+                Email = user.Email,
                 EmailConfirmed = user.EmailConfirmed,
                 PhoneNumber = user.PhoneNumber,
                 Roles = roles.ToList()

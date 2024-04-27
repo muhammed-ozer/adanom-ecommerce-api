@@ -29,7 +29,12 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var user = await _userManager.FindByEmailAsync(command.Email);
 
-            if (user!.EmailConfirmed)
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (user.EmailConfirmed)
             {
                 return true;
             }
@@ -41,7 +46,7 @@ namespace Adanom.Ecommerce.API.Handlers
             await _mediator.Publish(new SendMail()
             {
                 Key = MailTemplateKey.EMAIL_CONFIRMATION,
-                To = user.Email!,
+                To = user.Email,
                 Replacements = new Dictionary<string, string>()
                 {
                     { "{USER_NAME}", $"{user.FirstName} {user.LastName}" },

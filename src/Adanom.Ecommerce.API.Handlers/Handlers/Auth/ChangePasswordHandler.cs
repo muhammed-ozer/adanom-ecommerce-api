@@ -31,6 +31,11 @@ namespace Adanom.Ecommerce.API.Handlers
 
             var user = await _userManager.FindByIdAsync(userId.ToString());
 
+            if (user == null)
+            {
+                return false;
+            }
+
             var changePasswordResult = await _userManager.ChangePasswordAsync(user!, command.OldPassword, command.NewPassword);
 
             if (!changePasswordResult.Succeeded)
@@ -41,7 +46,7 @@ namespace Adanom.Ecommerce.API.Handlers
             await _mediator.Publish(new SendMail()
             {
                 Key = MailTemplateKey.PASSWORD_CHANGED_SUCCESSFUL,
-                To = user!.Email!,
+                To = user.Email,
                 Replacements = new Dictionary<string, string>()
                 {
                     { "{USER_NAME}", $"{user.FirstName} {user.LastName}" }

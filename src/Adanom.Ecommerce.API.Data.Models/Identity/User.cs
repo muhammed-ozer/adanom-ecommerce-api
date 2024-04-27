@@ -16,6 +16,12 @@ namespace Adanom.Ecommerce.API.Data.Models
             ReturnRequests = new List<ReturnRequest>();
         }
 
+        [ProtectedPersonalData]
+        public override string UserName { get; set; } = null!;
+
+        [ProtectedPersonalData]
+        public override string Email { get; set; } = null!;
+
         [StringLength(100)]
         public string FirstName { get; set; } = null!;
 
@@ -23,6 +29,7 @@ namespace Adanom.Ecommerce.API.Data.Models
         public string LastName { get; set; } = null!;
 
         [StringLength(10)]
+        [ProtectedPersonalData]
         public new string PhoneNumber { get; set; } = null!;
 
         public byte DefaultDiscountRate { get; set; }

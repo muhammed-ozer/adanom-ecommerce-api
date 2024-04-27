@@ -83,7 +83,7 @@ namespace Adanom.Ecommerce.API.Security.Middlewares
 
             foreach (var user in SeedData.Users)
             {
-                var dbUser = await userManager.FindByEmailAsync(user.Email!);
+                var dbUser = await userManager.FindByEmailAsync(user.Email);
 
                 if (dbUser is null)
                 {
