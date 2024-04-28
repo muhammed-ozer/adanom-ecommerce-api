@@ -26,13 +26,6 @@ namespace Adanom.Ecommerce.API.Data
 
             #endregion
 
-            #region ProductImageMapping
-
-            modelBuilder.Entity<Product_Image_Mapping>()
-                    .HasKey(e => new { e.ProductId, e.ImageId });
-
-            #endregion
-
             #region ProductAttribute
 
             modelBuilder.Entity<ProductAttribute>()
@@ -70,45 +63,10 @@ namespace Adanom.Ecommerce.API.Data
 
             #endregion
 
-            #region ProductMetaInformationMapping
-
-            modelBuilder.Entity<Product_MetaInformation_Mapping>()
-                    .HasKey(e => new { e.ProductId, e.MetaInformationId });
-
-            #endregion
-
             #region ProductCategoryMapping
 
             modelBuilder.Entity<Product_ProductCategory_Mapping>()
                     .HasKey(e => new { e.ProductCategoryId, e.ProductId });
-
-            #endregion
-
-            #region ProductCategoryMetaInformationMapping
-
-            modelBuilder.Entity<ProductCategory_MetaInformation_Mapping>()
-                    .HasKey(e => new { e.ProductCategoryId, e.MetaInformationId });
-
-            #endregion
-
-            #region ProductCategoryImageMapping
-
-            modelBuilder.Entity<ProductCategory_Image_Mapping>()
-                    .HasKey(e => new { e.ProductCategoryId, e.ImageId });
-
-            #endregion
-
-            #region BrandMetaInformationMapping
-
-            modelBuilder.Entity<Brand_MetaInformation_Mapping>()
-                    .HasKey(e => new { e.BrandId, e.MetaInformationId });
-
-            #endregion
-
-            #region BrandImageMapping
-
-            modelBuilder.Entity<Brand_Image_Mapping>()
-                    .HasKey(e => new { e.BrandId, e.ImageId });
 
             #endregion
 
@@ -132,48 +90,6 @@ namespace Adanom.Ecommerce.API.Data
 
             #region Relations
 
-            #region Brand - Image
-
-            modelBuilder.Entity<Brand>()
-                .HasMany(e => e.Brand_Image_Mappings)
-                .WithOne(e => e.Brand)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Image>()
-                .HasMany(e => e.Brand_Image_Mappings)
-                .WithOne(e => e.Image)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            #endregion
-
-            #region Brand - MetaInformation
-
-            modelBuilder.Entity<Brand>()
-                .HasMany(e => e.Brand_MetaInformation_Mappings)
-                .WithOne(e => e.Brand)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<MetaInformation>()
-                .HasMany(e => e.Brand_MetaInformation_Mappings)
-                .WithOne(e => e.MetaInformation)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            #endregion
-
-            #region Product - Image
-
-            modelBuilder.Entity<Product>()
-                .HasMany(e => e.Product_Image_Mappings)
-                .WithOne(e => e.Product)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Image>()
-                .HasMany(e => e.Product_Image_Mappings)
-                .WithOne(e => e.Image)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            #endregion
-
             #region Product - ProductSpecificationAttributeOption
 
             modelBuilder.Entity<Product>()
@@ -183,48 +99,6 @@ namespace Adanom.Ecommerce.API.Data
             modelBuilder.Entity<ProductSpecificationAttributeOption>()
                 .HasMany(e => e.Product_ProductSpecificationAttributeOption_Mappings)
                 .WithOne(e => e.ProductSpecificationAttributeOption);
-
-            #endregion
-
-            #region Product - MetaInformation
-
-            modelBuilder.Entity<Product>()
-                .HasMany(e => e.Product_MetaInformation_Mappings)
-                .WithOne(e => e.Product)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<MetaInformation>()
-                .HasMany(e => e.Product_MetaInformation_Mappings)
-                .WithOne(e => e.MetaInformation)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            #endregion
-
-            #region ProductCategory - Image
-
-            modelBuilder.Entity<ProductCategory>()
-                .HasMany(e => e.ProductCategory_Image_Mappings)
-                .WithOne(e => e.ProductCategory)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Image>()
-                .HasMany(e => e.ProductCategory_Image_Mappings)
-                .WithOne(e => e.Image)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            #endregion
-
-            #region ProductCategory - MetaInformation
-
-            modelBuilder.Entity<ProductCategory>()
-                .HasMany(e => e.ProductCategory_MetaInformation_Mappings)
-                .WithOne(e => e.ProductCategory)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<MetaInformation>()
-                .HasMany(e => e.ProductCategory_MetaInformation_Mappings)
-                .WithOne(e => e.MetaInformation)
-                .OnDelete(DeleteBehavior.Cascade);
 
             #endregion
 
@@ -327,25 +201,13 @@ namespace Adanom.Ecommerce.API.Data
 
         public DbSet<Brand> Brands { get; set; } = null!;
 
-        public DbSet<Brand_Image_Mapping> Brand_Image_Mappings { get; set; } = null!;
-
-        public DbSet<Brand_MetaInformation_Mapping> Brand_MetaInformation_Mappings { get; set; } = null!;
-
         public DbSet<FavoriteItem> FavoriteItems { get; set; } = null!;
 
         public DbSet<Product> Products { get; set; } = null!;
 
         public DbSet<ProductCategory> ProductCategories { get; set; } = null!;
 
-        public DbSet<ProductCategory_Image_Mapping> ProductCategory_Image_Mappings { get; set; } = null!;
-
-        public DbSet<ProductCategory_MetaInformation_Mapping> ProductCategory_MetaInformation_Mappings { get; set; } = null!;
-
         public DbSet<Product_ProductCategory_Mapping> Product_ProductCategory_Mapping { get; set; } = null!;
-
-        public DbSet<Product_Image_Mapping> Product_Image_Mappings { get; set; } = null!;
-
-        public DbSet<Product_MetaInformation_Mapping> Product_MetaInformation_Mappings { get; set; } = null!;
 
         public DbSet<ProductReview> ProductReviews { get; set; } = null!;
 
@@ -372,6 +234,10 @@ namespace Adanom.Ecommerce.API.Data
         public DbSet<ProductAttributeOption> ProductAttributeOptions { get; set; } = null!;
 
         public DbSet<StockNotificationItem> StockNotificationItems { get; set; } = null!;
+
+        public DbSet<Image_Entity_Mapping> Image_Entity_Mappings { get; set; }
+
+        public DbSet<MetaInformation_Entity_Mapping> MetaInformation_Entity_Mappings { get; set; }
 
         #endregion
 
