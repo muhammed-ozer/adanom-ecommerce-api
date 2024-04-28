@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Adanom.Ecommerce.API.Data.Models
 {
     [Index(nameof(Code), IsUnique = true)]
-    public class TaxAdministration : IBaseEntity<long>
+    public class TaxAdministration : BaseEntity<long>
     {
         [StringLength(50)]
         public string Code { get; set; } = null!;

@@ -1,6 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class ShoppingCart : IBaseEntity<long>
+    public class ShoppingCart : BaseEntity<long>
     {
         public ShoppingCart()
         {

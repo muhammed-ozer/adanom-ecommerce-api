@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Adanom.Ecommerce.API.Data.Models
 {
     [Index(nameof(OrderNumber), IsUnique = true)]
-    public class Order : IBaseEntity<long>
+    public class Order : BaseEntity<long>
     {
         public Order()
         {

@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class ProductReview : IBaseEntity<long>
+    public class ProductReview : BaseEntity<long>
     {
         public long ProductId { get; set; }
 

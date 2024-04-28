@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class MetaInformation : IBaseEntity<long>
+    public class MetaInformation : BaseEntity<long>
     {
         [StringLength(100)]
         public string Title { get; set; } = null!;

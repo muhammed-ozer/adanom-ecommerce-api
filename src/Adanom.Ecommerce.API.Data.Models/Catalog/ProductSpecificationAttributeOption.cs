@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class ProductSpecificationAttributeOption : IBaseEntity<long>
+    public class ProductSpecificationAttributeOption : BaseEntity<long>
     {
         public ProductSpecificationAttributeOption()
         {

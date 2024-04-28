@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class ProductTax : IBaseEntity<long>
+    public class ProductTax : BaseEntity<long>
     {
         [StringLength(100)]
         public string Name { get; set; } = null!;

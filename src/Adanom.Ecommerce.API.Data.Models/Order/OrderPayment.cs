@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class OrderPayment : IBaseEntity<long>
+    public class OrderPayment : BaseEntity<long>
     {
         public long OrderId { get; set; }
 

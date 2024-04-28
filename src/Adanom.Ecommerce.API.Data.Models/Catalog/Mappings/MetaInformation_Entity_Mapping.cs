@@ -3,7 +3,7 @@
 namespace Adanom.Ecommerce.API.Data.Models
 {
     [Index(nameof(MetaInformationId), IsUnique = true)]
-    public class MetaInformation_Entity_Mapping : IBaseEntity<long>
+    public class MetaInformation_Entity_Mapping : BaseEntity<long>
     {
         public long MetaInformationId { get; set; }
 

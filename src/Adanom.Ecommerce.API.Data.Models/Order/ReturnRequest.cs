@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Adanom.Ecommerce.API.Data.Models
 {
     [Index(nameof(ReturnRequestNumber), IsUnique = true)]
-    public class ReturnRequest : IBaseEntity<long>
+    public class ReturnRequest : BaseEntity<long>
     {
         public ReturnRequest()
         {

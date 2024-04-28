@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class Notification : IBaseEntity<long>
+    public class Notification : BaseEntity<long>
     {
         public NotificationType NotificationType { get; set; }
 

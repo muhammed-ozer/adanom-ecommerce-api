@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Adanom.Ecommerce.API.Data.Models
 {
     [Index(nameof(Code), IsUnique = true)]
-    public class ProductSKU : IBaseEntity<long>
+    public class ProductSKU : BaseEntity<long>
     {
         public long ProductId { get; set; }
 

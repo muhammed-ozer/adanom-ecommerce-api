@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class SliderItem : IBaseEntity<long>
+    public class SliderItem : BaseEntity<long>
     {
         public SliderItemType SliderItemType { get; set; }
 

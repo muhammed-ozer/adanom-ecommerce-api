@@ -1,6 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class ProductPrice : IBaseEntity<long>
+    public class ProductPrice : BaseEntity<long>
     {
         public long ProductTaxId { get; set; }
 

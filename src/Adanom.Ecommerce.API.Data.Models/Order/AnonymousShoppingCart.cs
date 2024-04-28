@@ -3,7 +3,7 @@
 namespace Adanom.Ecommerce.API.Data.Models
 {
     [Index(nameof(LastModifiedAtUtc), IsUnique = false)]
-    public class AnonymousShoppingCart : IBaseEntity<Guid>
+    public class AnonymousShoppingCart : BaseEntity<Guid>
     {
         public AnonymousShoppingCart()
         {
