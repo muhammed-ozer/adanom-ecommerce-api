@@ -1,3 +1,4 @@
+using Adanom.Ecommerce.API.Logging.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Adanom.Ecommerce.API.Logging
@@ -12,5 +13,7 @@ namespace Adanom.Ecommerce.API.Logging
         {
             base.OnModelCreating(modelBuilder);
         }
+
+        public DbSet<AuthLog> AuthLogs { get; set; }
     }
 }
