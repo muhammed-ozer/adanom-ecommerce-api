@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class Company : IBaseEntity<long>
+    public class Company : BaseEntity<long>
     {
         public long AddressCityId { get; set; }
 

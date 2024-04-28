@@ -1,6 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class FavoriteItem : IBaseEntity<long>
+    public class FavoriteItem : BaseEntity<long>
     {
         public Guid UserId { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class Image : IBaseEntity<long>
+    public class Image : BaseEntity<long>
     {
         [StringLength(250)]
         public string Name { get; set; } = null!;

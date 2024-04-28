@@ -1,16 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    [Index(nameof(Code), IsUnique = true)]
-    public class TaxAdministration : BaseEntity<long>
+    public class PickUpStore : BaseEntity<long>
     {
-        [StringLength(50)]
-        public string Code { get; set; } = null!;
+        [StringLength(250)]
+        public string DisplayName { get; set; } = null!;
 
-        [StringLength(200)]
-        public string Name { get; set; } = null!;
+        [StringLength(500)]
+        public string LogoPath { get; set; } = null!;
+
+        public bool IsActive { get; set; }
+
+        public bool IsDefault { get; set; }
+
+        [StringLength(500)]
+        public string Address { get; set; } = null!;
 
         public DateTime CreatedAtUtc { get; set; }
 

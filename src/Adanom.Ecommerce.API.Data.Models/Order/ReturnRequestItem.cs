@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class ReturnRequestItem : IBaseEntity<long>
+    public class ReturnRequestItem : BaseEntity<long>
     {
         public long ReturnRequestId { get; set; }
 

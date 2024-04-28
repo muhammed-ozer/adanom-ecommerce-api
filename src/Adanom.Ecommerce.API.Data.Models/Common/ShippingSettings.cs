@@ -1,6 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class ShippingSettings : IBaseEntity<long>
+    public class ShippingSettings : BaseEntity<long>
     {
         public decimal MinimumFreeShippingTotalPrice { get; set; }
 
@@ -13,7 +13,5 @@
         public byte TaxRate { get; set; }
 
         public byte ShippingInDays { get; set; }
-
-        public ShippingType ShippingType { get; set; }
     }
 }

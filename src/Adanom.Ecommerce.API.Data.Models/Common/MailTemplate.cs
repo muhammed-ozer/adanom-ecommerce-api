@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class MailTemplate : IBaseEntity<long>
+    public class MailTemplate : BaseEntity<long>
     {
         public MailTemplateKey Key { get; set; }
 

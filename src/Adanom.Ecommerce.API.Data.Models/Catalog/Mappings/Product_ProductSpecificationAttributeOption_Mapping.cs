@@ -3,7 +3,7 @@
 namespace Adanom.Ecommerce.API.Data.Models
 {
     [Index(nameof(ProductSpecificationAttributeOptionId), nameof(ProductId), IsUnique = true)]
-    public class Product_ProductSpecificationAttributeOption_Mapping : IBaseEntity<long>
+    public class Product_ProductSpecificationAttributeOption_Mapping : BaseEntity<long>
     {
         public long ProductSpecificationAttributeOptionId { get; set; }
 

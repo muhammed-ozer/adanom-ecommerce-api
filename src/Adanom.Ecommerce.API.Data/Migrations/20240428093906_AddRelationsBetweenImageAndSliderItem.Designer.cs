@@ -4,6 +4,7 @@ using Adanom.Ecommerce.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Adanom.Ecommerce.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240428093906_AddRelationsBetweenImageAndSliderItem")]
+    partial class AddRelationsBetweenImageAndSliderItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -540,9 +543,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte>("DeliveryType")
-                        .HasColumnType("tinyint");
-
                     b.Property<decimal>("GrandTotal")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
@@ -568,9 +568,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<long>("PaymentId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("PickUpStoreId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("ShippingAddressId")
                         .HasColumnType("bigint");
 
@@ -582,7 +579,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<long?>("ShippingProviderId")
+                    b.Property<long>("ShippingProviderId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("ShippingTransactionCode")
@@ -612,8 +609,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .IsUnique();
 
                     b.HasIndex("PaymentId");
-
-                    b.HasIndex("PickUpStoreId");
 
                     b.HasIndex("ShippingAddressId");
 
@@ -714,58 +709,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OrderPayments");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.PickUpStore", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<Guid>("CreateByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("DisplayName")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LogoPath")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UpdatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PickUpStores");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Product", b =>
@@ -1395,17 +1338,11 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte>("DeliveryType")
-                        .HasColumnType("tinyint");
-
                     b.Property<decimal>("GrandTotal")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<long>("OrderId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("PickUpStoreId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("ReturnRequestNumber")
@@ -1416,7 +1353,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<byte>("ReturnRequestStatusType")
                         .HasColumnType("tinyint");
 
-                    b.Property<long?>("ShippingProviderId")
+                    b.Property<long>("ShippingProviderId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("ShippingTransactionCode")
@@ -1429,8 +1366,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("PickUpStoreId");
 
                     b.HasIndex("ReturnRequestNumber")
                         .IsUnique();
@@ -1592,6 +1527,10 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<string>("Address")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<Guid>("CreateByUserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -1610,9 +1549,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDefault")
                         .HasColumnType("bit");
 
                     b.Property<string>("LogoPath")
@@ -1661,6 +1597,9 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<byte>("ShippingInDays")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte>("ShippingType")
                         .HasColumnType("tinyint");
 
                     b.Property<byte>("TaxRate")
@@ -2392,11 +2331,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.PickUpStore", "PickUpStore")
-                        .WithMany()
-                        .HasForeignKey("PickUpStoreId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.ShippingAddress", "ShippingAddress")
                         .WithMany()
                         .HasForeignKey("ShippingAddressId")
@@ -2406,7 +2340,8 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.ShippingProvider", "ShippingProvider")
                         .WithMany()
                         .HasForeignKey("ShippingProviderId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.User", "User")
                         .WithMany("Orders")
@@ -2417,8 +2352,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Navigation("BillingAddress");
 
                     b.Navigation("Payment");
-
-                    b.Navigation("PickUpStore");
 
                     b.Navigation("ShippingAddress");
 
@@ -2628,15 +2561,11 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.PickUpStore", "PickUpStore")
-                        .WithMany()
-                        .HasForeignKey("PickUpStoreId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.ShippingProvider", "ShippingProvider")
                         .WithMany()
                         .HasForeignKey("ShippingProviderId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.User", null)
                         .WithMany("ReturnRequests")
@@ -2644,8 +2573,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Order");
-
-                    b.Navigation("PickUpStore");
 
                     b.Navigation("ShippingProvider");
                 });

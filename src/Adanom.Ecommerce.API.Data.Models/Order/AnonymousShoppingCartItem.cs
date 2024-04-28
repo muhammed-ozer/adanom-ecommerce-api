@@ -3,7 +3,7 @@
 namespace Adanom.Ecommerce.API.Data.Models
 {
     [Index(nameof(AnonymousShoppingCartId), nameof(ProductId), IsUnique = true)]
-    public class AnonymousShoppingCartItem : IBaseEntity<long>
+    public class AnonymousShoppingCartItem : BaseEntity<long>
     {
         public Guid AnonymousShoppingCartId { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class BillingAddress : IBaseEntity<long>
+    public class BillingAddress : BaseEntity<long>
     {
         public Guid UserId { get; set; }
 

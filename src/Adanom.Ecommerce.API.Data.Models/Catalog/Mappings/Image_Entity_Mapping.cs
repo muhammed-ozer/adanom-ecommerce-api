@@ -3,7 +3,7 @@
 namespace Adanom.Ecommerce.API.Data.Models
 {
     [Index(nameof(ImageId), IsUnique = true)]
-    public class Image_Entity_Mapping : IBaseEntity<long>
+    public class Image_Entity_Mapping : BaseEntity<long>
     {
         public long ImageId { get; set; }
 

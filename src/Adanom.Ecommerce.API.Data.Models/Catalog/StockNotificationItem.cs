@@ -1,6 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class StockNotificationItem : IBaseEntity<long>
+    public class StockNotificationItem : BaseEntity<long>
     {
         public Guid UserId { get; set; }
 

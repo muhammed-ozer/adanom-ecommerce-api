@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class ShippingProvider : IBaseEntity<long>
+    public class ShippingProvider : BaseEntity<long>
     {
         public long ShippingSettingsId { get; set; }
 
@@ -14,8 +14,7 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public bool IsActive { get; set; }
 
-        [StringLength(500)]
-        public string? Address { get; set; }
+        public bool IsDefault { get; set; }
 
         public DateTime CreatedAtUtc { get; set; }
 

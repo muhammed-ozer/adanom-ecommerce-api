@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Adanom.Ecommerce.API.Data.Models
 {
     [Index(nameof(OrderNumber), IsUnique = true)]
-    public class Order : IBaseEntity<long>
+    public class Order : BaseEntity<long>
     {
         public Order()
         {
@@ -17,11 +17,15 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public long? BillingAddressId { get; set; }
 
-        public long ShippingProviderId { get; set; }
+        public long? ShippingProviderId { get; set; }
+
+        public long? PickUpStoreId { get; set; }
 
         public long OrderPaymentId { get; set; }
 
         public OrderStatusType OrderStatusType { get; set; }
+
+        public DeliveryType DeliveryType { get; set; }
 
         [StringLength(25)]
         public string OrderNumber { get; set; } = null!;
@@ -50,7 +54,9 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public User User { get; set; } = null!;
 
-        public ShippingProvider ShippingProvider { get; set; } = null!;
+        public ShippingProvider? ShippingProvider { get; set; }
+
+        public PickUpStore? PickUpStore { get; set; }
 
         public ICollection<OrderItem> Items { get; set; }
 
