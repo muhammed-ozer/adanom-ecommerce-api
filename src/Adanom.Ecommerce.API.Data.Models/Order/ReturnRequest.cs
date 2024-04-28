@@ -13,9 +13,13 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public long OrderId { get; set; }
 
-        public long ShippingProviderId { get; set; }
+        public long? ShippingProviderId { get; set; }
+
+        public long? PickUpStoreId { get; set; }
 
         public ReturnRequestStatusType ReturnRequestStatusType { get; set; }
+
+        public DeliveryType DeliveryType { get; set; }
 
         [StringLength(25)]
         public string ReturnRequestNumber { get; set; } = null!;
@@ -29,7 +33,9 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public Order Order { get; set; } = null!;
 
-        public ShippingProvider ShippingProvider { get; set; } = null!;
+        public ShippingProvider? ShippingProvider { get; set; }
+
+        public PickUpStore? PickUpStore { get; set; }
 
         public ICollection<ReturnRequestItem> Items { get; set; }
     }
