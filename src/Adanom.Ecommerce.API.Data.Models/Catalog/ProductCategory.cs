@@ -8,8 +8,6 @@ namespace Adanom.Ecommerce.API.Data.Models
         {
             Children = new List<ProductCategory>();
             Product_ProductCategory_Mappings = new List<Product_ProductCategory_Mapping>();
-            ProductCategory_Image_Mappings = new List<ProductCategory_Image_Mapping>();
-            ProductCategory_MetaInformation_Mappings = new List<ProductCategory_MetaInformation_Mapping>();
         }
 
         public long? ParentId { get; set; }
@@ -41,9 +39,5 @@ namespace Adanom.Ecommerce.API.Data.Models
         public ICollection<ProductCategory> Children { get; set; }
 
         public ICollection<Product_ProductCategory_Mapping> Product_ProductCategory_Mappings { get; set; }
-
-        public ICollection<ProductCategory_Image_Mapping> ProductCategory_Image_Mappings { get; set; }
-
-        public ICollection<ProductCategory_MetaInformation_Mapping> ProductCategory_MetaInformation_Mappings { get; set; }
     }
 }
