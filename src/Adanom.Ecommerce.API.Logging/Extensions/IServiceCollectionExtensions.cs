@@ -18,6 +18,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .WriteTo.File("Logs/.txt", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
+            services.AddScoped<ILogService, LogService>();
+
             return services;
         }
     }
