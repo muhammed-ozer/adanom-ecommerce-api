@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using Adanom.Ecommerce.API.Data.Models;
+using Adanom.Ecommerce.API.Logging;
 using Microsoft.AspNetCore.Identity;
 
 namespace Adanom.Ecommerce.API.Handlers
@@ -29,7 +30,12 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var user = await _userManager.FindByEmailAsync(command.Email);
 
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user!);
+            if (user == null)
+            {
+                return false;
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
             var url = $"{Store.Url}/reset-password?email={user!.Email}&token={HttpUtility.UrlEncode(token)}";
 
@@ -47,7 +53,7 @@ namespace Adanom.Ecommerce.API.Handlers
             // TODO: Update mail template
 
             return true;
-        } 
+        }
 
         #endregion
     }

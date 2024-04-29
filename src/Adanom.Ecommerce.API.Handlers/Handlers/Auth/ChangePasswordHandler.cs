@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
-using Adanom.Ecommerce.API.Data.Models;
 using Microsoft.AspNetCore.Identity;
+using Adanom.Ecommerce.API.Data.Models;
+using Adanom.Ecommerce.API.Logging;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
@@ -33,6 +34,12 @@ namespace Adanom.Ecommerce.API.Handlers
 
             if (user == null)
             {
+                await _mediator.Publish(new CreateLog(new AuthLogRequest()
+                {
+                    LogLevel = LogLevel.INFORMATION,
+                    Description = string.Format(LogMessages.Auth.UserNotFound, userId, "-")
+                }));
+
                 return false;
             }
 
@@ -56,7 +63,7 @@ namespace Adanom.Ecommerce.API.Handlers
             // TODO: Update mail template
 
             return true;
-        } 
+        }
 
         #endregion
     }

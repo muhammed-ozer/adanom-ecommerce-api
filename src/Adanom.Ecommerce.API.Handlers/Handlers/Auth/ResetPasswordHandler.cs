@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using Adanom.Ecommerce.API.Data.Models;
+using Adanom.Ecommerce.API.Logging;
 using Microsoft.AspNetCore.Identity;
 
 namespace Adanom.Ecommerce.API.Handlers
@@ -29,6 +30,11 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var user = await _userManager.FindByEmailAsync(command.Email);
 
+            if (user == null)
+            {
+                return false;
+            }
+
             var token = HttpUtility.UrlDecode(command.Token);
 
             var resetPasswordResult = await _userManager.ResetPasswordAsync(user!, token, command.Password);
@@ -41,7 +47,7 @@ namespace Adanom.Ecommerce.API.Handlers
             await _mediator.Publish(new SendMail()
             {
                 Key = MailTemplateKey.PASSWORD_RESET_SUCCESSFUL,
-                To = user!.Email!,
+                To = user.Email,
                 Replacements = new Dictionary<string, string>()
                 {
                     { "{USER_NAME}", $"{user.FirstName} {user.LastName}" }
@@ -51,7 +57,7 @@ namespace Adanom.Ecommerce.API.Handlers
             // TODO: Update mail template
 
             return true;
-        } 
+        }
 
         #endregion
     }
