@@ -2,7 +2,7 @@
 {
     public class ProductPrice : BaseEntity<long>
     {
-        public long ProductTaxId { get; set; }
+        public long TaxCategoryId { get; set; }
 
         public decimal OriginalPrice { get; set; }
 
@@ -20,6 +20,6 @@
 
         public Guid? DeletedByUserId { get; set; }
 
-        public ProductTax ProductTax { get; set; } = null!;
+        public TaxCategory TaxCategory { get; set; } = null!;
     }
 }

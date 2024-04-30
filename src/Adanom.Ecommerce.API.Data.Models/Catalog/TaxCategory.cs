@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
-    public class ProductTax : BaseEntity<long>
+    public class TaxCategory : BaseEntity<long>
     {
         [StringLength(100)]
         public string Name { get; set; } = null!;
