@@ -4,13 +4,11 @@ namespace Adanom.Ecommerce.API.Data.Models
 {
     public class ProductAttribute : BaseEntity<long>
     {
-        public ProductAttribute()
-        {
-            ProductAttributeOptions = new List<ProductAttributeOption>();
-        }
-
         [StringLength(250)]
         public string Name { get; set; } = null!;
+
+        [StringLength(250)]
+        public string Value { get; set; } = null!;
 
         public int DisplayOrder { get; set; }
 
@@ -25,7 +23,5 @@ namespace Adanom.Ecommerce.API.Data.Models
         public DateTime? DeletedAtUtc { get; set; }
 
         public Guid? DeletedByUserId { get; set; }
-
-        public ICollection<ProductAttributeOption> ProductAttributeOptions { get; set; }
     }
 }

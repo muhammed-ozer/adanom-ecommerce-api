@@ -26,15 +26,6 @@ namespace Adanom.Ecommerce.API.Data
 
             #endregion
 
-            #region ProductAttribute
-
-            modelBuilder.Entity<ProductAttribute>()
-                    .HasMany(e => e.ProductAttributeOptions)
-                    .WithOne(e => e.ProductAttribute)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-            #endregion
-
             #region ProductTagMapping
 
             modelBuilder.Entity<Product_ProductTag_Mapping>()
@@ -230,8 +221,6 @@ namespace Adanom.Ecommerce.API.Data
         public DbSet<Product_ProductTag_Mapping> Product_ProductTag_Mappings { get; set; } = null!;
 
         public DbSet<ProductAttribute> ProductAttributes { get; set; } = null!;
-
-        public DbSet<ProductAttributeOption> ProductAttributeOptions { get; set; } = null!;
 
         public DbSet<StockNotificationItem> StockNotificationItems { get; set; } = null!;
 

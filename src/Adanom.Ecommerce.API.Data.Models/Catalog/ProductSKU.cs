@@ -8,7 +8,7 @@ namespace Adanom.Ecommerce.API.Data.Models
     {
         public long ProductId { get; set; }
 
-        public long? ProductAttributeOptionId { get; set; }
+        public long? ProductAttributeId { get; set; }
 
         public long ProductPriceId { get; set; }
 
@@ -38,6 +38,6 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public ProductPrice ProductPrice { get; set; } = null!;
 
-        public ProductAttributeOption? ProductAttributeOption { get; set; }
+        public ProductAttribute? ProductAttribute { get; set; }
     }
 }
