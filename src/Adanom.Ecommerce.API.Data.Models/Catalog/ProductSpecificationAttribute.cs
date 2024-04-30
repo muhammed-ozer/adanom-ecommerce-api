@@ -6,13 +6,16 @@ namespace Adanom.Ecommerce.API.Data.Models
     {
         public ProductSpecificationAttribute()
         {
-            SpecificationAttributeOptions = new List<ProductSpecificationAttributeOption>();
+            Product_ProductSpecificationAttribute_Mappings = new List<Product_ProductSpecificationAttribute_Mapping>();
         }
 
         public long ProductSpecificationAttributeGroupId { get; set; }
 
-        [StringLength(100)]
+        [StringLength(250)]
         public string Name { get; set; } = null!;
+
+        [StringLength(250)]
+        public string Value { get; set; } = null!;
 
         public int DisplayOrder { get; set; }
 
@@ -30,6 +33,6 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public ProductSpecificationAttributeGroup SpecificationAttributeGroup { get; set; } = null!;
 
-        public ICollection<ProductSpecificationAttributeOption> SpecificationAttributeOptions { get; set; }
+        public ICollection<Product_ProductSpecificationAttribute_Mapping> Product_ProductSpecificationAttribute_Mappings { get; set; }
     }
 }
