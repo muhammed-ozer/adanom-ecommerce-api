@@ -10,7 +10,7 @@ namespace Adanom.Ecommerce.API.Data.Models
         {
             ProductReviews = new List<ProductReview>();
             Product_ProductCategory_Mappings = new List<Product_ProductCategory_Mapping>();
-            Product_ProductSpecificationAttributeOption_Mappings = new List<Product_ProductSpecificationAttributeOption_Mapping>();
+            Product_ProductSpecificationAttribute_Mappings = new List<Product_ProductSpecificationAttribute_Mapping>();
             ProductSKUs = new List<ProductSKU>();
         }
 
@@ -53,6 +53,6 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public ICollection<Product_ProductCategory_Mapping> Product_ProductCategory_Mappings { get; set; }
 
-        public ICollection<Product_ProductSpecificationAttributeOption_Mapping> Product_ProductSpecificationAttributeOption_Mappings { get; set; }
+        public ICollection<Product_ProductSpecificationAttribute_Mapping> Product_ProductSpecificationAttribute_Mappings { get; set; }
     }
 }

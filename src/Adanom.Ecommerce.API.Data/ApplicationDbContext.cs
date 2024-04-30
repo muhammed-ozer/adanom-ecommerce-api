@@ -26,15 +26,6 @@ namespace Adanom.Ecommerce.API.Data
 
             #endregion
 
-            #region ProductAttribute
-
-            modelBuilder.Entity<ProductAttribute>()
-                    .HasMany(e => e.ProductAttributeOptions)
-                    .WithOne(e => e.ProductAttribute)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-            #endregion
-
             #region ProductTagMapping
 
             modelBuilder.Entity<Product_ProductTag_Mapping>()
@@ -49,17 +40,12 @@ namespace Adanom.Ecommerce.API.Data
                     .WithOne(e => e.SpecificationAttributeGroup)
                     .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<ProductSpecificationAttribute>()
-                .HasMany(e => e.SpecificationAttributeOptions)
-                .WithOne(e => e.SpecificationAttribute)
-                .OnDelete(DeleteBehavior.Cascade);
-
             #endregion
 
-            #region ProductSpecificationAttributeOptionMapping
+            #region ProductSpecificationAttributeMapping
 
-            modelBuilder.Entity<Product_ProductSpecificationAttributeOption_Mapping>()
-                    .HasKey(e => new { e.ProductId, e.ProductSpecificationAttributeOptionId });
+            modelBuilder.Entity<Product_ProductSpecificationAttribute_Mapping>()
+                    .HasKey(e => new { e.ProductId, e.ProductSpecificationAttributeId });
 
             #endregion
 
@@ -90,15 +76,15 @@ namespace Adanom.Ecommerce.API.Data
 
             #region Relations
 
-            #region Product - ProductSpecificationAttributeOption
+            #region Product - ProductSpecificationAttribute
 
             modelBuilder.Entity<Product>()
-                .HasMany(e => e.Product_ProductSpecificationAttributeOption_Mappings)
+                .HasMany(e => e.Product_ProductSpecificationAttribute_Mappings)
                 .WithOne(e => e.Product);
 
-            modelBuilder.Entity<ProductSpecificationAttributeOption>()
-                .HasMany(e => e.Product_ProductSpecificationAttributeOption_Mappings)
-                .WithOne(e => e.ProductSpecificationAttributeOption);
+            modelBuilder.Entity<ProductSpecificationAttribute>()
+                .HasMany(e => e.Product_ProductSpecificationAttribute_Mappings)
+                .WithOne(e => e.ProductSpecificationAttribute);
 
             #endregion
 
@@ -215,9 +201,7 @@ namespace Adanom.Ecommerce.API.Data
 
         public DbSet<ProductSpecificationAttributeGroup> ProductSpecificationAttributeGroups { get; set; } = null!;
 
-        public DbSet<Product_ProductSpecificationAttributeOption_Mapping> Product_ProductSpecificationAttributeOption_Mappings { get; set; } = null!;
-
-        public DbSet<ProductSpecificationAttributeOption> ProductSpecificationAttributeOptions { get; set; } = null!;
+        public DbSet<Product_ProductSpecificationAttribute_Mapping> Product_ProductSpecificationAttribute_Mappings { get; set; } = null!;
 
         public DbSet<ProductSKU> ProductSKUs { get; set; } = null!;
 
@@ -225,13 +209,11 @@ namespace Adanom.Ecommerce.API.Data
 
         public DbSet<ProductPrice> ProductPrices { get; set; } = null!;
 
-        public DbSet<ProductTax> ProductTaxes { get; set; } = null!;
+        public DbSet<TaxCategory> TaxCategories { get; set; } = null!;
 
         public DbSet<Product_ProductTag_Mapping> Product_ProductTag_Mappings { get; set; } = null!;
 
         public DbSet<ProductAttribute> ProductAttributes { get; set; } = null!;
-
-        public DbSet<ProductAttributeOption> ProductAttributeOptions { get; set; } = null!;
 
         public DbSet<StockNotificationItem> StockNotificationItems { get; set; } = null!;
 
