@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class GetBrandsHandler : IRequestHandler<GetBrands, PaginatedData<BrandResponse>>
+    public sealed class GetBrandsHandler : IRequestHandler<GetBrands, PaginatedData<BrandResponse>>, INotificationHandler<ClearEntityCache<BrandResponse>>
     {
         #region Fields
 
@@ -93,6 +93,17 @@ namespace Adanom.Ecommerce.API.Handlers
                 totalCount,
                 command.Pagination?.Page ?? 1,
                 command.Pagination?.PageSize ?? totalCount);
+        }
+
+        #endregion
+
+        #region INotificationHandler Members
+
+        public Task Handle(ClearEntityCache<BrandResponse> command, CancellationToken cancellationToken)
+        {
+            _cache.Clear();
+
+            return Task.CompletedTask;
         }
 
         #endregion
