@@ -1,7 +1,3 @@
-using Adanom.Ecommerce.API.Data.Models;
-using AutoMapper;
-using HotChocolate.Types;
-
 namespace Adanom.Ecommerce.API.Business.Models.MappingProfiles.Resolvers
 {
     public sealed class IFileStreamToByteArrayResolver : IValueResolver<IFile, UploadedFile, byte[]>

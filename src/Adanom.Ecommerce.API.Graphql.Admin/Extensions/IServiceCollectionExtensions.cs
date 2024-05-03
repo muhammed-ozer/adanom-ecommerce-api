@@ -13,9 +13,13 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddHttpRequestInterceptor<HttpRequestInterceptor>()
                 .AddType<UploadType>();
 
+            #region Queries
+
             graphqlServices
                 .AddQueryType(e => e.Name(OperationTypeNames.Query))
-                .AddType<TestQueries>();
+                .AddType<BrandQueries>();
+
+            #endregion
 
             return services;
         }
