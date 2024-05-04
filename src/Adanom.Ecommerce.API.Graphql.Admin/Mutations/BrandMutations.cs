@@ -38,6 +38,22 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
 
         #endregion
 
+        #region UpdateBrandLogoAsync
+
+        [GraphQLDescription("Updates a brand logo")]
+        public async Task<BrandResponse?> UpdateBrandLogoAsync(
+            UpdateBrandLogoRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new UpdateBrandLogo(identity));
+
+            return await mediator.Send(command); ;
+        }
+
+        #endregion
+
         #region ClearBrandsCacheAsync
 
         [GraphQLDescription("Clears brand cache")]

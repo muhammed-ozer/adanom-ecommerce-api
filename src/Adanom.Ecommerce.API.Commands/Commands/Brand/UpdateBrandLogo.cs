@@ -1,0 +1,26 @@
+using System.Security.Claims;
+
+namespace Adanom.Ecommerce.API.Commands
+{
+    public class UpdateBrandLogo : IRequest<BrandResponse?>
+    {
+        #region Ctor
+
+        public UpdateBrandLogo(ClaimsPrincipal identity)
+        {
+            Identity = identity ?? throw new ArgumentNullException(nameof(identity));
+        }
+
+        #endregion
+
+        #region Properties
+
+        public ClaimsPrincipal Identity { get; }
+
+        public long Id { get; set; }
+
+        public UploadedFile Logo { get; set; } = null!;
+
+        #endregion
+    }
+}
