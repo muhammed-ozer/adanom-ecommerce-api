@@ -1,9 +1,7 @@
 namespace Adanom.Ecommerce.API.Commands.Models
 {
-    public class BrandResponse
+    public class BrandResponse : BaseResponseEntity<long>
     {
-        public long Id { get; set; }
-
         public string Name { get; set; } = null!;
 
         public string UrlSlug { get; set; } = null!;
