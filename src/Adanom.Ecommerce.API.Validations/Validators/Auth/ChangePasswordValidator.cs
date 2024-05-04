@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using System.Text.RegularExpressions;
-using FluentValidation.Results;
 
 namespace Adanom.Ecommerce.API.Validation.Validators
 {

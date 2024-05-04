@@ -1,7 +1,4 @@
-﻿using Adanom.Ecommerce.API.Commands.Models;
-using MediatR;
-
-namespace Adanom.Ecommerce.API.Commands
+﻿namespace Adanom.Ecommerce.API.Commands
 {
     public sealed class Login : IRequest<UserResponse?>
     {

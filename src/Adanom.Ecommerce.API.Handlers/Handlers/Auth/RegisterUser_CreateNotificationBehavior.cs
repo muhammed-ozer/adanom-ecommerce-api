@@ -1,6 +1,4 @@
-﻿using Adanom.Ecommerce.API.Data.Models;
-
-namespace Adanom.Ecommerce.API.Handlers
+﻿namespace Adanom.Ecommerce.API.Handlers
 {
     public class RegisterUser_CreateNotificationBehavior : IPipelineBehavior<RegisterUser, bool>
     {

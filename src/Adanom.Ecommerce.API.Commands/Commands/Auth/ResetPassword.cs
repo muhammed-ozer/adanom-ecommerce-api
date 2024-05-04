@@ -1,5 +1,3 @@
-using MediatR;
-
 namespace Adanom.Ecommerce.API.Commands
 {
     public class ResetPassword : IRequest<bool>

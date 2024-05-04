@@ -1,7 +1,5 @@
-﻿using Adanom.Ecommerce.API.Data.Models;
-using Adanom.Ecommerce.API.Logging;
+﻿using Adanom.Ecommerce.API.Logging;
 using Adanom.Ecommerce.API.Security;
-using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 
 namespace Adanom.Ecommerce.API.Handlers
