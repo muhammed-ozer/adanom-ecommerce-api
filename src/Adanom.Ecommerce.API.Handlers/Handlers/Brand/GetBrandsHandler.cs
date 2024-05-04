@@ -101,7 +101,19 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public Task Handle(ClearEntityCache<BrandResponse> command, CancellationToken cancellationToken)
         {
-            _cache.Clear();
+            if (command.Id != null)
+            {
+                var entity = _cache.Values.SingleOrDefault(e => e.Id == command.Id);
+
+                if (entity != null)
+                {
+                    _cache.Remove(entity.Id, out entity);
+                }
+            }
+            else
+            {
+                _cache.Clear();
+            }
 
             return Task.CompletedTask;
         }

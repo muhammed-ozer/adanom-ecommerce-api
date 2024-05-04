@@ -1,16 +1,19 @@
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class ClearEntityCache<T> : INotification
+    public class ClearEntityCache<TEntity> : INotification
     {
         #region Ctor
 
-        public ClearEntityCache()
+        public ClearEntityCache(long? id = null)
         {
+            Id = id;
         }
 
         #endregion
 
         #region Properties
+
+        public long? Id { get; set; }
 
         #endregion
     }
