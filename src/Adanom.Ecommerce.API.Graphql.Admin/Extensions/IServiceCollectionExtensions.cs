@@ -18,7 +18,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             graphqlServices
                 .AddQueryType(e => e.Name(OperationTypeNames.Query))
-                .AddType<BrandQueries>();
+                .AddType<BrandQueries>()
+                .AddType<TaxCategoryQueries>();
 
             #endregion
 
@@ -26,7 +27,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             graphqlServices
                 .AddMutationType(e => e.Name(OperationTypeNames.Mutation))
-                .AddType<BrandMutations>();
+                .AddType<BrandMutations>()
+                .AddType<TaxCategoryMutations>();
 
             #endregion
 
