@@ -11,6 +11,10 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<CreateBrandRequest, CreateBrand>();
 
             CreateMap<CreateBrand, Brand>();
+
+            CreateMap<UpdateBrandRequest, UpdateBrand>();
+
+            CreateMap<UpdateBrand, Brand>();
         }
     }
 }

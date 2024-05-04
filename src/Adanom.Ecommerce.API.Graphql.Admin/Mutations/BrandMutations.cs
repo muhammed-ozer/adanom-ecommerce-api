@@ -21,10 +21,26 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
         }
 
         #endregion
+
+        #region UpdateBrandAsync
+
+        [GraphQLDescription("Updates a brand")]
+        public async Task<BrandResponse?> UpdateBrandAsync(
+            UpdateBrandRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new UpdateBrand(identity));
+
+            return await mediator.Send(command); ;
+        }
+
+        #endregion
+
         #region ClearBrandsCacheAsync
 
         [GraphQLDescription("Clears brand cache")]
-        [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
         public async Task<bool> ClearBrandsCacheAsync([Service] IMediator mediator)
         {
             await mediator.Publish(new ClearEntityCache<BrandResponse>());

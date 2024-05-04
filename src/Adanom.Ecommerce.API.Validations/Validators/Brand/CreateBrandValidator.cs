@@ -1,6 +1,4 @@
-﻿using FluentValidation.Results;
-
-namespace Adanom.Ecommerce.API.Validation.Validators
+﻿namespace Adanom.Ecommerce.API.Validation.Validators
 {
     public sealed class CreateBrandValidator : AbstractValidator<CreateBrand>
     {
