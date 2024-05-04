@@ -46,9 +46,11 @@ namespace Adanom.Ecommerce.API.Handlers
             _applicationDbContext.Update(brand);
             await _applicationDbContext.SaveChangesAsync();
 
-            await _mediator.Publish(new UpdateFromCache<BrandResponse>(_mapper.Map<BrandResponse>(brand)));
+            var brandResponse = _mapper.Map<BrandResponse>(brand);
 
-            return _mapper.Map<BrandResponse>(brand);
+            await _mediator.Publish(new UpdateFromCache<BrandResponse>(brandResponse));
+
+            return brandResponse;
         }
 
         #endregion
