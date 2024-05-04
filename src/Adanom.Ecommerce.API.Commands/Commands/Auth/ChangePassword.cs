@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using MediatR;
 
 namespace Adanom.Ecommerce.API.Commands
 {

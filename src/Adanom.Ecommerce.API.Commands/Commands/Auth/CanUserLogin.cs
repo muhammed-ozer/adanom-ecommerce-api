@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace Adanom.Ecommerce.API.Commands
+﻿namespace Adanom.Ecommerce.API.Commands
 {
     public sealed class CanUserLogin : IRequest<bool>
     {

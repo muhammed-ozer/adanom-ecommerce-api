@@ -1,5 +1,4 @@
-﻿using Adanom.Ecommerce.API.Data.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
