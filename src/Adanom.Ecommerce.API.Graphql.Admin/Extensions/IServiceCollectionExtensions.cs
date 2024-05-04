@@ -1,4 +1,5 @@
 ﻿using Adanom.Ecommerce.API.Graphql.Admin;
+using Adanom.Ecommerce.API.Graphql.Admin.Mutations;
 using Adanom.Ecommerce.API.Graphql.Admin.Queries;
 using Microsoft.Extensions.Configuration;
 
@@ -18,6 +19,14 @@ namespace Microsoft.Extensions.DependencyInjection
             graphqlServices
                 .AddQueryType(e => e.Name(OperationTypeNames.Query))
                 .AddType<BrandQueries>();
+
+            #endregion
+
+            #region Mutations
+
+            graphqlServices
+                .AddMutationType(e => e.Name(OperationTypeNames.Mutation))
+                .AddType<BrandMutations>();
 
             #endregion
 
