@@ -1,6 +1,6 @@
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class DoesEntityNameExists<TEntity> : IRequest<bool>
+    public class DoesEntityNameExists<TEntity> : IRequest<bool> where TEntity : BaseResponseEntity<long>
     {
         #region Ctor
 

@@ -1,6 +1,6 @@
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class ClearEntityCache<TEntity> : INotification
+    public class ClearEntityCache<TEntity> : INotification where TEntity : BaseResponseEntity<long>
     {
         #region Ctor
 
