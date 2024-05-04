@@ -1,4 +1,4 @@
-﻿namespace Baby.Ecommerce.Handlers
+﻿namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class DoesBrandNameExistsHandler : IRequestHandler<DoesEntityNameExists<BrandResponse>, bool>
     {

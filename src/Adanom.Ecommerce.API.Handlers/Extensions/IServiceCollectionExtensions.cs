@@ -15,7 +15,13 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 options.RegisterServicesFromAssemblies(typeof(LoginHandler).Assembly, typeof(Login).Assembly);
 
-                #region CreateAccount
+                #region Brand
+
+                options.AddBehavior<IPipelineBehavior<DeleteBrand, bool>, DeleteBrand_DeleteRelationsBehavior>();
+
+                #endregion
+
+                #region RegisterUser
 
                 options.AddBehavior<IPipelineBehavior<RegisterUser, bool>, RegisterUser_SendMailsBehavior>();
                 options.AddBehavior<IPipelineBehavior<RegisterUser, bool>, RegisterUser_CreateNotificationBehavior>();

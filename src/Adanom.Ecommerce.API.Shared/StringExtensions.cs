@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 
 namespace System
 {
@@ -37,7 +38,7 @@ namespace System
 
         #region IsNotNullOrEmpty
 
-        public static bool IsNotNullOrEmpty(this string? text)
+        public static bool IsNotNullOrEmpty([NotNullWhen(true)] this string? text)
         {
             return !string.IsNullOrEmpty(text);
         }

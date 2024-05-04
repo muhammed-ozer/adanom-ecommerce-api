@@ -17,6 +17,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<UpdateBrand, Brand>();
 
             CreateMap<UpdateBrandLogoRequest, UpdateBrandLogo>();
+
+            CreateMap<DeleteBrandRequest, DeleteBrand>();
         }
     }
 }
