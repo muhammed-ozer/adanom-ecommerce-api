@@ -1,10 +1,10 @@
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class ClearEntityCache<TEntity> : INotification where TEntity : BaseResponseEntity<long>
+    public class RemoveFromCache<TEntity> : INotification where TEntity : BaseResponseEntity<long>
     {
         #region Ctor
 
-        public ClearEntityCache(long? id = null)
+        public RemoveFromCache(long id)
         {
             Id = id;
         }
@@ -13,7 +13,7 @@ namespace Adanom.Ecommerce.API.Commands
 
         #region Properties
 
-        public long? Id { get; set; }
+        public long Id { get; set; }
 
         #endregion
     }

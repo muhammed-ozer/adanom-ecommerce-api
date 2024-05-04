@@ -2,7 +2,12 @@ using System.Collections.Concurrent;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class GetBrandsHandler : IRequestHandler<GetBrands, PaginatedData<BrandResponse>>, INotificationHandler<ClearEntityCache<BrandResponse>>
+    public sealed class GetBrandsHandler : IRequestHandler<GetBrands, PaginatedData<BrandResponse>>,
+        INotificationHandler<ClearEntityCache<BrandResponse>>,
+        INotificationHandler<AddToCache<BrandResponse>>,
+        INotificationHandler<UpdateFromCache<BrandResponse>>,
+        INotificationHandler<RemoveFromCache<BrandResponse>>
+
     {
         #region Fields
 
@@ -29,8 +34,14 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<PaginatedData<BrandResponse>> Handle(GetBrands command, CancellationToken cancellationToken)
         {
-            if (!_cache.Values.Any())
+            var brandsCountOnDb = await _applicationDbContext.Brands
+                .Where(e => e.DeletedAtUtc == null)
+                .CountAsync();
+
+            if (!_cache.Values.Any() || brandsCountOnDb != _cache.Count)
             {
+                _cache.Clear();
+
                 var brandsOnDb = await _applicationDbContext.Brands
                    .AsNoTracking()
                    .Where(e => e.DeletedAtUtc == null)
@@ -101,18 +112,50 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public Task Handle(ClearEntityCache<BrandResponse> command, CancellationToken cancellationToken)
         {
-            if (command.Id != null)
-            {
-                var entity = _cache.Values.SingleOrDefault(e => e.Id == command.Id);
+            _cache.Clear();
 
-                if (entity != null)
-                {
-                    _cache.Remove(entity.Id, out entity);
-                }
-            }
-            else
+            return Task.CompletedTask;
+        }
+
+        public Task Handle(AddToCache<BrandResponse> command, CancellationToken cancellationToken)
+        {
+            var result = _cache.TryAdd(command.Entity.Id, command.Entity);
+
+            if (!result)
             {
                 _cache.Clear();
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task Handle(UpdateFromCache<BrandResponse> command, CancellationToken cancellationToken)
+        {
+            var oldEntity = _cache.Values.SingleOrDefault(e => e.Id == command.Entity.Id);
+
+            if (oldEntity != null)
+            {
+                var result = _cache.TryUpdate(command.Entity.Id, command.Entity, oldEntity);
+
+                if (!result)
+                {
+                    _cache.Clear();
+                }
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task Handle(RemoveFromCache<BrandResponse> command, CancellationToken cancellationToken)
+        {
+            if (_cache.ContainsKey(command.Id))
+            {
+                var result = _cache.TryRemove(command.Id, out _);
+
+                if (!result)
+                {
+                    _cache.Clear();
+                }
             }
 
             return Task.CompletedTask;

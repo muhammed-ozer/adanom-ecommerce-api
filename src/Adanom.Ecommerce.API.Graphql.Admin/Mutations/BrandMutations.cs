@@ -21,5 +21,17 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
         }
 
         #endregion
+        #region ClearBrandsCacheAsync
+
+        [GraphQLDescription("Clears brand cache")]
+        [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
+        public async Task<bool> ClearBrandsCacheAsync([Service] IMediator mediator)
+        {
+            await mediator.Publish(new ClearEntityCache<BrandResponse>());
+
+            return true;
+        }
+
+        #endregion
     }
 }
