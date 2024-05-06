@@ -34,7 +34,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<PaginatedData<ProductCategoryResponse>> Handle(GetProductCategories command, CancellationToken cancellationToken)
         {
-            var productCategoriesCountOnDb = await _applicationDbContext.Brands
+            var productCategoriesCountOnDb = await _applicationDbContext.ProductCategories
                 .Where(e => e.DeletedAtUtc == null)
                 .CountAsync();
 
