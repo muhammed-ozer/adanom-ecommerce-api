@@ -29,6 +29,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
+                #region ProductSpecificationAttribute
+
+                options.AddBehavior<IPipelineBehavior<DeleteProductSpecificationAttribute, bool>, DeleteProductSpecificationAttribute_DeleteRelationsBehavior>();
+
+                #endregion
+
                 #endregion
 
                 #region Auth
