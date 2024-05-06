@@ -35,7 +35,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-            var url = $"{Store.Url}/reset-password?email={user!.Email}&token={HttpUtility.UrlEncode(token)}";
+            var url = $"{UIClientConstants.Store.Url}/reset-password?email={user!.Email}&token={HttpUtility.UrlEncode(token)}";
 
             await _mediator.Publish(new SendMail()
             {

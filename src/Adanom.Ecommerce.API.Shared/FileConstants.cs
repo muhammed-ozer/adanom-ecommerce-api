@@ -1,4 +1,4 @@
-﻿namespace Adanom.Ecommerce.API.Shared
+﻿namespace Adanom.Ecommerce.API
 {
     public static class FileConstants
     {

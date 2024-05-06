@@ -40,7 +40,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var url = $"{Store.Url}/email-confirmation?email={user.Email}&token={HttpUtility.UrlEncode(token)}";
+            var url = $"{UIClientConstants.Store.Url}/email-confirmation?email={user.Email}&token={HttpUtility.UrlEncode(token)}";
 
             await _mediator.Publish(new SendMail()
             {

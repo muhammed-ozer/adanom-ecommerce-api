@@ -1,8 +1,7 @@
-﻿using Azure.Storage.Blobs;
+﻿using Adanom.Ecommerce.API.Data.Models;
+using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
-using Adanom.Ecommerce.API.Data.Models;
-using Adanom.Ecommerce.API.Shared;
 using Serilog;
 
 namespace Adanom.Ecommerce.API.Services.Azure
