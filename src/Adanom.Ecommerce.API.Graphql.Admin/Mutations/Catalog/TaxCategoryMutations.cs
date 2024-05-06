@@ -54,10 +54,10 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
 
         #endregion
 
-        #region ClearTaxCategorysCacheAsync
+        #region ClearTaxCategoriesCacheAsync
 
         [GraphQLDescription("Clears tax category cache")]
-        public async Task<bool> ClearTaxCategorysCacheAsync([Service] IMediator mediator)
+        public async Task<bool> ClearTaxCategoriesCacheAsync([Service] IMediator mediator)
         {
             await mediator.Publish(new ClearEntityCache<TaxCategoryResponse>());
 
