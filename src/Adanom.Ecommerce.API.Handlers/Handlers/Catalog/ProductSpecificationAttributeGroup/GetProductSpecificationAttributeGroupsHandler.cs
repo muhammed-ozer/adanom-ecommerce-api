@@ -34,7 +34,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<PaginatedData<ProductSpecificationAttributeGroupResponse>> Handle(GetProductSpecificationAttributeGroups command, CancellationToken cancellationToken)
         {
-            var productSpecificationAttributeGroupsCountOnDb = await _applicationDbContext.Brands
+            var productSpecificationAttributeGroupsCountOnDb = await _applicationDbContext.ProductSpecificationAttributeGroups
                 .Where(e => e.DeletedAtUtc == null)
                 .CountAsync();
 
