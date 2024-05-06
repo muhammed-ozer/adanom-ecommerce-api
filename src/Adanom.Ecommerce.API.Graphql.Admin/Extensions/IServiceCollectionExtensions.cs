@@ -1,6 +1,7 @@
 ﻿using Adanom.Ecommerce.API.Graphql.Admin;
 using Adanom.Ecommerce.API.Graphql.Admin.Mutations;
 using Adanom.Ecommerce.API.Graphql.Admin.Queries;
+using Adanom.Ecommerce.API.Graphql.Admin.Resolvers;
 using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -20,6 +21,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddQueryType(e => e.Name(OperationTypeNames.Query))
                 .AddType<BrandQueries>()
                 .AddType<ProductCategoryQueries>()
+                .AddType<ProductSpecificationAttributeQueries>()
+                .AddType<ProductSpecificationAttributeGroupQueries>()
                 .AddType<TaxCategoryQueries>();
 
             #endregion
@@ -30,7 +33,17 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddMutationType(e => e.Name(OperationTypeNames.Mutation))
                 .AddType<BrandMutations>()
                 .AddType<ProductCategoryMutations>()
+                .AddType<ProductSpecificationAttributeMutations>()
+                .AddType<ProductSpecificationAttributeGroupMutations>()
                 .AddType<TaxCategoryMutations>();
+
+            #endregion
+
+            #region Resolvers
+
+            graphqlServices
+                .AddType<ProductSpecificationAttributeResolvers>()
+                .AddType<ProductSpecificationAttributeGroupResolvers>();
 
             #endregion
 
