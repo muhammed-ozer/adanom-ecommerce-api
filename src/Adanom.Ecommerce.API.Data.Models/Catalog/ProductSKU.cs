@@ -22,6 +22,10 @@ namespace Adanom.Ecommerce.API.Data.Models
         [StringLength(1000)]
         public string? Barcodes { get; set; }
 
+        public bool IsEligibleToInstallment { get; set; }
+
+        public byte MaximumInstallmentCount { get; set; }
+
         public DateTime CreatedAtUtc { get; set; }
 
         public Guid CreatedByUserId { get; set; }
