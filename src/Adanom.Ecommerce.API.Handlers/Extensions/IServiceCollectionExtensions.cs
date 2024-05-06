@@ -15,16 +15,30 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 options.RegisterServicesFromAssemblies(typeof(LoginHandler).Assembly, typeof(Login).Assembly);
 
+                #region Catalog
+
                 #region Brand
 
                 options.AddBehavior<IPipelineBehavior<DeleteBrand, bool>, DeleteBrand_DeleteRelationsBehavior>();
 
                 #endregion
 
+                #region ProductCategory
+
+                options.AddBehavior<IPipelineBehavior<DeleteProductCategory, bool>, DeleteProductCategory_DeleteRelationsBehavior>();
+
+                #endregion
+
+                #endregion
+
+                #region Auth
+
                 #region RegisterUser
 
                 options.AddBehavior<IPipelineBehavior<RegisterUser, bool>, RegisterUser_SendMailsBehavior>();
                 options.AddBehavior<IPipelineBehavior<RegisterUser, bool>, RegisterUser_CreateNotificationBehavior>();
+
+                #endregion
 
                 #endregion
             });
