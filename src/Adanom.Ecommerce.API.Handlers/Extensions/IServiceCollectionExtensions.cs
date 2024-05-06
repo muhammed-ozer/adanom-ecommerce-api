@@ -35,6 +35,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
+                #region ProductTag
+
+                options.AddBehavior<IPipelineBehavior<DeleteProductTag, bool>, DeleteProductTag_DeleteRelationsBehavior>();
+
+                #endregion
+
                 #endregion
 
                 #region Auth
