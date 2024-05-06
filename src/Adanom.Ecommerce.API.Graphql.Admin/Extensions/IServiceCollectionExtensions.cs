@@ -23,6 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductCategoryQueries>()
                 .AddType<ProductSpecificationAttributeQueries>()
                 .AddType<ProductSpecificationAttributeGroupQueries>()
+                .AddType<ProductTagQueries>()
                 .AddType<TaxCategoryQueries>();
 
             #endregion
@@ -35,6 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductCategoryMutations>()
                 .AddType<ProductSpecificationAttributeMutations>()
                 .AddType<ProductSpecificationAttributeGroupMutations>()
+                .AddType<ProductTagMutations>()
                 .AddType<TaxCategoryMutations>();
 
             #endregion
