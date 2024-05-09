@@ -24,6 +24,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductSpecificationAttributeQueries>()
                 .AddType<ProductSpecificationAttributeGroupQueries>()
                 .AddType<ProductTagQueries>()
+                .AddType<StockUnitTypeQueries>()
                 .AddType<TaxCategoryQueries>();
 
             #endregion
