@@ -20,6 +20,7 @@ namespace Microsoft.Extensions.DependencyInjection
             graphqlServices
                 .AddQueryType(e => e.Name(OperationTypeNames.Query))
                 .AddType<BrandQueries>()
+                .AddType<ProductQueries>()
                 .AddType<ProductCategoryQueries>()
                 .AddType<ProductSpecificationAttributeQueries>()
                 .AddType<ProductSpecificationAttributeGroupQueries>()
