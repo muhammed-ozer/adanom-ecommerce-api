@@ -23,14 +23,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task Handle(CreateLog command, CancellationToken cancellationToken)
         {
-            switch (command.Request)
-            {
-                case AuthLogRequest request:
-                    await _logService.CreateAsync(request);
-                    break;
-                default:
-                    break;
-            }
+            await _logService.CreateAsync(command.Request);
         } 
 
         #endregion

@@ -22,4 +22,9 @@ public static class LogMessages
         /// </summary>
         public const string UserChangesCommercialSMSPreference = "Kullanıcı reklam SMS'leri izin tercihi. Yeni tercih: {0} --- Eski tercih: {1}";
     }
+
+    public static class AdminTransaction
+    {
+        public const string DatabaseSaveChangesHasFailed = "Veri tabanı işlemi sırasında hata meydana geldi.";
+    }
 }
