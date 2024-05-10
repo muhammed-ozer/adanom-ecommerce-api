@@ -50,6 +50,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             graphqlServices
                 .AddType<ProductResolvers>()
+                .AddType<ProductSKUResolvers>()
                 .AddType<ProductSpecificationAttributeResolvers>()
                 .AddType<ProductSpecificationAttributeGroupResolvers>();
 
