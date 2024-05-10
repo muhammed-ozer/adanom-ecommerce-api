@@ -21,6 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddQueryType(e => e.Name(OperationTypeNames.Query))
                 .AddType<BrandQueries>()
                 .AddType<ProductQueries>()
+                .AddType<ProductSKUQueries>()
                 .AddType<ProductCategoryQueries>()
                 .AddType<ProductSpecificationAttributeQueries>()
                 .AddType<ProductSpecificationAttributeGroupQueries>()
