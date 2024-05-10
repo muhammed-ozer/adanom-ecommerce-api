@@ -15,6 +15,10 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<UpdateProductNameRequest, UpdateProductName>();
 
             CreateMap<UpdateProductName, Product>();
+
+            CreateMap<UpdateProductBrandRequest, UpdateProductBrand>();
+
+            CreateMap<UpdateProductBrand, Product>();
         }
     }
 }
