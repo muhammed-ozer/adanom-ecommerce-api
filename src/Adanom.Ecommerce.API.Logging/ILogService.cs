@@ -2,11 +2,6 @@
 {
     public interface ILogService
     {
-        /// <summary>
-        /// Create log for auth
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        Task CreateAsync(AuthLogRequest request);
+        Task CreateAsync(BaseLogRequest request);
     }
 }
