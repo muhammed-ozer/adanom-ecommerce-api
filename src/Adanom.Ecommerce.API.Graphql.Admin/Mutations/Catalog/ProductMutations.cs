@@ -21,5 +21,21 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
         }
 
         #endregion
+
+        #region UpdateProductNameAsync
+
+        [GraphQLDescription("Updates a product name")]
+        public async Task<ProductResponse?> UpdateProductNameAsync(
+            UpdateProductNameRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new UpdateProductName(identity));
+
+            return await mediator.Send(command); ;
+        }
+
+        #endregion
     }
 }
