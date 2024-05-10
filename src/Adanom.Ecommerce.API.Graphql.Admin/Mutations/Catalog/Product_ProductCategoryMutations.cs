@@ -21,5 +21,21 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
         }
 
         #endregion
+
+        #region DeleteProduct_ProductCategoryAsync
+
+        [GraphQLDescription("Deletes a product productCategory")]
+        public async Task<bool> DeleteProduct_ProductCategoryAsync(
+            DeleteProduct_ProductCategoryRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new DeleteProduct_ProductCategory(identity));
+
+            return await mediator.Send(command); ;
+        }
+
+        #endregion
     }
 }
