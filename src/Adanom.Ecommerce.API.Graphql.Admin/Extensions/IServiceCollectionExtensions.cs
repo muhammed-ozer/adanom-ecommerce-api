@@ -38,6 +38,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<BrandMutations>()
                 .AddType<ProductCategoryMutations>()
                 .AddType<Product_ProductCategoryMutations>()
+                .AddType<Product_ProductSpecificationAttributeMutations>()
                 .AddType<ProductSpecificationAttributeMutations>()
                 .AddType<ProductSpecificationAttributeGroupMutations>()
                 .AddType<ProductTagMutations>()
