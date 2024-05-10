@@ -47,6 +47,7 @@ namespace Microsoft.Extensions.DependencyInjection
             #region Resolvers
 
             graphqlServices
+                .AddType<ProductResolvers>()
                 .AddType<ProductSpecificationAttributeResolvers>()
                 .AddType<ProductSpecificationAttributeGroupResolvers>();
 
