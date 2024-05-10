@@ -20,5 +20,21 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
         }
 
         #endregion
+
+        #region GetProductSKUsAsync
+
+        public async Task<IEnumerable<ProductSKUResponse>> GetProductSKUsAsync(
+           [Parent] ProductResponse productResponse,
+           [Service] IMediator mediator)
+        {
+            var productSKUs = await mediator.Send(new GetProductSKUs(new GetProductSKUsFilter()
+            {
+                ProductId = productResponse.Id
+            }));
+
+            return productSKUs.Rows;
+        }
+
+        #endregion
     }
 }

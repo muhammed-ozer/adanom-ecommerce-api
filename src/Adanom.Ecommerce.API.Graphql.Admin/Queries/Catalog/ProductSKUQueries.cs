@@ -31,5 +31,20 @@
         }
 
         #endregion
+
+        #region GetProductSKUsAsync
+
+        [GraphQLDescription("Gets product SKUs")]
+        public async Task<PaginatedData<ProductSKUResponse>> GetProductSKUsAsync(
+            GetProductSKUsFilter filter,
+            PaginationRequest? paginationRequest,
+            [Service] IMediator mediator)
+        {
+            var command = new GetProductSKUs(filter, paginationRequest);
+
+            return await mediator.Send(command);
+        }
+
+        #endregion
     }
 }
