@@ -38,6 +38,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductSpecificationAttributeMutations>()
                 .AddType<ProductSpecificationAttributeGroupMutations>()
                 .AddType<ProductTagMutations>()
+                .AddType<ProductMutations>()
+                .AddType<ProductSKUMutations>()
                 .AddType<TaxCategoryMutations>();
 
             #endregion

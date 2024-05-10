@@ -23,6 +23,14 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
+                #region Product
+
+                options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CommitTransactionBehavior>();
+                options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CreateProduct_ProductCategoryBehavior>();
+                options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CreateProductSKUBehavior>();
+
+                #endregion
+
                 #region ProductCategory
 
                 options.AddBehavior<IPipelineBehavior<DeleteProductCategory, bool>, DeleteProductCategory_DeleteRelationsBehavior>();

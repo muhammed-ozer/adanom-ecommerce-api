@@ -1,0 +1,25 @@
+﻿using AutoMapper;
+
+namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
+{
+    [ExtendObjectType("Mutation")]
+    // TODO: Implement authorize [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
+    public sealed class ProductSKUMutations
+    {
+        #region CreateProductSKUAsync
+
+        [GraphQLDescription("Creates a product SKU")]
+        public async Task<ProductSKUResponse?> CreateProductSKUAsync(
+            CreateProductSKURequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new CreateProductSKU(identity));
+
+            return await mediator.Send(command); ;
+        }
+
+        #endregion
+    }
+}
