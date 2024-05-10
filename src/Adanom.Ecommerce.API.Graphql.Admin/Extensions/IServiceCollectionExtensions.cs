@@ -32,11 +32,12 @@ namespace Microsoft.Extensions.DependencyInjection
             #endregion
 
             #region Mutations
-
+            
             graphqlServices
                 .AddMutationType(e => e.Name(OperationTypeNames.Mutation))
                 .AddType<BrandMutations>()
                 .AddType<ProductCategoryMutations>()
+                .AddType<Product_ProductCategoryMutations>()
                 .AddType<ProductSpecificationAttributeMutations>()
                 .AddType<ProductSpecificationAttributeGroupMutations>()
                 .AddType<ProductTagMutations>()

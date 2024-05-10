@@ -17,9 +17,9 @@ namespace Adanom.Ecommerce.API.Commands
 
         public ClaimsPrincipal Identity { get; }
 
-        public long ProductCategoryId { get; set; }
-
         public long ProductId { get; set; }
+
+        public long ProductCategoryId { get; set; }
 
         #endregion
     }

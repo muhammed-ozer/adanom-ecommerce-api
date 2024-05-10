@@ -5,14 +5,16 @@
         #region Fields
 
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public CreateProduct_CreateProduct_ProductCategoryBehavior(IMediator mediator)
+        public CreateProduct_CreateProduct_ProductCategoryBehavior(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         #endregion
@@ -28,11 +30,13 @@
                 return null;
             }
 
-            var createProduct_ProductCategoryCommand = new CreateProduct_ProductCategory(command.Identity)
+            var createProduct_ProductCategoryRequest = new CreateProduct_ProductCategoryRequest()
             {
-                ProductCategoryId = command.ProductCategoryId,
-                ProductId = productResponse.Id
+                ProductId = productResponse.Id,
+                ProductCategoryId = command.ProductCategoryId
             };
+
+            var createProduct_ProductCategoryCommand = _mapper.Map(createProduct_ProductCategoryRequest, new CreateProduct_ProductCategory(command.Identity));
 
             var createProduct_ProductCategoryResponse = await _mediator.Send(createProduct_ProductCategoryCommand);
 

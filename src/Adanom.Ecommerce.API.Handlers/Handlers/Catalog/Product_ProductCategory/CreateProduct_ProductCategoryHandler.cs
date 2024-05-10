@@ -28,7 +28,6 @@
             };
 
             await _applicationDbContext.AddAsync(product_ProductCategory);
-
             await _applicationDbContext.SaveChangesAsync();
 
             return true;
