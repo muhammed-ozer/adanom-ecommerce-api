@@ -23,6 +23,10 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<UpdateProductSKUBarcodesRequest, UpdateProductSKUBarcodes>();
 
             CreateMap<UpdateProductSKUBarcodes, ProductSKU>();
+
+            CreateMap<UpdateProductSKUInstallmentRequest, UpdateProductSKUInstallment>();
+
+            CreateMap<UpdateProductSKUInstallment, ProductSKU>();
         }
     }
 }
