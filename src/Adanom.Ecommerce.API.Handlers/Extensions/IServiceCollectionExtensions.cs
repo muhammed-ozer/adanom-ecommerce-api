@@ -34,6 +34,13 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
+                #region ProductSKU
+
+                options.AddBehavior<IPipelineBehavior<DeleteProductSKU, bool>, DeleteProductSKU_CommitTransactionBehavior>();
+                options.AddBehavior<IPipelineBehavior<DeleteProductSKU, bool>, DeleteProductSKU_DeleteRelationsBehavior>();
+
+                #endregion
+
                 #region ProductCategory
 
                 options.AddBehavior<IPipelineBehavior<DeleteProductCategory, bool>, DeleteProductCategory_DeleteRelationsBehavior>();
