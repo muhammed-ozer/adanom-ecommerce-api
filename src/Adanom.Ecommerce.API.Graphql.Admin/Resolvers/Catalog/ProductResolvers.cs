@@ -36,5 +36,18 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
         }
 
         #endregion
+
+        #region GetProductTagsAsync
+
+        public async Task<IEnumerable<ProductTagResponse>> GetProductTagsAsync(
+           [Parent] ProductResponse productResponse,
+           [Service] IMediator mediator)
+        {
+            var productTags = await mediator.Send(new GetProduct_ProductTags(productResponse.Id));
+
+            return productTags;
+        }
+
+        #endregion
     }
 }
