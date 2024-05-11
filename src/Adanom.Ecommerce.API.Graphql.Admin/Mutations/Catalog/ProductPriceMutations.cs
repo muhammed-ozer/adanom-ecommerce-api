@@ -21,5 +21,21 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
         }
 
         #endregion
+
+        #region UpdateProductPriceTaxCategoryAsync
+
+        [GraphQLDescription("Updates a product price tax category")]
+        public async Task<bool> UpdateProductPriceTaxCategoryAsync(
+            UpdateProductPriceTaxCategoryRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new UpdateProductPriceTaxCategory(identity));
+
+            return await mediator.Send(command); ;
+        }
+
+        #endregion
     }
 }
