@@ -20,5 +20,23 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
         }
 
         #endregion
+
+        #region GetProductPriceAsync
+
+        public async Task<ProductPriceResponse?> GetProductPriceAsync(
+           [Parent] ProductSKUResponse productSKUResponse,
+           [Service] IMediator mediator)
+        {
+            if (productSKUResponse == null)
+            {
+                return null;
+            }
+
+            var productPrice = await mediator.Send(new GetProductPrice(productSKUResponse.Id));
+
+            return productPrice;
+        }
+
+        #endregion
     }
 }
