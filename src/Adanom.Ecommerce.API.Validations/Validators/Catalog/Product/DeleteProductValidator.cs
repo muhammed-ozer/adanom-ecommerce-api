@@ -51,9 +51,9 @@
             ValidationContext<DeleteProduct> context,
             CancellationToken cancellationToken)
         {
-            var brandInUse = await _mediator.Send(new DoesEntityInUse<ProductResponse>(value));
+            var productInUse = await _mediator.Send(new DoesEntityInUse<ProductResponse>(value));
 
-            if (brandInUse)
+            if (productInUse)
             {
                 context.AddFailure(new ValidationFailure(nameof(DeleteProduct.Id), null)
                 {
