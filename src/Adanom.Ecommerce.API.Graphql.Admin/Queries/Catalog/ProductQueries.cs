@@ -11,7 +11,7 @@
             long id,
             [Service] IMediator mediator)
         {
-            var command = new GetProductById(id);
+            var command = new GetProduct(id);
 
             return await mediator.Send(command);
         }
@@ -25,7 +25,7 @@
             string urlSlug,
             [Service] IMediator mediator)
         {
-            var command = new GetProductByUrlSlug(urlSlug);
+            var command = new GetProduct(urlSlug);
 
             return await mediator.Send(command);
         }
