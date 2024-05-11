@@ -62,5 +62,19 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
         }
 
         #endregion
+
+        #region GetProductSpecificationAttributesAsync
+
+        public async Task<IEnumerable<ProductSpecificationAttributeResponse>> GetProductSpecificationAttributesAsync(
+           [Parent] ProductResponse productResponse,
+           [Service] IMediator mediator)
+        {
+            var productSpecificationAttributes = await mediator.Send(new GetProduct_ProductSpecificationAttributes(productResponse.Id));
+
+            return productSpecificationAttributes;
+        }
+
+        #endregion
+
     }
 }
