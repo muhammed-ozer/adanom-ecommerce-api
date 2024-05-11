@@ -7,6 +7,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<CreateProduct_ProductSpecificationAttributeRequest, CreateProduct_ProductSpecificationAttribute>();
 
             CreateMap<DeleteProduct_ProductSpecificationAttributeRequest, DeleteProduct_ProductSpecificationAttribute>();
+
+            CreateMap<Product_ProductSpecificationAttribute_Mapping, DeleteProduct_ProductSpecificationAttributeRequest>();
         }
     }
 }

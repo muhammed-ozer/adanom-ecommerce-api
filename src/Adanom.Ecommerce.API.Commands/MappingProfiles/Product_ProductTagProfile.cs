@@ -7,6 +7,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<CreateProduct_ProductTagRequest, CreateProduct_ProductTag>();
 
             CreateMap<DeleteProduct_ProductTagRequest, DeleteProduct_ProductTag>();
+
+            CreateMap<Product_ProductTag_Mapping, DeleteProduct_ProductTagRequest>();
         }
     }
 }
