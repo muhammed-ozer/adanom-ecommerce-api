@@ -45,6 +45,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductTagMutations>()
                 .AddType<ProductMutations>()
                 .AddType<ProductSKUMutations>()
+                .AddType<ProductPriceMutations>()
                 .AddType<TaxCategoryMutations>();
 
             #endregion
