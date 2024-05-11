@@ -32,7 +32,7 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
                 return null;
             }
 
-            var productPrice = await mediator.Send(new GetProductPrice(productSKUResponse.Id));
+            var productPrice = await mediator.Send(new GetProductPrice(productSKUResponse.ProductPriceId));
 
             return productPrice;
         }

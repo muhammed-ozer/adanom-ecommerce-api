@@ -23,11 +23,9 @@
 
         public async Task<ProductPriceResponse?> Handle(GetProductPrice command, CancellationToken cancellationToken)
         {
-            var productPrice = await _applicationDbContext.ProductSKUs
+            var productPrice = await _applicationDbContext.ProductPrices
                 .AsNoTracking()
-                .Where(e => e.DeletedAtUtc == null && e.Id == command.ProductSKUId)
-                .Select(e => e.ProductPrice)
-                .Where(e => e.DeletedAtUtc == null)
+                .Where(e => e.DeletedAtUtc == null && e.Id == command.Id)
                 .SingleOrDefaultAsync();
            
             return _mapper.Map<ProductPriceResponse>(productPrice);

@@ -32,9 +32,34 @@
 
             if (deleteProductSKUResponse)
             {
-                // TODO: Remove product attribute
+                #region Delete ProductPrice
 
-                // TODO: Remove product price
+                var productPrice = await _applicationDbContext.ProductSKUs
+                    .Where(e => e.Id == command.Id)
+                    .Select(e => e.ProductPrice)
+                    .Where(e => e.DeletedAtUtc == null)
+                    .SingleOrDefaultAsync();
+
+                if (productPrice != null)
+                {
+                    var deleteProductPriceRequest = new DeleteProductPriceRequest()
+                    {
+                        Id = productPrice.Id
+                    };
+
+                    var deleteProductPriceCommand = _mapper.Map(deleteProductPriceRequest, new DeleteProductPrice(command.Identity));
+
+                    var deleteProductPriceResponse = await _mediator.Send(deleteProductPriceCommand);
+
+                    if (!deleteProductPriceResponse)
+                    {
+                        return false;
+                    }
+                }
+
+                #endregion
+
+                // TODO: Remove product attribute
 
                 // TODO: Remove anonymous shopping cart items
 

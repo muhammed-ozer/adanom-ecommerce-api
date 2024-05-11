@@ -4,16 +4,16 @@ namespace Adanom.Ecommerce.API.Commands
     {
         #region Ctor
 
-        public GetProductPrice(long productSKUId)
+        public GetProductPrice(long id)
         {
-            ProductSKUId = productSKUId;
+            Id = id;
         }
 
         #endregion
 
         #region Properties
 
-        public long ProductSKUId { get; set; }
+        public long Id { get; set; }
 
         #endregion
     }

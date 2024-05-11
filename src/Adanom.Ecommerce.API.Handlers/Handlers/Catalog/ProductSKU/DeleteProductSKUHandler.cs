@@ -27,13 +27,13 @@ namespace Adanom.Ecommerce.API.Handlers
 
             var transaction = await _applicationDbContext.Database.BeginTransactionAsync();
 
-            var product = await _applicationDbContext.ProductSKUs
+            var productSKU = await _applicationDbContext.ProductSKUs
                 .Where(e => e.DeletedAtUtc == null &&
                             e.Id == command.Id)
                 .SingleAsync();
 
-            product.DeletedAtUtc = DateTime.UtcNow;
-            product.DeletedByUserId = userId;
+            productSKU.DeletedAtUtc = DateTime.UtcNow;
+            productSKU.DeletedByUserId = userId;
 
             await _applicationDbContext.SaveChangesAsync();
 
