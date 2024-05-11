@@ -13,6 +13,11 @@
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                     .WithMessage("Kullanıcı bilgilerine erişilemiyor.");
 
+            RuleFor(e => e.OriginalPrice)
+                .GreaterThanOrEqualTo(0)
+                    .WithErrorCode(ValidationErrorCodesEnum.GREATER_THAN)
+                    .WithMessage("Fiyat sıfır veya daha fazla olmalıdır.");
+
             RuleFor(e => e.TaxCategoryId)
                 .GreaterThan(0)
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)

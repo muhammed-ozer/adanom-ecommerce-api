@@ -30,6 +30,11 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                     .WithErrorCode(ValidationErrorCodesEnum.GREATER_THAN)
                 .CustomAsync(ValidateDoesProductSKUCodeNotExistsAsync);
 
+            RuleFor(e => e.StockQuantity)
+                .GreaterThanOrEqualTo(0)
+                    .WithErrorCode(ValidationErrorCodesEnum.GREATER_THAN)
+                    .WithMessage("Ürün stok miktarı 0 veya daha fazla olmalıdır.");
+
             RuleFor(e => e.Barcodes)
                 .MaximumLength(1000)
                     .WithMessage("Maksimum 50 barkod eklenebilir.")
