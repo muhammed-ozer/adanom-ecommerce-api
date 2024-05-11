@@ -54,6 +54,22 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
 
         #endregion
 
+        #region UpdateProductIsActiveAsync
+
+        [GraphQLDescription("Updates a product is active")]
+        public async Task<bool> UpdateProductIsActiveAsync(
+            UpdateProductIsActiveRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new UpdateProductIsActive(identity));
+
+            return await mediator.Send(command); ;
+        }
+
+        #endregion
+
         #region UpdateProductBrandAsync
 
         [GraphQLDescription("Updates a product brand")]
