@@ -11,7 +11,7 @@
             long id,
             [Service] IMediator mediator)
         {
-            var command = new GetProductSKUById(id);
+            var command = new GetProductSKU(id);
 
             return await mediator.Send(command);
         }
@@ -25,7 +25,7 @@
             string code,
             [Service] IMediator mediator)
         {
-            var command = new GetProductSKUByCode(code);
+            var command = new GetProductSKU(code);
 
             return await mediator.Send(command);
         }
