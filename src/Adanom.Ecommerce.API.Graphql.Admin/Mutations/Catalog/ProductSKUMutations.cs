@@ -37,5 +37,21 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
         }
 
         #endregion
+
+        #region UpdateProductSKUBarcodesAsync
+
+        [GraphQLDescription("Updates a product SKU barcodes")]
+        public async Task<bool> UpdateProductSKUBarcodesAsync(
+            UpdateProductSKUBarcodesRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new UpdateProductSKUBarcodes(identity));
+
+            return await mediator.Send(command); ;
+        }
+
+        #endregion
     }
 }
