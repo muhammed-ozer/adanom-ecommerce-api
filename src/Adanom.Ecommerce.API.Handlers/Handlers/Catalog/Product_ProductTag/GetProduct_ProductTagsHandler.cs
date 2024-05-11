@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-
-namespace Adanom.Ecommerce.API.Handlers
+﻿namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class GetProduct_ProductTagsHandler : IRequestHandler<GetProduct_ProductTags, IEnumerable<ProductTagResponse>>
     {
@@ -8,8 +6,6 @@ namespace Adanom.Ecommerce.API.Handlers
 
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
-
-        private readonly static ConcurrentDictionary<long, ProductTagResponse> _cache = new();
 
         #endregion
 
