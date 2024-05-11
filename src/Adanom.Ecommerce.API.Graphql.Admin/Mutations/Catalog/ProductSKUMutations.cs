@@ -21,5 +21,21 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
         }
 
         #endregion
+
+        #region UpdateProductSKUStockAsync
+
+        [GraphQLDescription("Updates a product SKU stock")]
+        public async Task<bool> UpdateProductSKUStockAsync(
+            UpdateProductSKUStockRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new UpdateProductSKUStock(identity));
+
+            return await mediator.Send(command); ;
+        }
+
+        #endregion
     }
 }

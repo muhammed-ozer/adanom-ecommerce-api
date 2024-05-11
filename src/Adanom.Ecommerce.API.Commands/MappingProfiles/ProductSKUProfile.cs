@@ -14,7 +14,11 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
 
             CreateMap<CreateProductSKURequest, CreateProductSKU>();
 
-            CreateMap<CreateProductSKU, ProductSKU>();;
+            CreateMap<CreateProductSKU, ProductSKU>();
+
+            CreateMap<UpdateProductSKUStockRequest, UpdateProductSKUStock>();
+
+            CreateMap<UpdateProductSKUStock, ProductSKU>();
         }
     }
 }
