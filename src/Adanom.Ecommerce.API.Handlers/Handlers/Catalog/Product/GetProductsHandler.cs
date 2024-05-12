@@ -92,6 +92,14 @@
                         productsQuery.OrderBy(e => e.Name),
                     GetProductsOrderByEnum.NAME_DESC =>
                         productsQuery.OrderByDescending(e => e.Name),
+                    GetProductsOrderByEnum.STOCK_QUANTITY_ASC =>
+                        productsQuery.OrderBy(e => e.ProductSKUs
+                            .Where(e => e.DeletedAtUtc == null)
+                            .Sum(e => e.StockQuantity)),
+                    GetProductsOrderByEnum.STOCK_QUANTITY_DESC =>
+                        productsQuery.OrderByDescending(e => e.ProductSKUs
+                            .Where(e => e.DeletedAtUtc == null)
+                            .Sum(e => e.StockQuantity)),
                     _ =>
                         productsQuery.OrderBy(e => e.DisplayOrder)
                 };

@@ -5,6 +5,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
         DISPLAY_ORDER_ASC,
         DISPLAY_ORDER_DESC,
         NAME_ASC,
-        NAME_DESC
+        NAME_DESC,
+        STOCK_QUANTITY_ASC,
+        STOCK_QUANTITY_DESC
     }
 }
