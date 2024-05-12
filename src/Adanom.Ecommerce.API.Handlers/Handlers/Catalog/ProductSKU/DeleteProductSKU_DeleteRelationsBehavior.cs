@@ -59,7 +59,32 @@
 
                 #endregion
 
-                // TODO: Remove product attribute
+                #region Delete ProductAttribute
+
+                var productAttribute = await _applicationDbContext.ProductSKUs
+                    .Where(e => e.Id == command.Id)
+                    .Select(e => e.ProductAttribute)
+                    .Where(e => e.DeletedAtUtc == null)
+                    .SingleOrDefaultAsync();
+
+                if (productAttribute != null)
+                {
+                    var deleteProductAttributeRequest = new DeleteProductAttributeRequest()
+                    {
+                        Id = productAttribute.Id
+                    };
+
+                    var deleteProductAttributeCommand = _mapper.Map(deleteProductAttributeRequest, new DeleteProductAttribute(command.Identity));
+
+                    var deleteProductAttributeResponse = await _mediator.Send(deleteProductAttributeCommand);
+
+                    if (!deleteProductAttributeResponse)
+                    {
+                        return false;
+                    }
+                }
+
+                #endregion
 
                 // TODO: Remove anonymous shopping cart items
 
