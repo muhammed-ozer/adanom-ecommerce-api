@@ -34,7 +34,7 @@
             {
                 #region Product_ProductCategory
 
-                var product_ProductCategories = await _applicationDbContext.Product_ProductCategory_Mapping
+                var product_ProductCategories = await _applicationDbContext.Product_ProductCategory_Mappings
                     .Where(e => e.ProductId == command.Id)
                     .ToListAsync();
 
