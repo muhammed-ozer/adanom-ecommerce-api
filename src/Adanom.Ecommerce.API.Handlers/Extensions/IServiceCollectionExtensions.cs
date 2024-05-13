@@ -23,6 +23,24 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
+                #region Product
+
+                options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CommitTransactionBehavior>();
+                options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CreateProduct_ProductCategoryBehavior>();
+                options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CreateProductSKUBehavior>();
+
+                options.AddBehavior<IPipelineBehavior<DeleteProduct, bool>, DeleteProduct_CommitTransactionBehavior>();
+                options.AddBehavior<IPipelineBehavior<DeleteProduct, bool>, DeleteProduct_DeleteRelationsBehavior>();
+
+                #endregion
+
+                #region ProductSKU
+
+                options.AddBehavior<IPipelineBehavior<DeleteProductSKU, bool>, DeleteProductSKU_CommitTransactionBehavior>();
+                options.AddBehavior<IPipelineBehavior<DeleteProductSKU, bool>, DeleteProductSKU_DeleteRelationsBehavior>();
+
+                #endregion
+
                 #region ProductCategory
 
                 options.AddBehavior<IPipelineBehavior<DeleteProductCategory, bool>, DeleteProductCategory_DeleteRelationsBehavior>();

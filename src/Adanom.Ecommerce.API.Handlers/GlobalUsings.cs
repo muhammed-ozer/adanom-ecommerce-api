@@ -7,3 +7,4 @@ global using Adanom.Ecommerce.API.Pagination;
 global using HotChocolate;
 global using MediatR;
 global using AutoMapper;
+global using Serilog;

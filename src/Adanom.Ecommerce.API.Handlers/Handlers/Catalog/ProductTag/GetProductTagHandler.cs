@@ -23,6 +23,11 @@
         {
             var productTags = await _mediator.Send(new GetProductTags());
 
+            if (command.Value.IsNotNullOrEmpty())
+            {
+                return productTags.Rows.SingleOrDefault(e => e.Value == command.Value);
+            }
+
             return productTags.Rows.SingleOrDefault(e => e.Id == command.Id);
         } 
 

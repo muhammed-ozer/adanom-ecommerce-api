@@ -20,23 +20,32 @@ namespace Microsoft.Extensions.DependencyInjection
             graphqlServices
                 .AddQueryType(e => e.Name(OperationTypeNames.Query))
                 .AddType<BrandQueries>()
+                .AddType<ProductQueries>()
+                .AddType<ProductSKUQueries>()
                 .AddType<ProductCategoryQueries>()
                 .AddType<ProductSpecificationAttributeQueries>()
                 .AddType<ProductSpecificationAttributeGroupQueries>()
                 .AddType<ProductTagQueries>()
+                .AddType<StockUnitTypeQueries>()
                 .AddType<TaxCategoryQueries>();
 
             #endregion
 
             #region Mutations
-
+            
             graphqlServices
                 .AddMutationType(e => e.Name(OperationTypeNames.Mutation))
                 .AddType<BrandMutations>()
                 .AddType<ProductCategoryMutations>()
+                .AddType<Product_ProductCategoryMutations>()
+                .AddType<Product_ProductSpecificationAttributeMutations>()
+                .AddType<Product_ProductTagMutations>()
                 .AddType<ProductSpecificationAttributeMutations>()
                 .AddType<ProductSpecificationAttributeGroupMutations>()
                 .AddType<ProductTagMutations>()
+                .AddType<ProductMutations>()
+                .AddType<ProductSKUMutations>()
+                .AddType<ProductPriceMutations>()
                 .AddType<TaxCategoryMutations>();
 
             #endregion
@@ -44,6 +53,9 @@ namespace Microsoft.Extensions.DependencyInjection
             #region Resolvers
 
             graphqlServices
+                .AddType<ProductResolvers>()
+                .AddType<ProductSKUResolvers>()
+                .AddType<ProductPriceResolvers>()
                 .AddType<ProductSpecificationAttributeResolvers>()
                 .AddType<ProductSpecificationAttributeGroupResolvers>();
 
