@@ -11,7 +11,7 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
             long id,
             [Service] IMediator mediator)
         {
-            var command = new GetBrandById(id);
+            var command = new GetBrand(id);
 
             return await mediator.Send(command);
         }
@@ -20,12 +20,12 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
 
         #region GetBrandByUrlSlugAsync
 
-        [GraphQLDescription("Gets brand by id")]
+        [GraphQLDescription("Gets brand by url slug")]
         public async Task<BrandResponse?> GetBrandByUrlSlugAsync(
             string urlSlug,
             [Service] IMediator mediator)
         {
-            var command = new GetBrandByUrlSlug(urlSlug);
+            var command = new GetBrand(urlSlug);
 
             return await mediator.Send(command);
         }

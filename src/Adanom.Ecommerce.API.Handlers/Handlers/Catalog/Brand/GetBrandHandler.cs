@@ -1,6 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class GetBrandByIdHandler : IRequestHandler<GetBrandById, BrandResponse?>
+    public sealed class GetBrandHandler : IRequestHandler<GetBrand, BrandResponse?>
     {
         #region Fields
 
@@ -10,7 +10,7 @@
 
         #region Ctor
 
-        public GetBrandByIdHandler(IMediator mediator)
+        public GetBrandHandler(IMediator mediator)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(_mediator));
         }
@@ -19,9 +19,14 @@
 
         #region IRequestHandler Members
 
-        public async Task<BrandResponse?> Handle(GetBrandById command, CancellationToken cancellationToken)
+        public async Task<BrandResponse?> Handle(GetBrand command, CancellationToken cancellationToken)
         {
             var brands = await _mediator.Send(new GetBrands());
+
+            if (command.UrlSlug.IsNotNullOrEmpty())
+            {
+                return brands.Rows.SingleOrDefault(e => e.UrlSlug == command.UrlSlug);
+            }
 
             return brands.Rows.SingleOrDefault(e => e.Id == command.Id);
         } 
