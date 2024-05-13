@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Adanom.Ecommerce.API.Data.Models;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
@@ -32,7 +33,17 @@ namespace Adanom.Ecommerce.API.Handlers
             productAttribute.DeletedAtUtc = DateTime.UtcNow;
             productAttribute.DeletedByUserId = userId;
 
-            await _applicationDbContext.SaveChangesAsync();
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"ProductAttribute_Delete_Failed: {exception.Message}");
+
+                return false;
+            }
 
             return true;
         }

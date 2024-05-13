@@ -33,7 +33,18 @@
             }
 
             _applicationDbContext.Remove(product_ProductTag);
-            await _applicationDbContext.SaveChangesAsync();
+
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"Product_ProductTag_Delete_Failed: {exception.Message}");
+
+                return false;
+            }
 
             return true;
         }

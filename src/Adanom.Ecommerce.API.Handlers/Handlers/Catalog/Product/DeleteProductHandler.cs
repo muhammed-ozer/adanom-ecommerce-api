@@ -39,7 +39,17 @@ namespace Adanom.Ecommerce.API.Handlers
             product.DeletedAtUtc = DateTime.UtcNow;
             product.DeletedByUserId = userId;
 
-            await _applicationDbContext.SaveChangesAsync();
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"Product_Delete_Failed: {exception.Message}");
+
+                return false;
+            }
 
             return true;
         }

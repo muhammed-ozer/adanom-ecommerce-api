@@ -28,7 +28,18 @@
                 .SingleAsync();
 
             _applicationDbContext.Remove(product_ProductSpecificationAttribute);
-            await _applicationDbContext.SaveChangesAsync();
+
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"Product_ProductSpecificationAttribute_Delete_Failed: {exception.Message}");
+
+                return false;
+            }
 
             return true;
         }
