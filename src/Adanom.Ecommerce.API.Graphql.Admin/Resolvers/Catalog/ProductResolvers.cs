@@ -14,7 +14,7 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
                 return null;
             }
 
-            var brand = await mediator.Send(new GetBrandById(productResponse.BrandId.Value));
+            var brand = await mediator.Send(new GetBrand(productResponse.BrandId.Value));
 
             return brand;
         }

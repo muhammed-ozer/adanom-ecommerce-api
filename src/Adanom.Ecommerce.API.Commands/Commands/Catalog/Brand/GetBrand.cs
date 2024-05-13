@@ -1,10 +1,14 @@
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class GetBrandByUrlSlug : IRequest<BrandResponse?>
+    public class GetBrand : IRequest<BrandResponse?>
     {
         #region Ctor
 
-        public GetBrandByUrlSlug(string urlSlug)
+        public GetBrand(long id)
+        {
+            Id = id;
+        }
+        public GetBrand(string urlSlug)
         {
             UrlSlug = urlSlug;
         }
@@ -12,6 +16,8 @@ namespace Adanom.Ecommerce.API.Commands
         #endregion
 
         #region Properties
+
+        public long Id { get; }
 
         public string UrlSlug { get; } = null!;
 
