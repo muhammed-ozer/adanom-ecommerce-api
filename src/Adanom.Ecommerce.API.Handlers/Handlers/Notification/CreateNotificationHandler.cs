@@ -1,7 +1,4 @@
-﻿using Adanom.Ecommerce.API.Data.Models;
-using AutoMapper;
-
-namespace Adanom.Ecommerce.API.Handlers
+﻿namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class CreateNotificationHandler : INotificationHandler<CreateNotification>
     {
@@ -9,6 +6,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -16,10 +14,12 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public CreateNotificationHandler(
             ApplicationDbContext applicationDbContext,
-            IMapper mapper)
+            IMapper mapper,
+            IMediator mediator)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         #endregion
@@ -44,8 +44,13 @@ namespace Adanom.Ecommerce.API.Handlers
             }
             catch (Exception exception)
             {
-                // TODO: Log exception to database
-                Log.Warning($"Notification_Create_Failed: {exception.Message}");
+                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                {
+                    UserId = Guid.Empty,
+                    EntityType = EntityType.NOTIFICATION,
+                    TransactionType = TransactionType.CREATE,
+                    Description = LogMessages.AdminTransaction.DatabaseTransactionHasFailed,
+                }));
             }
         } 
 

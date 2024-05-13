@@ -1,18 +1,23 @@
-﻿namespace Adanom.Ecommerce.API.Handlers
+﻿using System.Security.Claims;
+
+namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class CreateProduct_CommitTransactionBehavior : IPipelineBehavior<CreateProduct, ProductResponse?>
     {
         #region Fields
 
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public CreateProduct_CommitTransactionBehavior(ApplicationDbContext applicationDbContext)
+        public CreateProduct_CommitTransactionBehavior(ApplicationDbContext applicationDbContext, IMediator mediator)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+
         }
 
         #endregion
@@ -29,8 +34,15 @@
             {
                 if (currentTransaction != null)
                 {
-                    // TODO: Log product create failed
                     await currentTransaction.RollbackAsync(cancellationToken);
+
+                    await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                    {
+                        UserId = command.Identity.GetUserId(),
+                        EntityType = EntityType.PRODUCT,
+                        TransactionType = TransactionType.CREATE,
+                        Description = LogMessages.AdminTransaction.DatabaseTransactionHasFailed,
+                    }));
                 }
 
                 return null;
@@ -45,13 +57,19 @@
             }
             catch (Exception exception)
             {
-                // TODO: Log exception to database
-                Log.Warning($"Product_Create_Database_Transaction_Failed: {exception.Message}");
-
                 if (currentTransaction != null)
                 {
                     await currentTransaction.RollbackAsync(cancellationToken);
                 }
+
+                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                {
+                    UserId = command.Identity.GetUserId(),
+                    EntityType = EntityType.PRODUCT,
+                    TransactionType = TransactionType.CREATE,
+                    Description = LogMessages.AdminTransaction.DatabaseTransactionHasFailed,
+                    Exception = exception.ToString()
+                }));
 
                 productResponse = null;
             }

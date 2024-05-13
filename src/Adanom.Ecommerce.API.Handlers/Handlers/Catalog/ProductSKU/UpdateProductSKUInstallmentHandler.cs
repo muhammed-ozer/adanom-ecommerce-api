@@ -8,15 +8,18 @@ namespace Adanom.Ecommerce.API.Handlers
 
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public UpdateProductSKUInstallmentHandler(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public UpdateProductSKUInstallmentHandler(ApplicationDbContext applicationDbContext, IMapper mapper, IMediator mediator)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+
         }
 
         #endregion
@@ -46,11 +49,25 @@ namespace Adanom.Ecommerce.API.Handlers
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
+
+                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                {
+                    UserId = userId,
+                    EntityType = EntityType.PRODUCTSKU,
+                    TransactionType = TransactionType.UPDATE,
+                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productSKU.Id),
+                }));
             }
             catch (Exception exception)
             {
-                // TODO: Log exception to database
-                Log.Warning($"ProductSKU_Update_Failed: {exception.Message}");
+                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                {
+                    UserId = userId,
+                    EntityType = EntityType.PRODUCTSKU,
+                    TransactionType = TransactionType.UPDATE,
+                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
+                    Exception = exception.ToString()
+                }));
 
                 return false;
             }
