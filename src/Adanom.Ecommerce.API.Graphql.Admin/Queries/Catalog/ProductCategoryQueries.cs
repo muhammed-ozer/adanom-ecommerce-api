@@ -11,7 +11,7 @@
             long id,
             [Service] IMediator mediator)
         {
-            var command = new GetProductCategoryById(id);
+            var command = new GetProductCategory(id);
 
             return await mediator.Send(command);
         }
@@ -25,7 +25,7 @@
             string urlSlug,
             [Service] IMediator mediator)
         {
-            var command = new GetProductCategoryByUrlSlug(urlSlug);
+            var command = new GetProductCategory(urlSlug);
 
             return await mediator.Send(command);
         }

@@ -86,7 +86,7 @@
         {
             if (value.ProductCategoryLevel == ProductCategoryLevel.THIRD && value.ParentId != null)
             {
-                var parentCategory = await _mediator.Send(new GetProductCategoryById(value.ParentId.Value));
+                var parentCategory = await _mediator.Send(new GetProductCategory(value.ParentId.Value));
 
                 if (parentCategory != null)
                 {

@@ -14,7 +14,7 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
                 return null;
             }
 
-            var parent = await mediator.Send(new GetProductCategoryById(productCategoryResponse.ParentId.Value));
+            var parent = await mediator.Send(new GetProductCategory(productCategoryResponse.ParentId.Value));
 
             return parent;
         }
