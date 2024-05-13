@@ -21,7 +21,7 @@
 
         public async Task<bool> Handle(DoesProduct_ProductCategoryExists command, CancellationToken cancellationToken)
         {
-            return await _applicationDbContext.Product_ProductCategory_Mapping
+            return await _applicationDbContext.Product_ProductCategory_Mappings
                 .AnyAsync(e => 
                     e.ProductId == command.ProductId && 
                     e.ProductCategoryId == command.ProductCategoryId);

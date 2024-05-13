@@ -193,7 +193,7 @@ namespace Adanom.Ecommerce.API.Data
 
         public DbSet<ProductCategory> ProductCategories { get; set; } = null!;
 
-        public DbSet<Product_ProductCategory_Mapping> Product_ProductCategory_Mapping { get; set; } = null!;
+        public DbSet<Product_ProductCategory_Mapping> Product_ProductCategory_Mappings { get; set; } = null!;
 
         public DbSet<ProductReview> ProductReviews { get; set; } = null!;
 

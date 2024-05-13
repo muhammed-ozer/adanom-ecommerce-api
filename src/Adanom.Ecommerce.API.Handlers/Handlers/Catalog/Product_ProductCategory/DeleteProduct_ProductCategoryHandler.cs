@@ -21,7 +21,7 @@
 
         public async Task<bool> Handle(DeleteProduct_ProductCategory command, CancellationToken cancellationToken)
         {
-            var product_ProductCategory = await _applicationDbContext.Product_ProductCategory_Mapping
+            var product_ProductCategory = await _applicationDbContext.Product_ProductCategory_Mappings
                 .Where(e =>
                     e.ProductId == command.ProductId &&
                     e.ProductCategoryId == command.ProductCategoryId)

@@ -25,7 +25,7 @@
 
         public async Task<IEnumerable<ProductCategoryResponse>> Handle(GetProduct_ProductCategories command, CancellationToken cancellationToken)
         {
-            var productCategoriesQuery = _applicationDbContext.Product_ProductCategory_Mapping
+            var productCategoriesQuery = _applicationDbContext.Product_ProductCategory_Mappings
                 .Where(e => e.ProductId == command.ProductId && e.Product.DeletedAtUtc == null)
                 .Select(e => e.ProductCategory);
 
