@@ -3,7 +3,7 @@ using Adanom.Ecommerce.API.Data.Models;
 
 namespace Adanom.Ecommerce.API.Logging.Models
 {
-    public class AdminTransactionLog : BaseEntity<long>
+    public class AdminTransactionLog : BaseLogEntity<long>
     {
         public LogLevel LogLevel { get; set; }
 
