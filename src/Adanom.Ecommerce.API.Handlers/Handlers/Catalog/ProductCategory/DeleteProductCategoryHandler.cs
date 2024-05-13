@@ -37,7 +37,17 @@ namespace Adanom.Ecommerce.API.Handlers
             productCategory.DeletedAtUtc = DateTime.UtcNow;
             productCategory.DeletedByUserId = userId;
 
-            await _applicationDbContext.SaveChangesAsync();
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"ProductCategory_Delete_Failed: {exception.Message}");
+
+                return false;
+            }
 
             await _mediator.Publish(new RemoveFromCache<ProductCategoryResponse>(productCategory.Id));
 

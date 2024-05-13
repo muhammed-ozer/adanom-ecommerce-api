@@ -43,7 +43,18 @@ namespace Adanom.Ecommerce.API.Handlers
             taxCategory.UpdatedByUserId = userId;
 
             _applicationDbContext.Update(taxCategory);
-            await _applicationDbContext.SaveChangesAsync();
+
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"TaxCategory_Update_Failed: {exception.Message}");
+
+                return null;
+            }
 
             var taxCategoryResponse = _mapper.Map<TaxCategoryResponse>(taxCategory);
 

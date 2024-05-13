@@ -29,7 +29,18 @@
                     .ToListAsync();
 
                 _applicationDbContext.RemoveRange(product_ProductSpecificationAttribute_Mappings);
-                await _applicationDbContext.SaveChangesAsync();
+
+                try
+                {
+                    await _applicationDbContext.SaveChangesAsync();
+                }
+                catch (Exception exception)
+                {
+                    // TODO: Log exception to database
+                    Log.Warning($"ProductSpecificationAttribute_Mappings_Delete_Failed: {exception.Message}");
+
+                    return false;
+                }
             }
 
             return deleteProductSpecificationAttributeResponse;

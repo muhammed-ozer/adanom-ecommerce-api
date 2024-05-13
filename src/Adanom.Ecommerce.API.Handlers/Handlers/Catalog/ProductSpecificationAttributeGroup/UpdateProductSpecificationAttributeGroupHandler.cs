@@ -43,7 +43,18 @@ namespace Adanom.Ecommerce.API.Handlers
             productSpecificationAttributeGroup.UpdatedByUserId = userId;
 
             _applicationDbContext.Update(productSpecificationAttributeGroup);
-            await _applicationDbContext.SaveChangesAsync();
+
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"ProductSpecificationAttributeGroup_Update_Failed: {exception.Message}");
+
+                return null;
+            }
 
             var productSpecificationAttributeGroupResponse = _mapper.Map<ProductSpecificationAttributeGroupResponse>(productSpecificationAttributeGroup);
 

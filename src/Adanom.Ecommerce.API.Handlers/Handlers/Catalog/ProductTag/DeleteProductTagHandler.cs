@@ -37,7 +37,17 @@ namespace Adanom.Ecommerce.API.Handlers
             productTag.DeletedAtUtc = DateTime.UtcNow;
             productTag.DeletedByUserId = userId;
 
-            await _applicationDbContext.SaveChangesAsync();
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"ProductTag_Delete_Failed: {exception.Message}");
+
+                return false;
+            }
 
             await _mediator.Publish(new RemoveFromCache<ProductTagResponse>(productTag.Id));
 

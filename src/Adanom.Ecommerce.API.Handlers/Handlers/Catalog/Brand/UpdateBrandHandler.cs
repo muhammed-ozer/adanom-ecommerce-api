@@ -44,7 +44,18 @@ namespace Adanom.Ecommerce.API.Handlers
             brand.UpdatedByUserId = userId;
 
             _applicationDbContext.Update(brand);
-            await _applicationDbContext.SaveChangesAsync();
+
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"Brand_Update_Failed: {exception.Message}");
+
+                return null;
+            }
 
             var brandResponse = _mapper.Map<BrandResponse>(brand);
 

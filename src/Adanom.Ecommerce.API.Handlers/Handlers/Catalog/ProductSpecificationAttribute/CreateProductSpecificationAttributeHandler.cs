@@ -44,7 +44,18 @@ namespace Adanom.Ecommerce.API.Handlers
             });
 
             await _applicationDbContext.AddAsync(productSpecificationAttribute);
-            await _applicationDbContext.SaveChangesAsync();
+
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"ProductSpecificationAttribute_Create_Failed: {exception.Message}");
+
+                return null;
+            }
 
             var productSpecificationAttributeResponse = _mapper.Map<ProductSpecificationAttributeResponse>(productSpecificationAttribute);
 
