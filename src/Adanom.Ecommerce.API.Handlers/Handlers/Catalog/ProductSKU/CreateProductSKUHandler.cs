@@ -36,6 +36,7 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 options.AfterMap((source, target) =>
                 {
+                    target.Code = source.Code.ToUpper();
                     target.CreatedByUserId = userId;
                     target.CreatedAtUtc = DateTime.UtcNow;
                 });

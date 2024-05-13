@@ -28,6 +28,21 @@
             public const string ContentType = "application/pdf";
         }
 
+        public static class XLS
+        {
+            public const string Extension = ".xls";
+
+            public const string ContentType = "application/vnd.ms-excel";
+        }
+
+        public static class XLSX
+        {
+            public const string Extension = ".xlsx";
+
+            public const string ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        }
+        
+
         public static ICollection<string> AllowedImageExtensions = new List<string>()
         {
             JPEG.Extension,
@@ -38,6 +53,12 @@
         public static ICollection<string> AllowedDocumentExtensions = new List<string>()
         {
             PDF.Extension
+        };
+
+        public static ICollection<string> AllowedExcelExtensions = new List<string>()
+        {
+            XLS.Extension,
+            XLSX.Extension,
         };
     }
 }

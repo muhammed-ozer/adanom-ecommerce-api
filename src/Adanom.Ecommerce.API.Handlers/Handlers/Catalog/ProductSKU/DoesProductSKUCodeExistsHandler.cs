@@ -22,7 +22,7 @@
         public async Task<bool> Handle(DoesProductSKUCodeExists command, CancellationToken cancellationToken)
         {
             return await _applicationDbContext.ProductSKUs
-                .AnyAsync(e => e.DeletedAtUtc == null && e.Code.ToLower() == command.Code.ToLower());
+                .AnyAsync(e => e.DeletedAtUtc == null && e.Code.ToUpper() == command.Code.ToUpper());
         }
 
         #endregion

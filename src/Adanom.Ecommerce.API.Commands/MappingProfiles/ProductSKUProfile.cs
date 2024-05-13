@@ -30,6 +30,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
 
             CreateMap<UpdateProductSKUInstallment, ProductSKU>();
 
+            CreateMap<BatchUpdateProductSKUStocksRequest, BatchUpdateProductSKUStocks>();
+
             CreateMap<DeleteProductSKURequest, DeleteProductSKU>();
         }
     }
