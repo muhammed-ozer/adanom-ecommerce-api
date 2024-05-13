@@ -7,14 +7,17 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Fields
 
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public DeleteProductPriceHandler(ApplicationDbContext applicationDbContext)
+        public DeleteProductPriceHandler(ApplicationDbContext applicationDbContext, IMediator mediator)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+
         }
 
         #endregion
@@ -45,11 +48,25 @@ namespace Adanom.Ecommerce.API.Handlers
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
+
+                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                {
+                    UserId = userId,
+                    EntityType = EntityType.PRODUCTPRICE,
+                    TransactionType = TransactionType.DELETE,
+                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productPrice.Id),
+                }));
             }
             catch (Exception exception)
             {
-                // TODO: Log exception to database
-                Log.Warning($"ProductPrice_Delete_Failed: {exception.Message}");
+                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                {
+                    UserId = userId,
+                    EntityType = EntityType.PRODUCTPRICE,
+                    TransactionType = TransactionType.DELETE,
+                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
+                    Exception = exception.ToString()
+                }));
 
                 return false;
             }

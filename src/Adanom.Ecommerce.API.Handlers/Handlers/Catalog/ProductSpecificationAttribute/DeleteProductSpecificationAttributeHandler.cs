@@ -40,11 +40,25 @@ namespace Adanom.Ecommerce.API.Handlers
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
+
+                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                {
+                    UserId = userId,
+                    EntityType = EntityType.PRODUCTSPECIFICATIONATTRIBUTE,
+                    TransactionType = TransactionType.DELETE,
+                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productSpecificationAttribute.Id),
+                }));
             }
             catch (Exception exception)
             {
-                // TODO: Log exception to database
-                Log.Warning($"ProductSpecificationAttribute_Delete_Failed: {exception.Message}");
+                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                {
+                    UserId = userId,
+                    EntityType = EntityType.PRODUCTSPECIFICATIONATTRIBUTE,
+                    TransactionType = TransactionType.DELETE,
+                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
+                    Exception = exception.ToString()
+                }));
 
                 return false;
             }

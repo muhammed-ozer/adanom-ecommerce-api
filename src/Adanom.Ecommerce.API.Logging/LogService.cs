@@ -69,6 +69,7 @@ namespace Adanom.Ecommerce.API.Logging
                 TransactionType = request.TransactionType,
                 UserId = request.UserId,
                 Description = request.Description,
+                Exception = request.Exception,
                 CreatedAtUtc = DateTime.UtcNow,
             };
 

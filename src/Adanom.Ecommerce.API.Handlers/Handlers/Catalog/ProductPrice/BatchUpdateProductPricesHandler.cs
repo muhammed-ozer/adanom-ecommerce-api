@@ -58,7 +58,14 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 if (productSKU == null)
                 {
-                    // TODO: Log productSKU not found
+                    await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                    {
+                        UserId = userId,
+                        EntityType = EntityType.PRODUCTPRICE,
+                        TransactionType = TransactionType.UPDATE,
+                        Description = string.Format(LogMessages.AdminTransaction.BatchUpdateProductSKUNotFound, productSKUCode),
+                    }));
+
                     continue;
                 }
 
@@ -74,9 +81,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 {
                     await _mediator.Send(updateProductPrice_PriceCommand);
                 }
-                catch (Exception exception)
+                catch
                 {
-                    // TODO: Log exception
                     continue;
                 }
             }

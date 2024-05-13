@@ -25,6 +25,12 @@ public static class LogMessages
 
     public static class AdminTransaction
     {
+        public const string DatabaseSaveChangesSuccessful = @"Veri tabanı işlemi başarılı bir şekilde gerçekleştirildi. Id: {0}";
+
         public const string DatabaseSaveChangesHasFailed = "Veri tabanı işlemi sırasında hata meydana geldi.";
+
+        public const string DatabaseTransactionHasFailed = "Veri tabanı transaction sırasında hata meydana geldi.";
+
+        public const string BatchUpdateProductSKUNotFound = @"Toplu işlem sırasında ürün kodu bulunamadı. Kod: {0}";
     }
 }

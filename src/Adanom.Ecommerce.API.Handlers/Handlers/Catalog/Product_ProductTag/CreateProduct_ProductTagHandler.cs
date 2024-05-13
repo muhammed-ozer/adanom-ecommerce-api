@@ -1,4 +1,4 @@
-﻿using System.Security.Principal;
+﻿using System.Security.Claims;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
@@ -60,11 +60,27 @@ namespace Adanom.Ecommerce.API.Handlers
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
+
+                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                {
+                    UserId = command.Identity.GetUserId(),
+                    EntityType = EntityType.PRODUCT_PRODUCTTAG,
+                    TransactionType = TransactionType.CREATE,
+                    Description = string.Format(
+                        LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful,
+                        $"{product_ProductTag.ProductId}-{product_ProductTag.ProductTagId}"),
+                }));
             }
             catch (Exception exception)
             {
-                // TODO: Log exception to database
-                Log.Warning($"Product_ProductTag_Create_Failed: {exception.Message}");
+                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                {
+                    UserId = command.Identity.GetUserId(),
+                    EntityType = EntityType.PRODUCT_PRODUCTTAG,
+                    TransactionType = TransactionType.CREATE,
+                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
+                    Exception = exception.ToString()
+                }));
 
                 return false;
             }

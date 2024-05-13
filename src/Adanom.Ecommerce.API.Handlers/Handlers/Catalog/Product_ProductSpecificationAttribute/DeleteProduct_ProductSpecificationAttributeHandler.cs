@@ -1,18 +1,23 @@
-﻿namespace Adanom.Ecommerce.API.Handlers
+﻿using System.Security.Claims;
+
+namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class DeleteProduct_ProductSpecificationAttributeHandler : IRequestHandler<DeleteProduct_ProductSpecificationAttribute, bool>
     {
         #region Fields
 
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public DeleteProduct_ProductSpecificationAttributeHandler(ApplicationDbContext applicationDbContext)
+        public DeleteProduct_ProductSpecificationAttributeHandler(ApplicationDbContext applicationDbContext, IMediator mediator)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+
         }
 
         #endregion
@@ -32,11 +37,27 @@
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
+
+                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                {
+                    UserId = command.Identity.GetUserId(),
+                    EntityType = EntityType.PRODUCT_PRODUCTSPECIFICATIONATTRIBUTE,
+                    TransactionType = TransactionType.DELETE,
+                    Description = string.Format(
+                        LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful,
+                        $"{product_ProductSpecificationAttribute.ProductId}-{product_ProductSpecificationAttribute.ProductSpecificationAttributeId}"),
+                }));
             }
             catch (Exception exception)
             {
-                // TODO: Log exception to database
-                Log.Warning($"Product_ProductSpecificationAttribute_Delete_Failed: {exception.Message}");
+                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                {
+                    UserId = command.Identity.GetUserId(),
+                    EntityType = EntityType.PRODUCT_PRODUCTSPECIFICATIONATTRIBUTE,
+                    TransactionType = TransactionType.DELETE,
+                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
+                    Exception = exception.ToString()
+                }));
 
                 return false;
             }

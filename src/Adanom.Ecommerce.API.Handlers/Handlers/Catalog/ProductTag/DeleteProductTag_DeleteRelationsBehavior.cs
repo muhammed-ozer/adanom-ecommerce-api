@@ -1,18 +1,23 @@
-﻿namespace Adanom.Ecommerce.API.Handlers
+﻿using System.Security.Claims;
+
+namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class DeleteProductTag_DeleteRelationsBehavior : IPipelineBehavior<DeleteProductTag, bool>
     {
         #region Fields
 
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public DeleteProductTag_DeleteRelationsBehavior(ApplicationDbContext applicationDbContext)
+        public DeleteProductTag_DeleteRelationsBehavior(ApplicationDbContext applicationDbContext, IMediator mediator)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+
         }
 
         #endregion
@@ -36,11 +41,25 @@
                     try
                     {
                         await _applicationDbContext.SaveChangesAsync();
+
+                        await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                        {
+                            UserId = command.Identity.GetUserId(),
+                            EntityType = EntityType.PRODUCTTAG,
+                            TransactionType = TransactionType.DELETE,
+                            Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, "-"),
+                        }));
                     }
                     catch (Exception exception)
                     {
-                        // TODO: Log exception to database
-                        Log.Warning($"ProductTag_Mappings_Delete_Failed: {exception.Message}");
+                        await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                        {
+                            UserId = command.Identity.GetUserId(),
+                            EntityType = EntityType.PRODUCTTAG,
+                            TransactionType = TransactionType.DELETE,
+                            Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
+                            Exception = exception.ToString()
+                        }));
 
                         return false;
                     }

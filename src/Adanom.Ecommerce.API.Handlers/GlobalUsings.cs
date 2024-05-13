@@ -1,10 +1,11 @@
-global using Microsoft.EntityFrameworkCore;
 global using Adanom.Ecommerce.API.Commands;
 global using Adanom.Ecommerce.API.Commands.Models;
 global using Adanom.Ecommerce.API.Data;
 global using Adanom.Ecommerce.API.Data.Models;
+global using Adanom.Ecommerce.API.Logging;
 global using Adanom.Ecommerce.API.Pagination;
+global using AutoMapper;
 global using HotChocolate;
 global using MediatR;
-global using AutoMapper;
+global using Microsoft.EntityFrameworkCore;
 global using Serilog;
