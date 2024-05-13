@@ -8,14 +8,21 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Fields
 
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public BatchUpdateProductSKUStocksHandler(ApplicationDbContext applicationDbContext)
+        public BatchUpdateProductSKUStocksHandler(
+            ApplicationDbContext applicationDbContext,
+            IMapper mapper,
+            IMediator mediator)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         #endregion
@@ -55,18 +62,23 @@ namespace Adanom.Ecommerce.API.Handlers
                     continue;
                 }
 
-                productSKU.StockQuantity = stockQuantity;
-                productSKU.UpdatedByUserId = userId;
-                productSKU.UpdatedAtUtc = DateTime.UtcNow;
+                var updateProductSKUStockRequest = new UpdateProductSKUStockRequest()
+                {
+                    Id = productSKU.Id,
+                    StockQuantity = stockQuantity,
+                    StockUnitType = productSKU.StockUnitType
+                };
+
+                var updateProductSKUStockCommand = _mapper.Map(updateProductSKUStockRequest, new UpdateProductSKUStock(command.Identity));
 
                 try
                 {
-                    await _applicationDbContext.SaveChangesAsync();
+                    await _mediator.Send(updateProductSKUStockCommand);
                 }
                 catch (Exception exception)
                 {
-                    // TODO: Log exception to database
-                    Log.Warning($"ProductSKU_Update_Failed: {exception.Message}");
+                    // TODO: Log exception
+                    continue;
                 }
             }
 
