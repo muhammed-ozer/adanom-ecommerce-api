@@ -45,7 +45,18 @@ namespace Adanom.Ecommerce.API.Handlers
             productTag.UpdatedByUserId = userId;
 
             _applicationDbContext.Update(productTag);
-            await _applicationDbContext.SaveChangesAsync();
+
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"ProductTag_Update_Failed: {exception.Message}");
+
+                return null;
+            }
 
             var productTagResponse = _mapper.Map<ProductTagResponse>(productTag);
 

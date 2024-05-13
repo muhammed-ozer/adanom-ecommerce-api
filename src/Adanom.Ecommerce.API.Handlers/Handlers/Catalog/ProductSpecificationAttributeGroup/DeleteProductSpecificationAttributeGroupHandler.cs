@@ -37,7 +37,17 @@ namespace Adanom.Ecommerce.API.Handlers
             productSpecificationAttributeGroup.DeletedAtUtc = DateTime.UtcNow;
             productSpecificationAttributeGroup.DeletedByUserId = userId;
 
-            await _applicationDbContext.SaveChangesAsync();
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"ProductSpecificationAttributeGroup_Delete_Failed: {exception.Message}");
+
+                return false;
+            }
 
             await _mediator.Publish(new RemoveFromCache<ProductSpecificationAttributeGroupResponse>(productSpecificationAttributeGroup.Id));
 

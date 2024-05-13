@@ -42,7 +42,18 @@ namespace Adanom.Ecommerce.API.Handlers
             });
 
             await _applicationDbContext.AddAsync(taxCategory);
-            await _applicationDbContext.SaveChangesAsync();
+
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"TaxCategory_Create_Failed: {exception.Message}");
+
+                return null;
+            }
 
             var taxCategoryResponse = _mapper.Map<TaxCategoryResponse>(taxCategory);
 

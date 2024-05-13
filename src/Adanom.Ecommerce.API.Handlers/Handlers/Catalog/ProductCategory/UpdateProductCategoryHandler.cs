@@ -44,7 +44,18 @@ namespace Adanom.Ecommerce.API.Handlers
             productCategory.UpdatedByUserId = userId;
 
             _applicationDbContext.Update(productCategory);
-            await _applicationDbContext.SaveChangesAsync();
+
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"ProductCategory_Update_Failed: {exception.Message}");
+
+                return null;
+            }
 
             var productCategoryResponse = _mapper.Map<ProductCategoryResponse>(productCategory);
 

@@ -37,7 +37,17 @@ namespace Adanom.Ecommerce.API.Handlers
             taxCategory.DeletedAtUtc = DateTime.UtcNow;
             taxCategory.DeletedByUserId = userId;
 
-            await _applicationDbContext.SaveChangesAsync();
+            try
+            {
+                await _applicationDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                // TODO: Log exception to database
+                Log.Warning($"TaxCategory_Delete_Failed: {exception.Message}");
+
+                return false;
+            }
 
             await _mediator.Publish(new RemoveFromCache<TaxCategoryResponse>(taxCategory.Id));
 

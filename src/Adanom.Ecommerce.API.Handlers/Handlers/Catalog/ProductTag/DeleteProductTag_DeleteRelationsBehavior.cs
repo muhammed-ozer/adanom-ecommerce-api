@@ -33,7 +33,17 @@
                 {
                     _applicationDbContext.RemoveRange(product_ProductTag_Mappings);
 
-                    await _applicationDbContext.SaveChangesAsync();
+                    try
+                    {
+                        await _applicationDbContext.SaveChangesAsync();
+                    }
+                    catch (Exception exception)
+                    {
+                        // TODO: Log exception to database
+                        Log.Warning($"ProductTag_Mappings_Delete_Failed: {exception.Message}");
+
+                        return false;
+                    }
                 }
             }
 
