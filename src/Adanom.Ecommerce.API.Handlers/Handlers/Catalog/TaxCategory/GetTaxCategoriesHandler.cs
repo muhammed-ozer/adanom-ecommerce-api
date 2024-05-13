@@ -47,10 +47,10 @@ namespace Adanom.Ecommerce.API.Handlers
                    .Where(e => e.DeletedAtUtc == null)
                    .ToListAsync();
 
-                var brandResponses = _mapper
+                var taxCategoryResponses = _mapper
                     .Map<IEnumerable<TaxCategoryResponse>>(taxCategoriesOnDb);
 
-                foreach (var item in brandResponses)
+                foreach (var item in taxCategoryResponses)
                 {
                     _cache.TryAdd(item.Id, item);
                 }
