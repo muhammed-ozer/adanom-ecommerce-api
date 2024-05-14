@@ -15,6 +15,7 @@
         PRODUCT_PRODUCTTAG,
         BRAND,
         TAXCATEGORY,
-        NOTIFICATION
+        NOTIFICATION,
+        METAINFORMATION
     }
 }
