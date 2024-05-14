@@ -74,6 +74,13 @@ namespace Adanom.Ecommerce.API.Data
 
             #endregion
 
+            #region MetaInformation_Entity_Mapping
+
+            modelBuilder.Entity<MetaInformation_Entity_Mapping>()
+                    .HasKey(e => new { e.MetaInformationId, e.EntityId, e.EntityType });
+
+            #endregion
+
             #region Relations
 
             #region Product - ProductSpecificationAttribute
