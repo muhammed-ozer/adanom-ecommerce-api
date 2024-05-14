@@ -12,5 +12,7 @@ namespace Adanom.Ecommerce.API.Data.Models
         public EntityType EntityType { get; set; }
 
         public ImageType ImageType { get; set; }
+
+        public Image Image { get; set; } = null!;
     }
 }

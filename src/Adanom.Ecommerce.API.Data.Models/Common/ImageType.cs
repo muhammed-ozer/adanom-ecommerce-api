@@ -2,6 +2,7 @@
 {
     public enum ImageType : byte
     {
+        MAIN,
         SLIDER
     }
 }
