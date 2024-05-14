@@ -30,36 +30,27 @@
         {
             var deleteProductCategoryResponse = await next();
 
-            if (deleteProductCategoryResponse)
+            if (!deleteProductCategoryResponse)
             {
-                // TODO: Test here after create azure blob storage 
-
-                var productCategoryImageMappings = await _applicationDbContext.Image_Entity_Mappings
-                                .Where(e => e.EntityType == EntityType.PRODUCTCATEGORY &&
-                                            e.EntityId == command.Id)
-                                .ToListAsync();
-
-                if (productCategoryImageMappings.Any())
-                {
-                    foreach (var productCategoryImageMapping in productCategoryImageMappings)
-                    {
-                        // TODO: Delete images
-                    }
-                }
-
-                var productCategoryMetaInformationMappings = await _applicationDbContext.MetaInformation_Entity_Mappings
-                    .Where(e => e.EntityType == EntityType.PRODUCTCATEGORY && 
-                                e.EntityId == command.Id)
-                    .ToListAsync();
-
-                if (productCategoryMetaInformationMappings.Any())
-                {
-                    foreach (var productCategoryMetaInformationMapping in productCategoryMetaInformationMappings)
-                    {
-                        // TODO: Delete meta informations
-                    }
-                }
+                return deleteProductCategoryResponse;
             }
+
+            #region MetaInformation_Entity
+
+            var deleteMetaInformation_EntityRequest = new DeleteMetaInformation_EntityRequest()
+            {
+                EntityId = command.Id,
+                EntityType = EntityType.PRODUCTCATEGORY
+            };
+
+            var deleteMetaInformation_EntityCommand = _mapper
+                .Map(deleteMetaInformation_EntityRequest, new DeleteMetaInformation_Entity(command.Identity));
+
+            await _mediator.Send(deleteMetaInformation_EntityCommand);
+
+            #endregion
+
+            // TODO: Delete images
 
             return deleteProductCategoryResponse;
         }

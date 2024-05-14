@@ -15,6 +15,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<UpdateMetaInformationRequest, UpdateMetaInformation>();
 
             CreateMap<UpdateMetaInformation, MetaInformation>();
+
+            CreateMap<DeleteMetaInformationRequest, DeleteMetaInformation>();
         }
     }
 }

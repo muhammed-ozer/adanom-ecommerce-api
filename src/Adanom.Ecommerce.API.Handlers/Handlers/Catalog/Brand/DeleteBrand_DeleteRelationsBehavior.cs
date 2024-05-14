@@ -7,6 +7,8 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Fields
 
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
         private readonly IBlobStorageService _blobStorageService;
 
         #endregion
@@ -15,9 +17,13 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public DeleteBrand_DeleteRelationsBehavior(
             ApplicationDbContext applicationDbContext,
+            IMapper mapper,
+            IMediator mediator,
             IBlobStorageService blobStorageService)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _blobStorageService = blobStorageService ?? throw new ArgumentNullException(nameof(blobStorageService));
         }
 
@@ -29,20 +35,34 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var deleteBrandResponse = await next();
 
-            if (deleteBrandResponse)
+            if (!deleteBrandResponse)
             {
-                var brand = await _applicationDbContext.Brands
-                    .SingleOrDefaultAsync(e => e.Id == command.Id && e.DeletedAtUtc.HasValue);
-
-                if (brand != null)
-                {
-                    if (brand.LogoPath.IsNotNullOrEmpty())
-                    {
-                        // TODO: Test this handler when azure blob storage created
-                        await _blobStorageService.DeleteFileAsync(AzureBlobStorageConstants.Containers.Brands, brand.LogoPath);
-                    }
-                }
+                return deleteBrandResponse;
             }
+
+            var brand = await _applicationDbContext.Brands
+                    .SingleAsync(e => e.Id == command.Id && e.DeletedAtUtc.HasValue);
+
+            if (brand.LogoPath.IsNotNullOrEmpty())
+            {
+                // TODO: Test this handler when azure blob storage created
+                await _blobStorageService.DeleteFileAsync(AzureBlobStorageConstants.Containers.Brands, brand.LogoPath);
+            }
+
+            #region MetaInformation_Entity
+
+            var deleteMetaInformation_EntityRequest = new DeleteMetaInformation_EntityRequest()
+            {
+                EntityId = command.Id,
+                EntityType = EntityType.BRAND
+            };
+
+            var deleteMetaInformation_EntityCommand = _mapper
+                .Map(deleteMetaInformation_EntityRequest, new DeleteMetaInformation_Entity(command.Identity));
+
+            await _mediator.Send(deleteMetaInformation_EntityCommand);
+
+            #endregion
 
             return deleteBrandResponse;
         }

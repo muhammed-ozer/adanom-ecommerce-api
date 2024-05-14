@@ -98,9 +98,22 @@
 
                 #endregion
 
-                // TODO: Remove product SKUs
+                #region MetaInformation_Entity
 
-                // TODO: Remove meta informations
+                var deleteMetaInformation_EntityRequest = new DeleteMetaInformation_EntityRequest()
+                {
+                    EntityId = command.Id,
+                    EntityType = EntityType.PRODUCT
+                };
+
+                var deleteMetaInformation_EntityCommand = _mapper
+                    .Map(deleteMetaInformation_EntityRequest, new DeleteMetaInformation_Entity(command.Identity));
+
+                await _mediator.Send(deleteMetaInformation_EntityCommand);
+
+                #endregion
+
+                // TODO: Remove product SKUs
 
                 // TODO: Remove images
 
