@@ -9,5 +9,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public string? LogoPath { get; set; }
 
         public int DisplayOrder { get; set; }
+
+        public MetaInformation? MetaInformation { get; set; }
     }
 }

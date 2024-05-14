@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class CreateProductCategoryHandler : IRequestHandler<CreateProductCategory, ProductCategoryResponse?>
+    public sealed class UpdateMetaInformationHandler : IRequestHandler<UpdateMetaInformation, MetaInformationResponse?>
     {
         #region Fields
 
@@ -14,7 +14,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region Ctor
 
-        public CreateProductCategoryHandler(
+        public UpdateMetaInformationHandler(
             ApplicationDbContext applicationDbContext,
             IMapper mapper,
             IMediator mediator)
@@ -28,23 +28,17 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region IRequestHandler Members
 
-        public async Task<ProductCategoryResponse?> Handle(CreateProductCategory command, CancellationToken cancellationToken)
+        public async Task<MetaInformationResponse?> Handle(UpdateMetaInformation command, CancellationToken cancellationToken)
         {
             var userId = command.Identity.GetUserId();
 
-            await _applicationDbContext.Database.BeginTransactionAsync();
+            var metaInformation = await _applicationDbContext.MetaInformations
+                .Where(e => e.Id == command.Id)
+                .SingleAsync();
 
-            var productCategory = _mapper.Map<CreateProductCategory, ProductCategory>(command, options =>
-            {
-                options.AfterMap((source, target) =>
-                {
-                    target.UrlSlug = command.Name.ConvertToUrlSlug();
-                    target.CreatedByUserId = userId;
-                    target.CreatedAtUtc = DateTime.UtcNow;
-                });
-            });
+            metaInformation = _mapper.Map(command, metaInformation);
 
-            await _applicationDbContext.AddAsync(productCategory);
+            _applicationDbContext.Update(metaInformation);
 
             try
             {
@@ -53,9 +47,9 @@ namespace Adanom.Ecommerce.API.Handlers
                 await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
                 {
                     UserId = userId,
-                    EntityType = EntityType.PRODUCTCATEGORY,
-                    TransactionType = TransactionType.CREATE,
-                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productCategory.Id),
+                    EntityType = EntityType.METAINFORMATION,
+                    TransactionType = TransactionType.UPDATE,
+                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, metaInformation.Id),
                 }));
             }
             catch (Exception exception)
@@ -63,8 +57,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
                 {
                     UserId = userId,
-                    EntityType = EntityType.PRODUCTCATEGORY,
-                    TransactionType = TransactionType.CREATE,
+                    EntityType = EntityType.METAINFORMATION,
+                    TransactionType = TransactionType.UPDATE,
                     Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
                     Exception = exception.ToString()
                 }));
@@ -72,11 +66,9 @@ namespace Adanom.Ecommerce.API.Handlers
                 return null;
             }
 
-            var productCategoryResponse = _mapper.Map<ProductCategoryResponse>(productCategory);
+            var metaInformationResponse = _mapper.Map<MetaInformationResponse>(metaInformation);
 
-            await _mediator.Publish(new AddToCache<ProductCategoryResponse>(productCategoryResponse));
-
-            return productCategoryResponse;
+            return metaInformationResponse;
         }
 
         #endregion
