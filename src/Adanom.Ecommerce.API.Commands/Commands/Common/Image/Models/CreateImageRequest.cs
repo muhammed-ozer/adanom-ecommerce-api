@@ -6,9 +6,9 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public long EntityId { get; set; }
 
-        public EntityType EntityType { get; set; }
+        public bool IsDefault { get; set; }
 
-        public ImageType ImageType { get; set; }
+        public EntityType EntityType { get; set; }
 
         public int DisplayOrder { get; set; }
     }

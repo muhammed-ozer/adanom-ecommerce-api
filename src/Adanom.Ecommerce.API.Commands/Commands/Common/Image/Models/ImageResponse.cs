@@ -8,6 +8,6 @@
 
         public int DisplayOrder { get; set; }
 
-        public ImageType ImageType { get; set; }
+        public bool IsDefault { get; set; }
     }
 }

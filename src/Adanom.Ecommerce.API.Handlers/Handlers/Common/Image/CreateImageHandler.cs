@@ -60,7 +60,7 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 EntityId = command.EntityId,
                 EntityType = command.EntityType,
-                ImageType = command.ImageType,
+                IsDefault = command.IsDefault,
                 Image = new Image()
                 {
                     Name = fileName,
@@ -82,7 +82,7 @@ namespace Adanom.Ecommerce.API.Handlers
                     UserId = userId,
                     EntityType = EntityType.IMAGE_ENTITY,
                     TransactionType = TransactionType.CREATE,
-                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, image_Entity_Mapping.Id),
+                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, image_Entity_Mapping.ImageId),
                 }));
             }
             catch (Exception exception)
@@ -97,6 +97,11 @@ namespace Adanom.Ecommerce.API.Handlers
                 }));
 
                 return null;
+            }
+
+            if (image_Entity_Mapping.IsDefault)
+            {
+                await _mediator.Send(new MakeIsDefaultToFalseIfEntityHasDefaultImage(command.EntityId, command.EntityType));
             }
 
             var imageResponse = _mapper.Map<ImageResponse>(image_Entity_Mapping.Image);

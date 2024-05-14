@@ -81,6 +81,13 @@ namespace Adanom.Ecommerce.API.Data
 
             #endregion
 
+            #region Image_Entity_Mapping
+
+            modelBuilder.Entity<Image_Entity_Mapping>()
+                    .HasKey(e => new { e.ImageId, e.EntityId, e.EntityType });
+
+            #endregion
+
             #region Relations
 
             #region Product - ProductSpecificationAttribute
