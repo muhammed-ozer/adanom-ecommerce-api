@@ -1,6 +1,4 @@
-﻿using Adanom.Ecommerce.API.Commands.Models;
-
-namespace Adanom.Ecommerce.API.Handlers
+﻿namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class CreateProduct_CreateMetaInformationBehavior : IPipelineBehavior<CreateProduct, ProductResponse?>
     {
