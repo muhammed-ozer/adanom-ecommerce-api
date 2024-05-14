@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class CreateProduct_CreateProduct_CreateMetaInformationBehavior : IPipelineBehavior<CreateProduct, ProductResponse?>
+    public sealed class CreateProduct_CreateMetaInformationBehavior : IPipelineBehavior<CreateProduct, ProductResponse?>
     {
         #region Fields
 
@@ -13,7 +13,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region Ctor
 
-        public CreateProduct_CreateProduct_CreateMetaInformationBehavior(IMediator mediator, IMapper mapper)
+        public CreateProduct_CreateMetaInformationBehavior(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));

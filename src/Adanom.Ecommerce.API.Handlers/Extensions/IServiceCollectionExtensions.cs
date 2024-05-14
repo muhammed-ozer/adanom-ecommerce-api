@@ -26,7 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 #region Product
 
                 options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CommitTransactionBehavior>();
-                options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CreateProduct_CreateMetaInformationBehavior>();
+                options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CreateMetaInformationBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CreateProduct_ProductCategoryBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CreateProductSKUBehavior>();
 
