@@ -16,6 +16,7 @@
         BRAND,
         TAXCATEGORY,
         NOTIFICATION,
-        METAINFORMATION
+        METAINFORMATION,
+        METAINFORMATION_ENTITY,
     }
 }
