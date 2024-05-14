@@ -1,3 +1,5 @@
+using Adanom.Ecommerce.API.Data.Models;
+
 namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 {
     [ExtendObjectType(typeof(ProductResponse))]
@@ -76,5 +78,17 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         #endregion
 
+        #region GetMetaInformationAsync
+
+        public async Task<MetaInformationResponse?> GetMetaInformationAsync(
+           [Parent] ProductResponse productResponse,
+           [Service] IMediator mediator)
+        {
+            var metaInformation = await mediator.Send(new GetMetaInformation(productResponse.Id, EntityType.PRODUCT));
+
+            return metaInformation;
+        }
+
+        #endregion
     }
 }

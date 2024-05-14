@@ -10,5 +10,7 @@ namespace Adanom.Ecommerce.API.Data.Models
         public long EntityId { get; set; }
 
         public EntityType EntityType { get; set; }
+
+        public MetaInformation MetaInformation { get; set; } = null!;
     }
 }

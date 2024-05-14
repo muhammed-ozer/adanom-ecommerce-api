@@ -27,6 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductSpecificationAttributeGroupQueries>()
                 .AddType<ProductTagQueries>()
                 .AddType<StockUnitTypeQueries>()
+                .AddType<MetaInformationQueries>()
                 .AddType<TaxCategoryQueries>();
 
             #endregion
@@ -53,6 +54,7 @@ namespace Microsoft.Extensions.DependencyInjection
             #region Resolvers
 
             graphqlServices
+                .AddType<BrandResolvers>()
                 .AddType<ProductResolvers>()
                 .AddType<ProductCategoryResolvers>()
                 .AddType<ProductSKUResolvers>()
