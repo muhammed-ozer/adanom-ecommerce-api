@@ -49,18 +49,18 @@ namespace Adanom.Ecommerce.API.Handlers
                 await _blobStorageService.DeleteFileAsync(AzureBlobStorageConstants.Containers.Brands, brand.LogoPath);
             }
 
-            #region MetaInformation_Entity
+            #region MetaInformation
 
-            var deleteMetaInformation_EntityRequest = new DeleteMetaInformation_EntityRequest()
+            var deleteMetaInformationRequest = new DeleteMetaInformationRequest()
             {
                 EntityId = command.Id,
                 EntityType = EntityType.BRAND
             };
 
-            var deleteMetaInformation_EntityCommand = _mapper
-                .Map(deleteMetaInformation_EntityRequest, new DeleteMetaInformation_Entity(command.Identity));
+            var deleteMetaInformationCommand = _mapper
+                .Map(deleteMetaInformationRequest, new DeleteMetaInformation(command.Identity));
 
-            await _mediator.Send(deleteMetaInformation_EntityCommand);
+            await _mediator.Send(deleteMetaInformationCommand);
 
             #endregion
 

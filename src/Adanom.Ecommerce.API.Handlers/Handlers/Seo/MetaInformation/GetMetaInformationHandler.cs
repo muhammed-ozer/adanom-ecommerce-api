@@ -34,11 +34,10 @@
             }
             else if(command.EntityId > 0)
             {
-                metaInformation = await _applicationDbContext.MetaInformation_Entity_Mappings
+                metaInformation = await _applicationDbContext.MetaInformations
                     .AsNoTracking()
                     .Where(e => e.EntityId == command.EntityId &&
                                 e.EntityType == command.EntityType)
-                    .Select(e => e.MetaInformation)
                     .FirstOrDefaultAsync();
             }
            

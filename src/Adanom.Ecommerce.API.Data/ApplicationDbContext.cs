@@ -74,13 +74,6 @@ namespace Adanom.Ecommerce.API.Data
 
             #endregion
 
-            #region MetaInformation_Entity_Mapping
-
-            modelBuilder.Entity<MetaInformation_Entity_Mapping>()
-                    .HasKey(e => new { e.MetaInformationId, e.EntityId, e.EntityType });
-
-            #endregion
-
             #region Relations
 
             #region Product - ProductSpecificationAttribute
@@ -223,8 +216,6 @@ namespace Adanom.Ecommerce.API.Data
         public DbSet<ProductAttribute> ProductAttributes { get; set; } = null!;
 
         public DbSet<StockNotificationItem> StockNotificationItems { get; set; } = null!;
-
-        public DbSet<MetaInformation_Entity_Mapping> MetaInformation_Entity_Mappings { get; set; }
 
         #endregion
 

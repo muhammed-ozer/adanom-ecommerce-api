@@ -30,7 +30,8 @@ namespace Adanom.Ecommerce.API.Handlers
             var userId = command.Identity.GetUserId();
 
             var metaInformation = await _applicationDbContext.MetaInformations
-                .Where(e => e.Id == command.Id)
+                .Where(e => e.EntityId == command.EntityId &&
+                            e.EntityType == command.EntityType)
                 .SingleOrDefaultAsync();
 
             if (metaInformation == null)

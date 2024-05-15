@@ -4,6 +4,10 @@ namespace Adanom.Ecommerce.API.Data.Models
 {
     public class MetaInformation : BaseEntity<long>
     {
+        public long EntityId { get; set; }
+
+        public EntityType EntityType { get; set; }
+
         [StringLength(250)]
         public string Title { get; set; } = null!;
 
