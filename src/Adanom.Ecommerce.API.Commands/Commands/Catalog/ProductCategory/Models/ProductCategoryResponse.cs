@@ -5,6 +5,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public ProductCategoryResponse()
         {
             Children = new List<ProductCategoryResponse>();
+            Images = new List<ImageResponse>();
         }
 
         public long? ParentId { get; set; }
@@ -22,5 +23,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public ICollection<ProductCategoryResponse> Children { get; set; }
 
         public MetaInformation? MetaInformation { get; set; }
+
+        public ICollection<ImageResponse> Images { get; set; }
     }
 }

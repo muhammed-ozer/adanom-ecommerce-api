@@ -224,8 +224,6 @@ namespace Adanom.Ecommerce.API.Data
 
         public DbSet<StockNotificationItem> StockNotificationItems { get; set; } = null!;
 
-        public DbSet<Image_Entity_Mapping> Image_Entity_Mappings { get; set; }
-
         public DbSet<MetaInformation_Entity_Mapping> MetaInformation_Entity_Mappings { get; set; }
 
         #endregion

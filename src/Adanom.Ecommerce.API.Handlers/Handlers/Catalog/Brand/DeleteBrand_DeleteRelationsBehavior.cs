@@ -64,6 +64,21 @@ namespace Adanom.Ecommerce.API.Handlers
 
             #endregion
 
+            #region Images
+
+            var deleteImagesRequest = new DeleteImagesRequest()
+            {
+                EntityId = command.Id,
+                EntityType = EntityType.BRAND
+            };
+
+            var deleteImagesCommand = _mapper
+                .Map(deleteImagesRequest, new DeleteImages(command.Identity));
+
+            await _mediator.Send(deleteImagesCommand);
+
+            #endregion
+
             return deleteBrandResponse;
         }
 

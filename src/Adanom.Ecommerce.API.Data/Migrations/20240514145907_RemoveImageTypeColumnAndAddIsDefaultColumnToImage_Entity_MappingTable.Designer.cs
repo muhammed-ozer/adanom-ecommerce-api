@@ -4,6 +4,7 @@ using Adanom.Ecommerce.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Adanom.Ecommerce.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240514145907_RemoveImageTypeColumnAndAddIsDefaultColumnToImage_Entity_MappingTable")]
+    partial class RemoveImageTypeColumnAndAddIsDefaultColumnToImage_Entity_MappingTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -363,15 +366,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
 
-                    b.Property<long>("EntityId")
-                        .HasColumnType("bigint");
-
-                    b.Property<byte>("EntityType")
-                        .HasColumnType("tinyint");
-
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
@@ -391,6 +385,28 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Image_Entity_Mapping", b =>
+                {
+                    b.Property<long>("ImageId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("EntityId")
+                        .HasColumnType("bigint");
+
+                    b.Property<byte>("EntityType")
+                        .HasColumnType("tinyint");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ImageId", "EntityId", "EntityType");
+
+                    b.HasIndex("ImageId")
+                        .IsUnique();
+
+                    b.ToTable("Image_Entity_Mappings");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.MailTemplate", b =>

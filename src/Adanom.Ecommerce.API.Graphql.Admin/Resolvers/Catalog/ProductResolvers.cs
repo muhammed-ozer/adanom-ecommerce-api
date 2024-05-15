@@ -90,5 +90,31 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
         }
 
         #endregion
+
+        #region GetImagesAsync
+
+        public async Task<IEnumerable<ImageResponse>> GetImagesAsync(
+           [Parent] ProductResponse productResponse,
+           [Service] IMediator mediator)
+        {
+            var images = await mediator.Send(new GetEntityImages(productResponse.Id, EntityType.PRODUCT));
+
+            return images;
+        }
+
+        #endregion
+
+        #region GetDefaultImageAsync
+
+        public async Task<ImageResponse?> GetDefaultImageAsync(
+           [Parent] ProductResponse productResponse,
+           [Service] IMediator mediator)
+        {
+            var image = await mediator.Send(new GetEntityDefaultImage(productResponse.Id, EntityType.PRODUCT));
+
+            return image;
+        }
+
+        #endregion
     }
 }

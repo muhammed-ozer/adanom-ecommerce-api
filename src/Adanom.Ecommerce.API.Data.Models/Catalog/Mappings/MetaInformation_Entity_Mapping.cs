@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Adanom.Ecommerce.API.Data.Models
 {
@@ -11,6 +12,7 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public EntityType EntityType { get; set; }
 
+        [NotMapped]
         public MetaInformation MetaInformation { get; set; } = null!;
     }
 }
