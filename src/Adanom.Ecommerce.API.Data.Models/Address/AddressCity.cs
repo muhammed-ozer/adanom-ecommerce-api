@@ -6,5 +6,7 @@ namespace Adanom.Ecommerce.API.Data.Models
     {
         [StringLength(100)]
         public string Name { get; set; } = null!;
+
+        public byte Code { get; set; }
     }
 }
