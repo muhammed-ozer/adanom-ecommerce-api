@@ -50,7 +50,20 @@
 
             #endregion
 
-            // TODO: Delete images
+            #region Images
+
+            var deleteImagesRequest = new DeleteImagesRequest()
+            {
+                EntityId = command.Id,
+                EntityType = EntityType.PRODUCTCATEGORY
+            };
+
+            var deleteImagesCommand = _mapper
+                .Map(deleteImagesRequest, new DeleteImages(command.Identity));
+
+            await _mediator.Send(deleteImagesCommand);
+
+            #endregion
 
             return deleteProductCategoryResponse;
         }

@@ -113,9 +113,22 @@
 
                 #endregion
 
-                // TODO: Remove product SKUs
+                #region Images
 
-                // TODO: Remove images
+                var deleteImagesRequest = new DeleteImagesRequest()
+                {
+                    EntityId = command.Id,
+                    EntityType = EntityType.PRODUCT
+                };
+
+                var deleteImagesCommand = _mapper
+                    .Map(deleteImagesRequest, new DeleteImages(command.Identity));
+
+                await _mediator.Send(deleteImagesCommand);
+
+                #endregion
+
+                // TODO: Remove product SKUs
 
                 // TODO: Remove shopping cart items
 
