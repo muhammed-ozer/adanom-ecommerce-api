@@ -56,6 +56,18 @@ namespace Adanom.Ecommerce.API.Handlers
                 return null;
             }
 
+            if (!command.IsDefault)
+            {
+                if (!await _applicationDbContext.Image_Entity_Mappings.AnyAsync(e => e.EntityType == command.EntityType && e.EntityId == command.EntityId))
+                {
+                    command.IsDefault = true;
+                }
+            }
+            else
+            {
+                await _mediator.Send(new MakeIsDefaultToFalseIfEntityHasDefaultImage(command.EntityId, command.EntityType));
+            }
+
             var image_Entity_Mapping = new Image_Entity_Mapping()
             {
                 EntityId = command.EntityId,

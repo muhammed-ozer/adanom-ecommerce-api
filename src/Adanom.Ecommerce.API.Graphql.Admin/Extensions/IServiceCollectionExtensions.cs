@@ -49,6 +49,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductPriceMutations>()
                 .AddType<MetaInformationMutations>()
                 .AddType<ImageMutations>()
+                .AddType<Image_EntityMutations>()
                 .AddType<TaxCategoryMutations>();
 
             #endregion

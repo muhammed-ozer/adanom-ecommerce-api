@@ -8,6 +8,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
             ProductCategories = new List<ProductCategoryResponse>();
             ProductSpecificationAttributes = new List<ProductSpecificationAttributeResponse>();
             ProductTags = new List<ProductTagResponse>();
+            Images = new List<ImageResponse>();
         }
 
         public long? BrandId { get; set; }
@@ -37,5 +38,9 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public ICollection<ProductSpecificationAttributeResponse> ProductSpecificationAttributes { get; set; }
 
         public ICollection<ProductTagResponse> ProductTags { get; set; }
+
+        public ImageResponse? DefaultImage { get; set; }
+
+        public ICollection<ImageResponse> Images { get; set; }
     }
 }
