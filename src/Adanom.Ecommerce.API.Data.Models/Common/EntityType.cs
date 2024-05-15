@@ -17,6 +17,7 @@
         TAXCATEGORY,
         NOTIFICATION,
         METAINFORMATION,
-        IMAGE
+        IMAGE,
+        PRODUCTREVIEW
     }
 }

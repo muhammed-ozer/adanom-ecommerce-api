@@ -116,5 +116,21 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
         }
 
         #endregion
+
+        #region GetProductReviewsAsync
+
+        public async Task<IEnumerable<ProductReviewResponse>> GetProductReviewsAsync(
+           [Parent] ProductResponse productResponse,
+           [Service] IMediator mediator)
+        {
+            var productReviews = await mediator.Send(new GetProductReviews(new GetProductReviewsFilter()
+            {
+                ProductId = productResponse.Id,
+            }));
+
+            return productReviews.Rows;
+        }
+
+        #endregion
     }
 }

@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Adanom.Ecommerce.API.Data.Models
+namespace Adanom.Ecommerce.API.Commands.Models
 {
-    public class ProductReview : BaseEntity<long>
+    public class ProductReviewResponse : BaseResponseEntity<long>
     {
         public long ProductId { get; set; }
 
@@ -10,7 +8,6 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public byte Points { get; set; }
 
-        [StringLength(500)]
         public string? Comment { get; set; }
 
         public bool IsApproved { get; set; }
@@ -22,9 +19,5 @@ namespace Adanom.Ecommerce.API.Data.Models
         public DateTime? ApprovedAtUtc { get; set; }
 
         public Guid? ApprovedByUserId { get; set; }
-
-        public Product Product { get; set; } = null!;
-
-        public User User { get; set; } = null!;
     }
 }
