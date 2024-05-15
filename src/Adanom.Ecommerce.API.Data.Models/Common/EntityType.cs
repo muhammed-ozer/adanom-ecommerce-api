@@ -17,7 +17,6 @@
         TAXCATEGORY,
         NOTIFICATION,
         METAINFORMATION,
-        METAINFORMATION_ENTITY,
         IMAGE
     }
 }

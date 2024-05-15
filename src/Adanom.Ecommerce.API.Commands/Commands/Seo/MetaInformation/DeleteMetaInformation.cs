@@ -17,7 +17,9 @@ namespace Adanom.Ecommerce.API.Commands
 
         public ClaimsPrincipal Identity { get; }
 
-        public long Id { get; set; }
+        public long EntityId { get; set; }
+
+        public EntityType EntityType { get; set; }
 
         #endregion
     }

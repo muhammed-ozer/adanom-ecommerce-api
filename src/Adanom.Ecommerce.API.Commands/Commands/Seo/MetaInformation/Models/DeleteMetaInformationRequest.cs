@@ -4,6 +4,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
 {
     public class DeleteMetaInformationRequest
     {
-        public long Id { get; set; }
+        public long EntityId { get; set; }
+
+        public EntityType EntityType { get; set; }
     }
 }

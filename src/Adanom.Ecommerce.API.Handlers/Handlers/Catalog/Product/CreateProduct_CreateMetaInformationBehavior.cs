@@ -32,6 +32,8 @@
 
             var createMetaInformationRequest = new CreateMetaInformationRequest()
             {
+                EntityId = productResponse.Id,
+                EntityType = EntityType.PRODUCT,
                 Title = command.Name,
                 Description = command.Name,
                 Keywords = command.Name
@@ -42,24 +44,6 @@
             var metaInformationResponse = await _mediator.Send(createMetaInformationCommand);
 
             if (metaInformationResponse == null)
-            {
-                return null;
-            }
-
-            var createMetaInformation_EntityRequest = new CreateMetaInformation_EntityRequest()
-            {
-                MetaInformationId = metaInformationResponse.Id,
-                EntityId = productResponse.Id,
-                EntityType = EntityType.PRODUCT
-            };
-
-            var createMetaInformation_EntityCommand = _mapper.Map(
-                createMetaInformation_EntityRequest,
-                new CreateMetaInformation_Entity(command.Identity));
-
-            var createMetaInformation_EntityResponse = await _mediator.Send(createMetaInformation_EntityCommand);
-
-            if (!createMetaInformation_EntityResponse)
             {
                 return null;
             }
