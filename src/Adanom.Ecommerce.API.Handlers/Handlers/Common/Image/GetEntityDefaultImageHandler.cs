@@ -25,13 +25,12 @@
 
         public async Task<ImageResponse?> Handle(GetEntityDefaultImage command, CancellationToken cancellationToken)
         {
-            var image = await _applicationDbContext.Image_Entity_Mappings
+            var image = await _applicationDbContext.Images
                  .AsNoTracking()
-                 .Where(e => e.EntityId == command.EntityId &&
+                 .Where(e => e.DeletedAtUtc == null &&
+                             e.EntityId == command.EntityId &&
                              e.EntityType == command.EntityType &&
                              e.IsDefault)
-                 .Include(e => e.Image)
-                 .Where(e => e.Image.DeletedAtUtc == null)
                  .SingleOrDefaultAsync();
 
             var imageResponse = _mapper.Map<ImageResponse>(image);

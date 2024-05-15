@@ -11,6 +11,10 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<CreateImageRequest, CreateImage>();
 
             CreateMap<CreateImage, Image>();
+
+            CreateMap<UpdateImageRequest, UpdateImage>();
+
+            CreateMap<UpdateImage, Image>();
         }
     }
 }

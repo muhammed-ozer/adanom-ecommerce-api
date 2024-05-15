@@ -58,32 +58,45 @@ namespace Adanom.Ecommerce.API.Handlers
 
             if (!command.IsDefault)
             {
-                if (!await _applicationDbContext.Image_Entity_Mappings.AnyAsync(e => e.EntityType == command.EntityType && e.EntityId == command.EntityId))
+                var hasAnyOtherImage = await _applicationDbContext.Images
+                    .AsNoTracking()
+                    .AnyAsync(e => e.DeletedAtUtc == null &&
+                                   e.EntityId == command.EntityId &&
+                                   e.EntityType == command.EntityType);
+
+                if (!hasAnyOtherImage)
                 {
                     command.IsDefault = true;
                 }
             }
             else
             {
-                await _mediator.Send(new MakeIsDefaultToFalseIfEntityHasDefaultImage(command.EntityId, command.EntityType));
+                var cuurentDefaultImage = await _applicationDbContext.Images
+                    .Where(e => e.DeletedAtUtc == null &&
+                                e.EntityType == command.EntityType &&
+                                e.EntityId == command.EntityId &&
+                                e.IsDefault)
+                    .SingleOrDefaultAsync();
+
+                if (cuurentDefaultImage != null)
+                {
+                    cuurentDefaultImage.IsDefault = false;
+                }
             }
 
-            var image_Entity_Mapping = new Image_Entity_Mapping()
+            var image = new Image()
             {
+                Name = fileName,
+                Path = $"{containerName}/{entityFolderName}/{fileName}",
+                DisplayOrder = command.DisplayOrder,
                 EntityId = command.EntityId,
                 EntityType = command.EntityType,
                 IsDefault = command.IsDefault,
-                Image = new Image()
-                {
-                    Name = fileName,
-                    Path = $"{containerName}/{entityFolderName}/{fileName}",
-                    DisplayOrder = command.DisplayOrder,
-                    CreatedAtUtc = DateTime.UtcNow,
-                    CreatedByUserId = userId,
-                },
+                CreatedByUserId = userId,
+                CreatedAtUtc = DateTime.UtcNow,
             };
 
-            await _applicationDbContext.AddAsync(image_Entity_Mapping);
+            await _applicationDbContext.AddAsync(image);
 
             try
             {
@@ -92,9 +105,9 @@ namespace Adanom.Ecommerce.API.Handlers
                 await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
                 {
                     UserId = userId,
-                    EntityType = EntityType.IMAGE_ENTITY,
+                    EntityType = EntityType.IMAGE,
                     TransactionType = TransactionType.CREATE,
-                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, image_Entity_Mapping.ImageId),
+                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, image.Id),
                 }));
             }
             catch (Exception exception)
@@ -102,7 +115,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
                 {
                     UserId = userId,
-                    EntityType = EntityType.IMAGE_ENTITY,
+                    EntityType = EntityType.IMAGE,
                     TransactionType = TransactionType.CREATE,
                     Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
                     Exception = exception.ToString()
@@ -111,12 +124,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 return null;
             }
 
-            if (image_Entity_Mapping.IsDefault)
-            {
-                await _mediator.Send(new MakeIsDefaultToFalseIfEntityHasDefaultImage(command.EntityId, command.EntityType));
-            }
-
-            var imageResponse = _mapper.Map<ImageResponse>(image_Entity_Mapping.Image);
+            var imageResponse = _mapper.Map<ImageResponse>(image);
 
             return imageResponse;
         }

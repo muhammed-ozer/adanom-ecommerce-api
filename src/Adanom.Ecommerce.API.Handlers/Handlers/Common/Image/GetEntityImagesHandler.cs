@@ -25,15 +25,15 @@
 
         public async Task<IEnumerable<ImageResponse>> Handle(GetEntityImages command, CancellationToken cancellationToken)
         {
-            var image_EntitesQuery = _applicationDbContext.Image_Entity_Mappings
+            var images = await _applicationDbContext.Images
                  .AsNoTracking()
-                 .Where(e => e.EntityId == command.EntityId &&
+                 .Where(e => e.DeletedAtUtc == null &&
+                             e.EntityId == command.EntityId &&
                              e.EntityType == command.EntityType)
-                 .Include(e => e.Image)
-                 .Where(e => e.Image.DeletedAtUtc == null)
-                 .OrderBy(e => e.Image.DisplayOrder);
+                 .OrderBy(e => e.DisplayOrder)
+                 .ToListAsync();
 
-            var imageResponses = _mapper.Map<IEnumerable<ImageResponse>>(await image_EntitesQuery.ToListAsync());
+            var imageResponses = _mapper.Map<IEnumerable<ImageResponse>>(images);
 
             return imageResponses;
         }

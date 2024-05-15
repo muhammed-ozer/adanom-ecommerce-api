@@ -4,11 +4,17 @@ namespace Adanom.Ecommerce.API.Data.Models
 {
     public class Image : BaseEntity<long>
     {
+        public long EntityId { get; set; }
+
+        public EntityType EntityType { get; set; }
+
         [StringLength(250)]
         public string Name { get; set; } = null!;
 
         [StringLength(1000)]
         public string Path { get; set; } = null!;
+
+        public bool IsDefault { get; set; }
 
         public int DisplayOrder { get; set; }
 

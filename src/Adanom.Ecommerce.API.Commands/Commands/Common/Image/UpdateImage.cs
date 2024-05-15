@@ -2,11 +2,11 @@ using System.Security.Claims;
 
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class UpdateImage_Entity : IRequest<bool>
+    public class UpdateImage : IRequest<bool>
     {
         #region Ctor
 
-        public UpdateImage_Entity(ClaimsPrincipal identity)
+        public UpdateImage(ClaimsPrincipal identity)
         {
             Identity = identity ?? throw new ArgumentNullException(nameof(identity));
         }
@@ -17,7 +17,7 @@ namespace Adanom.Ecommerce.API.Commands
 
         public ClaimsPrincipal Identity { get; }
 
-        public long ImageId { get; set; }
+        public long Id { get; set; }
 
         public bool IsDefault { get; set; }
 

@@ -2,12 +2,16 @@
 {
     public class ImageResponse : BaseResponseEntity<long>
     {
+        public long EntityId { get; set; }
+
+        public EntityType EntityType { get; set; }
+
         public string Name { get; set; } = null!;
 
         public string Path { get; set; } = null!;
 
-        public int DisplayOrder { get; set; }
-
         public bool IsDefault { get; set; }
+
+        public int DisplayOrder { get; set; }
     }
 }

@@ -21,5 +21,21 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
         }
 
         #endregion
+
+        #region UpdateImageAsync
+
+        [GraphQLDescription("Updates an image")]
+        public async Task<bool> UpdateImageAsync(
+            UpdateImageRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new UpdateImage(identity));
+
+            return await mediator.Send(command); ;
+        }
+
+        #endregion
     }
 }

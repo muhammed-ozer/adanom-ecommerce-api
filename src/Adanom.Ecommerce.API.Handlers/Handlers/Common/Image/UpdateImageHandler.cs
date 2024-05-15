@@ -1,9 +1,8 @@
 ﻿using System.Security.Claims;
-using Adanom.Ecommerce.API.Data.Models;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class UpdateImage_EntityHandler : IRequestHandler<UpdateImage_Entity, bool>
+    public sealed class UpdateImageHandler : IRequestHandler<UpdateImage, bool>
     {
         #region Fields
 
@@ -15,7 +14,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region Ctor
 
-        public UpdateImage_EntityHandler(ApplicationDbContext applicationDbContext, IMapper mapper, IMediator mediator)
+        public UpdateImageHandler(ApplicationDbContext applicationDbContext, IMapper mapper, IMediator mediator)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -26,26 +25,37 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region IRequestHandler Members
 
-        public async Task<bool> Handle(UpdateImage_Entity command, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdateImage command, CancellationToken cancellationToken)
         {
             var userId = command.Identity.GetUserId();
 
-            var image_Entity = await _applicationDbContext.Image_Entity_Mappings
-                .Where(e => e.ImageId == command.ImageId)
+            var image = await _applicationDbContext.Images
+                .Where(e => e.DeletedAtUtc == null &&
+                            e.Id == command.Id)
                 .SingleAsync();
 
-            if (command.IsDefault && !image_Entity.IsDefault)
+            if (command.IsDefault && !image.IsDefault)
             {
-                await _mediator.Send(new MakeIsDefaultToFalseIfEntityHasDefaultImage(image_Entity.EntityId, image_Entity.EntityType));
+                var cuurentDefaultImage = await _applicationDbContext.Images
+                    .Where(e => e.DeletedAtUtc == null &&
+                                e.EntityType == image.EntityType &&
+                                e.EntityId == image.EntityId &&
+                                e.IsDefault)
+                    .SingleOrDefaultAsync();
+
+                if (cuurentDefaultImage != null)
+                {
+                    cuurentDefaultImage.IsDefault = false;
+                }
             }
             else
             {
                 command.IsDefault = true;
             }
 
-            image_Entity = _mapper.Map(command, image_Entity);
+            image = _mapper.Map(command, image);
 
-            _applicationDbContext.Update(image_Entity);
+            _applicationDbContext.Update(image);
 
             try
             {
@@ -56,7 +66,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
                 {
                     UserId = userId,
-                    EntityType = EntityType.IMAGE_ENTITY,
+                    EntityType = EntityType.IMAGE,
                     TransactionType = TransactionType.UPDATE,
                     Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
                     Exception = exception.ToString()

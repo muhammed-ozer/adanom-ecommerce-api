@@ -1,10 +1,10 @@
 ﻿namespace Adanom.Ecommerce.API.Validation.Validators
 {
-    public sealed class UpdateImage_EntityValidator : AbstractValidator<UpdateImage_Entity>
+    public sealed class UpdateImageValidator : AbstractValidator<UpdateImage>
     {
         private readonly IMediator _mediator;
 
-        public UpdateImage_EntityValidator(IMediator mediator)
+        public UpdateImageValidator(IMediator mediator)
         {
             _mediator = mediator;
 
@@ -13,7 +13,7 @@
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                     .WithMessage("Kullanıcı bilgilerine erişilemiyor.");
 
-            RuleFor(e => e.ImageId)
+            RuleFor(e => e.Id)
                 .GreaterThan(0)
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                     .WithMessage("Görsel bulunamadı.")
@@ -26,14 +26,14 @@
 
         private async Task ValidateDoesImageExistsAsync(
             long value,
-            ValidationContext<UpdateImage_Entity> context,
+            ValidationContext<UpdateImage> context,
             CancellationToken cancellationToken)
         {
             var imageExists = await _mediator.Send(new DoesEntityExists<ImageResponse>(value));
 
             if (!imageExists)
             {
-                context.AddFailure(new ValidationFailure(nameof(UpdateImage_Entity.ImageId), null)
+                context.AddFailure(new ValidationFailure(nameof(UpdateImage.Id), null)
                 {
                     ErrorCode = ValidationErrorCodesEnum.NOT_EXISTS.ToString(),
                     ErrorMessage = "Görsel bulunamadı."

@@ -18,7 +18,6 @@
         NOTIFICATION,
         METAINFORMATION,
         METAINFORMATION_ENTITY,
-        IMAGE,
-        IMAGE_ENTITY
+        IMAGE
     }
 }
