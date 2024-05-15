@@ -20,6 +20,7 @@ namespace Microsoft.Extensions.DependencyInjection
             graphqlServices
                 .AddQueryType(e => e.Name(OperationTypeNames.Query))
                 .AddType<AddressCityQueries>()
+                .AddType<AddressDistrictQueries>()
                 .AddType<BrandQueries>()
                 .AddType<ProductQueries>()
                 .AddType<ProductReviewQueries>()
@@ -39,6 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
             graphqlServices
                 .AddMutationType(e => e.Name(OperationTypeNames.Mutation))
                 .AddType<AddressCityMutations>()
+                .AddType<AddressDistrictMutations>()
                 .AddType<BrandMutations>()
                 .AddType<ProductCategoryMutations>()
                 .AddType<Product_ProductCategoryMutations>()
@@ -60,6 +62,7 @@ namespace Microsoft.Extensions.DependencyInjection
             #region Resolvers
 
             graphqlServices
+                .AddType<AddressDistrictResolvers>()
                 .AddType<BrandResolvers>()
                 .AddType<ProductResolvers>()
                 .AddType<ProductCategoryResolvers>()
