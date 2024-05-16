@@ -72,14 +72,6 @@ namespace Adanom.Ecommerce.API.Handlers
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
-
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.PRODUCTSKU,
-                    TransactionType = TransactionType.CREATE,
-                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productSKU.Id),
-                }));
             }
             catch (Exception exception)
             {
@@ -92,8 +84,16 @@ namespace Adanom.Ecommerce.API.Handlers
                     Exception = exception.ToString()
                 }));
 
-                productSKU = null;
+                return null;
             }
+
+            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+            {
+                UserId = userId,
+                EntityType = EntityType.PRODUCTSKU,
+                TransactionType = TransactionType.CREATE,
+                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productSKU.Id),
+            }));
 
             var productSKUResponse = _mapper.Map<ProductSKUResponse>(productSKU);
 

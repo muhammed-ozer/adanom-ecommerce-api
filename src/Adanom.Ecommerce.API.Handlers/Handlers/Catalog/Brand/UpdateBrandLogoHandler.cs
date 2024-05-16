@@ -61,14 +61,6 @@ namespace Adanom.Ecommerce.API.Handlers
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
-
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.BRAND,
-                    TransactionType = TransactionType.UPDATE,
-                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, brand.Id),
-                }));
             }
             catch (Exception exception)
             {
@@ -87,6 +79,14 @@ namespace Adanom.Ecommerce.API.Handlers
             var brandResponse = _mapper.Map<BrandResponse>(brand);
 
             await _mediator.Publish(new UpdateFromCache<BrandResponse>(brandResponse));
+
+            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+            {
+                UserId = userId,
+                EntityType = EntityType.BRAND,
+                TransactionType = TransactionType.UPDATE,
+                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, brand.Id),
+            }));
 
             return brandResponse;
         }

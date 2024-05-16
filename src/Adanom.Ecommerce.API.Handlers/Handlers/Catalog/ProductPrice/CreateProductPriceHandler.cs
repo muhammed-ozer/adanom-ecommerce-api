@@ -47,14 +47,6 @@ namespace Adanom.Ecommerce.API.Handlers
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
-
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.PRODUCTPRICE,
-                    TransactionType = TransactionType.CREATE,
-                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productPrice.Id),
-                }));
             }
             catch (Exception exception)
             {
@@ -67,8 +59,16 @@ namespace Adanom.Ecommerce.API.Handlers
                     Exception = exception.ToString()
                 }));
 
-                productPrice = null;
+                return null;
             }
+
+            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+            {
+                UserId = userId,
+                EntityType = EntityType.PRODUCTPRICE,
+                TransactionType = TransactionType.CREATE,
+                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productPrice.Id),
+            }));
 
             var productPriceResponse = _mapper.Map<ProductPriceResponse>(productPrice);
 
