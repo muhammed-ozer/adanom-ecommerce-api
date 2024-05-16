@@ -1,6 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
 {
-    [ExtendObjectType("Query")]
+    [ExtendObjectType(OperationTypeNames.Query)]
     // TODO: Implement authorize [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
     public sealed class ProductSpecificationAttributeGroupQueries
     {
