@@ -6,15 +6,20 @@
 
         public CreateImageValidator(IMediator mediator)
         {
-                _mediator = mediator;
+            _mediator = mediator;
 
-                RuleFor(e => e.Identity)
+            RuleFor(e => e.Identity)
                 .NotNull()
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                     .WithMessage("Kullanıcı bilgilerine erişilemiyor.");
 
             RuleFor(e => e)
                 .CustomAsync(ValidateDoesEntityExistsAsync);
+
+            RuleFor(e => e.EntityNameAsUrlSlug)
+                .NotEmpty()
+                    .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
+                    .WithMessage("Obje adı gereklidir.");
 
             RuleFor(e => e.File)
                 .Custom(ValidateDoesImageExtensionAllowed);

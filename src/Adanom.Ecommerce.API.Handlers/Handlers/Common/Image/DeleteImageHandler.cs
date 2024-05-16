@@ -58,8 +58,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 image.IsDefault = false;
             }
 
-            var containerName = GetContainerName(image.EntityType);
-            var deleteImageResponse = await _blobStorageService.DeleteFileAsync(containerName, image.Path);
+            var deleteImageResponse = await _blobStorageService.DeleteFileAsync(image.Path);
 
             image.DeletedAtUtc = DateTime.UtcNow;
             image.DeletedByUserId = userId;
@@ -91,28 +90,6 @@ namespace Adanom.Ecommerce.API.Handlers
             }
 
             return true;
-        }
-
-        #endregion
-
-        #region GetContainerName
-
-        private string GetContainerName(EntityType entityType)
-        {
-            switch (entityType)
-            {
-                case EntityType.PRODUCT:
-                    return AzureBlobStorageConstants.Containers.Products;
-
-                case EntityType.PRODUCTCATEGORY:
-                    return AzureBlobStorageConstants.Containers.ProductCategories;
-
-                case EntityType.BRAND:
-                    return AzureBlobStorageConstants.Containers.Brands;
-
-                default:
-                    return string.Empty;
-            }
         }
 
         #endregion
