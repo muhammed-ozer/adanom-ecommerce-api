@@ -18,6 +18,7 @@
         NOTIFICATION,
         METAINFORMATION,
         IMAGE,
-        PRODUCTREVIEW
+        PRODUCTREVIEW,
+        TAXADMINISTRATION
     }
 }

@@ -31,12 +31,13 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductTagQueries>()
                 .AddType<StockUnitTypeQueries>()
                 .AddType<MetaInformationQueries>()
-                .AddType<TaxCategoryQueries>();
+                .AddType<TaxCategoryQueries>()
+                .AddType<TaxAdministrationQueries>();
 
             #endregion
 
             #region Mutations
-            
+
             graphqlServices
                 .AddMutationType(e => e.Name(OperationTypeNames.Mutation))
                 .AddType<AddressCityMutations>()
@@ -55,7 +56,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductPriceMutations>()
                 .AddType<MetaInformationMutations>()
                 .AddType<ImageMutations>()
-                .AddType<TaxCategoryMutations>();
+                .AddType<TaxCategoryMutations>()
+                .AddType<TaxAdministrationMutations>();
 
             #endregion
 
