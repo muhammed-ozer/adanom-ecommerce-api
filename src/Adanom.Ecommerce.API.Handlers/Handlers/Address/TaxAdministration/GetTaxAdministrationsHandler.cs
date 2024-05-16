@@ -30,8 +30,6 @@ namespace Adanom.Ecommerce.API.Handlers
                 .AsNoTracking()
                 .Where(e => e.DeletedAtUtc== null);
 
-            var totalCount = taxAdministrationsQuery.Count();
-
             if (command.Filter is not null)
             {
                 #region Apply filtering
@@ -44,6 +42,8 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 #endregion
             }
+
+            var totalCount = taxAdministrationsQuery.Count();
 
             #region Apply pagination
 

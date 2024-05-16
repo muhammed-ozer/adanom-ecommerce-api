@@ -28,8 +28,6 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var productReviewsQuery = _applicationDbContext.ProductReviews.AsNoTracking();
 
-            var totalCount = productReviewsQuery.Count();
-
             if (command.Filter is not null)
             {
                 #region Apply filtering
@@ -70,6 +68,8 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 #endregion
             }
+
+            var totalCount = productReviewsQuery.Count();
 
             #region Apply pagination
 
