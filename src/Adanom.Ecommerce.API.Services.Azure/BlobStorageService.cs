@@ -27,17 +27,17 @@ namespace Adanom.Ecommerce.API.Services.Azure
 
         #region UploadFileAsync
 
-        public async Task<bool> UploadFileAsync(UploadedFile file, string containerName, string? existingFileName = null)
+        public async Task<bool> UploadFileAsync(UploadedFile file, string? existingFileName = null)
         {
             try
             {
-                var blobContainerClient = _blobServiceClient.GetBlobContainerClient(containerName);
+                var blobContainerClient = _blobServiceClient.GetBlobContainerClient(AzureBlobStorageConstants.Containers.Ecommerce);
 
                 var isContainerExists = await blobContainerClient.ExistsAsync();
 
                 if (!isContainerExists)
                 {
-                    await _blobServiceClient.CreateBlobContainerAsync(containerName);
+                    await _blobServiceClient.CreateBlobContainerAsync(AzureBlobStorageConstants.Containers.Ecommerce);
 
                     await blobContainerClient.SetAccessPolicyAsync(PublicAccessType.Blob);
                 }
@@ -82,11 +82,11 @@ namespace Adanom.Ecommerce.API.Services.Azure
 
         #region UpdateFileNameAsync
 
-        public async Task<bool> UpdateFileNameAsync(string containerName, string oldName, string newName)
+        public async Task<bool> UpdateFileNameAsync(string oldName, string newName)
         {
             try
             {
-                var blobContainerClient = _blobServiceClient.GetBlobContainerClient(containerName);
+                var blobContainerClient = _blobServiceClient.GetBlobContainerClient(AzureBlobStorageConstants.Containers.Ecommerce);
 
                 var isContainerExists = await blobContainerClient.ExistsAsync();
 
@@ -138,11 +138,11 @@ namespace Adanom.Ecommerce.API.Services.Azure
 
         #region DeleteFileAsync
 
-        public async Task<bool> DeleteFileAsync(string containerName, string fileName)
+        public async Task<bool> DeleteFileAsync(string fileName)
         {
             try
             {
-                var blobContainerClient = _blobServiceClient.GetBlobContainerClient(containerName);
+                var blobContainerClient = _blobServiceClient.GetBlobContainerClient(AzureBlobStorageConstants.Containers.Ecommerce);
 
                 var isContainerExists = await blobContainerClient.ExistsAsync();
 

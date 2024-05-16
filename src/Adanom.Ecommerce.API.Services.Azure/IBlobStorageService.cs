@@ -10,23 +10,22 @@ namespace Adanom.Ecommerce.API.Services.Azure
         /// 
         /// </summary>
         /// <param name="file"></param>
-        /// <param name="containerName"></param>
         /// <param name="existingFileName">File name to delete</param>
         /// <returns></returns>
 
-        Task<bool> UploadFileAsync(UploadedFile file, string containerName, string? existingFileName = null);
+        Task<bool> UploadFileAsync(UploadedFile file, string? existingFileName = null);
 
         #endregion
 
         #region UpdateFileNameAsync
 
-        Task<bool> UpdateFileNameAsync(string containerName, string oldName, string newName);
+        Task<bool> UpdateFileNameAsync(string oldName, string newName);
 
         #endregion
 
         #region DeleteFileAsync
 
-        Task<bool> DeleteFileAsync(string containerName, string fileName);
+        Task<bool> DeleteFileAsync(string fileName);
 
         #endregion
     }

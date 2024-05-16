@@ -43,12 +43,13 @@ namespace Adanom.Ecommerce.API.Handlers
                             e.Id == command.Id)
                 .SingleAsync();
 
-            var logoPath = $"{brand.UrlSlug}/logo{command.Logo.Extension}";
+            var entityFolderName = AzureBlobStorageHelpers.GetFolderName(EntityType.BRAND);
+            var logoPath = $"{entityFolderName}/{brand.UrlSlug}/{AzureBlobStorageConstants.ImagesFolderName}/logo{command.Logo.Extension}";
+
             command.Logo.Name = logoPath;
 
             var uploadFileResponse = await _blobStorageService.UploadFileAsync(
                 command.Logo,
-                AzureBlobStorageConstants.Containers.Brands,
                 brand.LogoPath);
 
             brand.LogoPath = logoPath;

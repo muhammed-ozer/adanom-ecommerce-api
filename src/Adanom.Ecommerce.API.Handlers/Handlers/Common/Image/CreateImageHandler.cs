@@ -37,19 +37,19 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var (containerName, entityFolderName) = await GetContainerNameAndEntityFolderNameAsync(command.EntityType, command.EntityId);
+            var entityFolderName = AzureBlobStorageHelpers.GetFolderName(command.EntityType);
 
-            if (containerName.IsNullOrEmpty() || entityFolderName.IsNullOrEmpty())
+            if (entityFolderName.IsNullOrEmpty())
             {
                 return null;
             }
 
             var fileName = $"{Guid.NewGuid()}{command.File.Extension}";
 
-            command.File.Name = $"{entityFolderName}/{AzureBlobStorageConstants.ImagesFolderName}/{fileName}";
+            command.File.Name = $"{entityFolderName}/{command.EntityNameAsUrlSlug}/{AzureBlobStorageConstants.ImagesFolderName}/{fileName}";
 
             // TODO: Test here after Azure storage created
-            var uploadFileResponse = await _blobStorageService.UploadFileAsync(command.File, containerName);
+            var uploadFileResponse = await _blobStorageService.UploadFileAsync(command.File);
 
             if (!uploadFileResponse)
             {
@@ -87,7 +87,7 @@ namespace Adanom.Ecommerce.API.Handlers
             var image = new Image()
             {
                 Name = fileName,
-                Path = $"{containerName}/{entityFolderName}/{fileName}",
+                Path = command.File.Name,
                 DisplayOrder = command.DisplayOrder,
                 EntityId = command.EntityId,
                 EntityType = command.EntityType,
@@ -127,34 +127,6 @@ namespace Adanom.Ecommerce.API.Handlers
             var imageResponse = _mapper.Map<ImageResponse>(image);
 
             return imageResponse;
-        }
-
-        #endregion
-
-        #region GetContainerNameAndEntityFolderAsync
-
-        private async Task<(string containerName, string entityFolderName)> GetContainerNameAndEntityFolderNameAsync(EntityType entityType, long entityId)
-        {
-            switch (entityType)
-            {
-                case EntityType.PRODUCT:
-                    var productResponse = await _mediator.Send(new GetProduct(entityId));
-
-                    return (AzureBlobStorageConstants.Containers.Products, productResponse!.UrlSlug);
-
-                case EntityType.PRODUCTCATEGORY:
-                    var productCategoryResponse = await _mediator.Send(new GetProduct(entityId));
-
-                    return (AzureBlobStorageConstants.Containers.ProductCategories, productCategoryResponse!.UrlSlug);
-
-                case EntityType.BRAND:
-                    var brand = await _mediator.Send(new GetProductCategory(entityId));
-
-                    return (AzureBlobStorageConstants.Containers.Brands, brand!.UrlSlug);
-
-                default:
-                    return (string.Empty, string.Empty);
-            }
         }
 
         #endregion

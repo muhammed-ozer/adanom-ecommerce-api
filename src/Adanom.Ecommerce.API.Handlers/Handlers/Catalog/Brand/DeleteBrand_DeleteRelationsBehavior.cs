@@ -46,7 +46,7 @@ namespace Adanom.Ecommerce.API.Handlers
             if (brand.LogoPath.IsNotNullOrEmpty())
             {
                 // TODO: Test this handler when azure blob storage created
-                await _blobStorageService.DeleteFileAsync(AzureBlobStorageConstants.Containers.Brands, brand.LogoPath);
+                await _blobStorageService.DeleteFileAsync(brand.LogoPath);
             }
 
             #region MetaInformation

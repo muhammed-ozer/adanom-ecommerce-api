@@ -6,6 +6,11 @@
 
         public static class Containers
         {
+            public const string Ecommerce = "e-commerce";
+        }
+
+        public static class FolderNames
+        {
             public const string Brands = "brands";
 
             public const string Products = "products";
