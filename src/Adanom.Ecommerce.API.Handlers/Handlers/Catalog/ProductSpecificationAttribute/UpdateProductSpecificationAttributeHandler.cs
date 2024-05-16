@@ -47,14 +47,6 @@ namespace Adanom.Ecommerce.API.Handlers
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
-
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.PRODUCTSPECIFICATIONATTRIBUTE,
-                    TransactionType = TransactionType.UPDATE,
-                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productSpecificationAttribute.Id),
-                }));
             }
             catch (Exception exception)
             {
@@ -73,6 +65,14 @@ namespace Adanom.Ecommerce.API.Handlers
             var productSpecificationAttributeResponse = _mapper.Map<ProductSpecificationAttributeResponse>(productSpecificationAttribute);
 
             await _mediator.Publish(new UpdateFromCache<ProductSpecificationAttributeResponse>(productSpecificationAttributeResponse));
+
+            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+            {
+                UserId = userId,
+                EntityType = EntityType.PRODUCTSPECIFICATIONATTRIBUTE,
+                TransactionType = TransactionType.UPDATE,
+                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productSpecificationAttribute.Id),
+            }));
 
             return productSpecificationAttributeResponse;
         }

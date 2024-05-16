@@ -47,14 +47,6 @@ namespace Adanom.Ecommerce.API.Handlers
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
-
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.TAXCATEGORY,
-                    TransactionType = TransactionType.UPDATE,
-                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, taxCategory.Id),
-                }));
             }
             catch (Exception exception)
             {
@@ -73,6 +65,14 @@ namespace Adanom.Ecommerce.API.Handlers
             var taxCategoryResponse = _mapper.Map<TaxCategoryResponse>(taxCategory);
 
             await _mediator.Publish(new UpdateFromCache<TaxCategoryResponse>(taxCategoryResponse));
+
+            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+            {
+                UserId = userId,
+                EntityType = EntityType.TAXCATEGORY,
+                TransactionType = TransactionType.UPDATE,
+                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, taxCategory.Id),
+            }));
 
             return taxCategoryResponse;
         }

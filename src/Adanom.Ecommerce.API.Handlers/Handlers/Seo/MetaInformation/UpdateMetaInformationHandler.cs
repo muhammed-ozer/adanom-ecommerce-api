@@ -43,14 +43,6 @@ namespace Adanom.Ecommerce.API.Handlers
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
-
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.METAINFORMATION,
-                    TransactionType = TransactionType.UPDATE,
-                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, metaInformation.Id),
-                }));
             }
             catch (Exception exception)
             {
@@ -65,6 +57,14 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 return null;
             }
+
+            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+            {
+                UserId = userId,
+                EntityType = EntityType.METAINFORMATION,
+                TransactionType = TransactionType.UPDATE,
+                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, metaInformation.Id),
+            }));
 
             var metaInformationResponse = _mapper.Map<MetaInformationResponse>(metaInformation);
 

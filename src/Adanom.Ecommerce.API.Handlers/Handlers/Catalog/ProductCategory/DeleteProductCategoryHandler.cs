@@ -40,14 +40,6 @@ namespace Adanom.Ecommerce.API.Handlers
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
-
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.PRODUCTCATEGORY,
-                    TransactionType = TransactionType.DELETE,
-                    Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productCategory.Id),
-                }));
             }
             catch (Exception exception)
             {
@@ -64,6 +56,14 @@ namespace Adanom.Ecommerce.API.Handlers
             }
 
             await _mediator.Publish(new RemoveFromCache<ProductCategoryResponse>(productCategory.Id));
+
+            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+            {
+                UserId = userId,
+                EntityType = EntityType.PRODUCTCATEGORY,
+                TransactionType = TransactionType.DELETE,
+                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productCategory.Id),
+            }));
 
             return true;
         }
