@@ -4,8 +4,6 @@ namespace Adanom.Ecommerce.API.Data.Models
 {
     public class SliderItem : BaseEntity<long>
     {
-        public long ImageId { get; set; }
-
         public SliderItemType SliderItemType { get; set; }
 
         [StringLength(50)]
@@ -23,7 +21,5 @@ namespace Adanom.Ecommerce.API.Data.Models
         public DateTime? UpdatedAtUtc { get; set; }
 
         public Guid? UpdatedByUserId { get; set; }
-
-        public Image Image { get; set; } = null!;
     }
 }
