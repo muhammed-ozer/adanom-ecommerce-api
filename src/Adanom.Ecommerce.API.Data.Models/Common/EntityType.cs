@@ -19,6 +19,7 @@
         METAINFORMATION,
         IMAGE,
         PRODUCTREVIEW,
-        TAXADMINISTRATION
+        TAXADMINISTRATION,
+        SLIDERITEM
     }
 }

@@ -68,6 +68,20 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
+                #region Cms
+
+                #region SliderItem
+
+                options.AddBehavior<IPipelineBehavior<CreateSliderItem, SliderItemResponse?>, CreateSliderItem_CommitTransactionBehavior>();
+                options.AddBehavior<IPipelineBehavior<CreateSliderItem, SliderItemResponse?>, CreateSliderItem_CreateImageBehavior>();
+
+                options.AddBehavior<IPipelineBehavior<DeleteSliderItem, bool>, DeleteSliderItem_CommitTransactionBehavior>();
+                options.AddBehavior<IPipelineBehavior<DeleteSliderItem, bool>, DeleteSliderItem_DeleteImageBehavior>();
+
+                #endregion
+
+                #endregion
+
                 #region Auth
 
                 #region RegisterUser

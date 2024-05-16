@@ -16,6 +16,8 @@
             public const string Products = "products";
 
             public const string ProductCategories = "product-categories";
+
+            public const string SliderItems = "slider-items";
         }
     }
 }

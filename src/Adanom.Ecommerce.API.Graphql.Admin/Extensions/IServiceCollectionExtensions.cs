@@ -31,6 +31,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductTagQueries>()
                 .AddType<StockUnitTypeQueries>()
                 .AddType<MetaInformationQueries>()
+                .AddType<SliderItemQueries>()
                 .AddType<TaxCategoryQueries>()
                 .AddType<TaxAdministrationQueries>();
 
@@ -56,6 +57,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductPriceMutations>()
                 .AddType<MetaInformationMutations>()
                 .AddType<ImageMutations>()
+                .AddType<SliderItemMutations>()
                 .AddType<TaxCategoryMutations>()
                 .AddType<TaxAdministrationMutations>();
 
@@ -71,7 +73,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductSKUResolvers>()
                 .AddType<ProductPriceResolvers>()
                 .AddType<ProductSpecificationAttributeResolvers>()
-                .AddType<ProductSpecificationAttributeGroupResolvers>();
+                .AddType<ProductSpecificationAttributeGroupResolvers>()
+                .AddType<SliderItemResolvers>();
 
             #endregion
 
