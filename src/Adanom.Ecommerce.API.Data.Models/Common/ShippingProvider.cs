@@ -18,7 +18,7 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public DateTime CreatedAtUtc { get; set; }
 
-        public Guid CreateByUserId { get; set; }
+        public Guid CreatedByUserId { get; set; }
 
         public DateTime? UpdatedAtUtc { get; set; }
 
