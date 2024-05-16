@@ -2,7 +2,7 @@ using AutoMapper;
 
 namespace Adanom.Ecommerce.API.Graphql.Auth.Mutations
 {
-    [ExtendObjectType("Mutation")]
+    [ExtendObjectType(OperationTypeNames.Mutation)]
     public sealed class AuthMutations
     {
         #region RegisterUserAsync

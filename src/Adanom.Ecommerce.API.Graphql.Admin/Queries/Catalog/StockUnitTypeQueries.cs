@@ -1,6 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
 {
-    [ExtendObjectType("Query")]
+    [ExtendObjectType(OperationTypeNames.Query)]
     public sealed class StockUnitTypeQueries
     {
         #region GetStockUnitTypesAsync
