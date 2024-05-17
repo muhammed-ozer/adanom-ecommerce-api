@@ -158,7 +158,7 @@ namespace Adanom.Ecommerce.API.Data
                 e.Property(e => e.Total).HasPrecision(10, 2);
             });
 
-            modelBuilder.Entity<ShippingSettings>(e =>
+            modelBuilder.Entity<ShippingProvider>(e =>
             {
                 e.Property(e => e.FeeTax).HasPrecision(10, 2);
                 e.Property(e => e.FeeTotal).HasPrecision(10, 2);
@@ -236,8 +236,6 @@ namespace Adanom.Ecommerce.API.Data
         public DbSet<Notification> Notifications { get; set; } = null!;
 
         public DbSet<ShippingProvider> ShippingProviders { get; set; } = null!;
-
-        public DbSet<ShippingSettings> ShippingSettings { get; set; } = null!;
 
         public DbSet<TaxAdministration> TaxAdministrations { get; set; } = null!;
 

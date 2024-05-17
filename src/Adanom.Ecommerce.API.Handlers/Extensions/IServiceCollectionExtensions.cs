@@ -68,6 +68,17 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
+                #region Common
+
+                #region ShippingProvider
+
+                options.AddBehavior<IPipelineBehavior<DeleteShippingProvider, bool>, DeleteShippingProvider_CommitTransactionBehavior>();
+                options.AddBehavior<IPipelineBehavior<DeleteShippingProvider, bool>, DeleteShippingProvider_DeleteRelationsBehavior>();
+
+                #endregion
+
+                #endregion
+
                 #region Cms
 
                 #region SliderItem
