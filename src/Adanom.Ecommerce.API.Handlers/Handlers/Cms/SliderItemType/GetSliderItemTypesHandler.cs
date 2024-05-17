@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Reflection;
 using Adanom.Ecommerce.API.Data.Attributes;
 
@@ -7,6 +8,8 @@ namespace Adanom.Ecommerce.API.Handlers
 
     {
         #region Fields
+
+        private readonly static ConcurrentDictionary<SliderItemType, SliderItemTypeResponse> _cache = new();
 
         #endregion
 
@@ -22,6 +25,11 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public Task<IEnumerable<SliderItemTypeResponse>> Handle(GetSliderItemTypes command, CancellationToken cancellationToken)
         {
+            if (_cache.Values.Any())
+            {
+                return Task.FromResult(_cache.Values.AsEnumerable());
+            }
+
             var responses = new List<SliderItemTypeResponse>();
             var types = Enum.GetValues<SliderItemType>();
             var enumType = typeof(SliderItemType);
@@ -36,6 +44,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 };
 
                 responses.Add(response);
+
+                _cache.TryAdd(response.Key, response);
             }
 
             return Task.FromResult(responses.AsEnumerable());
