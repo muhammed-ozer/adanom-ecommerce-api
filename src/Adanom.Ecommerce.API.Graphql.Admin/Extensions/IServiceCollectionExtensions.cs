@@ -19,6 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             graphqlServices
                 .AddQueryType(e => e.Name(OperationTypeNames.Query))
+                .AddType<CompanyQueries>()
                 .AddType<AddressCityQueries>()
                 .AddType<AddressDistrictQueries>()
                 .AddType<BrandQueries>()
@@ -41,6 +42,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             graphqlServices
                 .AddMutationType(e => e.Name(OperationTypeNames.Mutation))
+                .AddType<CompanyMutations>()
                 .AddType<AddressCityMutations>()
                 .AddType<AddressDistrictMutations>()
                 .AddType<BrandMutations>()

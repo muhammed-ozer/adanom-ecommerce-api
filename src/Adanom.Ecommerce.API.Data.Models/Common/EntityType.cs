@@ -20,6 +20,7 @@
         IMAGE,
         PRODUCTREVIEW,
         TAXADMINISTRATION,
-        SLIDERITEM
+        SLIDERITEM,
+        COMPANY
     }
 }
