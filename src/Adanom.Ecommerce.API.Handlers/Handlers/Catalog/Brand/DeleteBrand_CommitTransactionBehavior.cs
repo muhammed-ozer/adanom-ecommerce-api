@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Adanom.Ecommerce.API.Data.Models;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
@@ -71,8 +72,10 @@ namespace Adanom.Ecommerce.API.Handlers
                     Exception = exception.ToString()
                 }));
 
-                deleteBrandResponse = false;
+                return false;
             }
+
+            await _mediator.Publish(new RemoveFromCache<BrandResponse>(command.Id));
 
             return deleteBrandResponse;
         }

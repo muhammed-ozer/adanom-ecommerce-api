@@ -71,7 +71,7 @@ namespace Adanom.Ecommerce.API.Handlers
                     Exception = exception.ToString()
                 }));
 
-                sldierItemResponse = null;
+                return null;
             }
 
             return sldierItemResponse;

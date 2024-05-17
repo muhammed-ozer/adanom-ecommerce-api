@@ -1,8 +1,9 @@
 ﻿using System.Security.Claims;
+using Adanom.Ecommerce.API.Data.Models;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class CreateProduct_CommitTransactionBehavior : IPipelineBehavior<CreateProduct, ProductResponse?>
+    public sealed class DeleteProductCategory_CommitTransactionBehavior : IPipelineBehavior<DeleteProductCategory, bool>
     {
         #region Fields
 
@@ -13,7 +14,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region Ctor
 
-        public CreateProduct_CommitTransactionBehavior(ApplicationDbContext applicationDbContext, IMediator mediator)
+        public DeleteProductCategory_CommitTransactionBehavior(ApplicationDbContext applicationDbContext, IMediator mediator)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
@@ -24,13 +25,13 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region IPipelineBehavior Members
 
-        public async Task<ProductResponse?> Handle(CreateProduct command, RequestHandlerDelegate<ProductResponse?> next, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteProductCategory command, RequestHandlerDelegate<bool> next, CancellationToken cancellationToken)
         {
-            var productResponse = await next();
+            var deleteProductCategoryResponse = await next();
 
             var currentTransaction = _applicationDbContext.Database.CurrentTransaction;
 
-            if (productResponse == null)
+            if (!deleteProductCategoryResponse)
             {
                 if (currentTransaction != null)
                 {
@@ -39,13 +40,13 @@ namespace Adanom.Ecommerce.API.Handlers
                     await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
                     {
                         UserId = command.Identity.GetUserId(),
-                        EntityType = EntityType.PRODUCT,
-                        TransactionType = TransactionType.CREATE,
+                        EntityType = EntityType.PRODUCTCATEGORY,
+                        TransactionType = TransactionType.DELETE,
                         Description = LogMessages.AdminTransaction.DatabaseTransactionHasFailed,
                     }));
                 }
 
-                return null;
+                return false;
             }
 
             try
@@ -65,16 +66,18 @@ namespace Adanom.Ecommerce.API.Handlers
                 await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
                 {
                     UserId = command.Identity.GetUserId(),
-                    EntityType = EntityType.PRODUCT,
-                    TransactionType = TransactionType.CREATE,
+                    EntityType = EntityType.PRODUCTCATEGORY,
+                    TransactionType = TransactionType.DELETE,
                     Description = LogMessages.AdminTransaction.DatabaseTransactionHasFailed,
                     Exception = exception.ToString()
                 }));
 
-                return null;
+                return false;
             }
 
-            return productResponse;
+            await _mediator.Publish(new RemoveFromCache<ProductCategoryResponse>(command.Id));
+
+            return deleteProductCategoryResponse;
         }
 
         #endregion

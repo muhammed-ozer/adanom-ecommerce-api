@@ -71,8 +71,10 @@ namespace Adanom.Ecommerce.API.Handlers
                     Exception = exception.ToString()
                 }));
 
-                brandResponse = null;
+                return null;
             }
+
+            await _mediator.Publish(new AddToCache<BrandResponse>(brandResponse));
 
             return brandResponse;
         }

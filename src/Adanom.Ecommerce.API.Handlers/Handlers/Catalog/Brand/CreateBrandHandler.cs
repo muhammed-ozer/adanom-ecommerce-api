@@ -66,8 +66,6 @@ namespace Adanom.Ecommerce.API.Handlers
 
             var brandResponse = _mapper.Map<BrandResponse>(brand);
 
-            await _mediator.Publish(new AddToCache<BrandResponse>(brandResponse));
-
             await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
             {
                 UserId = userId,
