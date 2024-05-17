@@ -58,10 +58,10 @@ namespace Adanom.Ecommerce.API.Handlers
 
             taxAdministrationsQuery = taxAdministrationsQuery.OrderBy(e => e.Code);
 
-            var taxAdministrationesponses = _mapper.Map<IEnumerable<TaxAdministrationResponse>>(await taxAdministrationsQuery.ToListAsync());
+            var taxAdministrationResponses = _mapper.Map<IEnumerable<TaxAdministrationResponse>>(await taxAdministrationsQuery.ToListAsync());
 
             return new PaginatedData<TaxAdministrationResponse>(
-                taxAdministrationesponses,
+                taxAdministrationResponses,
                 totalCount,
                 command.Pagination?.Page ?? 1,
                 command.Pagination?.PageSize ?? totalCount);
