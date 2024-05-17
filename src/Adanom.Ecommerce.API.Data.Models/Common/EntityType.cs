@@ -21,6 +21,7 @@
         PRODUCTREVIEW,
         TAXADMINISTRATION,
         SLIDERITEM,
-        COMPANY
+        COMPANY,
+        SHIPPINGPROVIDER
     }
 }

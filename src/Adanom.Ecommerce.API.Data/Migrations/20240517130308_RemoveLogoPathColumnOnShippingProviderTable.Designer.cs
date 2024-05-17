@@ -4,6 +4,7 @@ using Adanom.Ecommerce.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Adanom.Ecommerce.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240517130308_RemoveLogoPathColumnOnShippingProviderTable")]
+    partial class RemoveLogoPathColumnOnShippingProviderTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1452,6 +1455,36 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<long>("ShippingSettingsId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShippingSettingsId");
+
+                    b.ToTable("ShippingProviders");
+                });
+
+            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ShippingSettings", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
                     b.Property<decimal>("FeeTax")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
@@ -1464,12 +1497,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
-
                     b.Property<decimal>("MinimumFreeShippingTotalPrice")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
@@ -1480,15 +1507,9 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<byte>("TaxRate")
                         .HasColumnType("tinyint");
 
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UpdatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.ToTable("ShippingProviders");
+                    b.ToTable("ShippingSettings");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ShoppingCart", b =>
@@ -2512,6 +2533,17 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Navigation("AddressDistrict");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ShippingProvider", b =>
+                {
+                    b.HasOne("Adanom.Ecommerce.API.Data.Models.ShippingSettings", "ShippingSettings")
+                        .WithMany()
+                        .HasForeignKey("ShippingSettingsId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("ShippingSettings");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ShoppingCartItem", b =>

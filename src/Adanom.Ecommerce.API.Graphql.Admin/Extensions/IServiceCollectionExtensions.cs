@@ -33,6 +33,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<StockUnitTypeQueries>()
                 .AddType<MetaInformationQueries>()
                 .AddType<SliderItemQueries>()
+                .AddType<ShippingProviderQueries>()
                 .AddType<TaxCategoryQueries>()
                 .AddType<TaxAdministrationQueries>();
 
@@ -60,6 +61,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<MetaInformationMutations>()
                 .AddType<ImageMutations>()
                 .AddType<SliderItemMutations>()
+                .AddType<ShippingProviderMutations>()
                 .AddType<TaxCategoryMutations>()
                 .AddType<TaxAdministrationMutations>();
 

@@ -4,13 +4,20 @@ namespace Adanom.Ecommerce.API.Data.Models
 {
     public class ShippingProvider : BaseEntity<long>
     {
-        public long ShippingSettingsId { get; set; }
-
         [StringLength(250)]
         public string DisplayName { get; set; } = null!;
 
-        [StringLength(500)]
-        public string LogoPath { get; set; } = null!;
+        public decimal MinimumFreeShippingTotalPrice { get; set; }
+
+        public decimal FeeWithoutTax { get; set; }
+
+        public decimal FeeTax { get; set; }
+
+        public decimal FeeTotal { get; set; }
+
+        public byte TaxRate { get; set; }
+
+        public byte ShippingInDays { get; set; }
 
         public bool IsActive { get; set; }
 
@@ -27,7 +34,5 @@ namespace Adanom.Ecommerce.API.Data.Models
         public DateTime? DeletedAtUtc { get; set; }
 
         public Guid? DeletedByUserId { get; set; }
-
-        public ShippingSettings ShippingSettings { get; set; } = null!;
     }
 }
