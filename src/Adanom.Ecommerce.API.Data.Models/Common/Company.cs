@@ -10,8 +10,6 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public long TaxAdministrationId { get; set; }
 
-        public long MetaInformationId { get; set; }
-
         [StringLength(250)]
         public string LegalName { get; set; } = null!;
 
@@ -21,6 +19,9 @@ namespace Adanom.Ecommerce.API.Data.Models
         [StringLength(500)]
         public string Address { get; set; } = null!;
 
+        [StringLength(250)]
+        public string Email { get; set; } = null!;
+
         [StringLength(10)]
         public string PhoneNumber { get; set; } = null!;
 
@@ -29,7 +30,5 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         [StringLength(50)]
         public string MersisNumber { get; set; } = null!;
-
-        public MetaInformation MetaInformation { get; set; } = null!;
     }
 }
