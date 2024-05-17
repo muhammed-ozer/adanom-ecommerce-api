@@ -66,8 +66,6 @@ namespace Adanom.Ecommerce.API.Handlers
 
             var productCategoryResponse = _mapper.Map<ProductCategoryResponse>(productCategory);
 
-            await _mediator.Publish(new AddToCache<ProductCategoryResponse>(productCategoryResponse));
-
             await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
             {
                 UserId = userId,

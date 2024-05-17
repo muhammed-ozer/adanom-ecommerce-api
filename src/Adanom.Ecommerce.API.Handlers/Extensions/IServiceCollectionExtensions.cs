@@ -51,18 +51,21 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.AddBehavior<IPipelineBehavior<CreateProductCategory, ProductCategoryResponse?>, CreateProductCategory_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateProductCategory, ProductCategoryResponse?>, CreateProductCategory_CreateMetaInformationBehavior>();
 
+                options.AddBehavior<IPipelineBehavior<DeleteProductCategory, bool>, DeleteProductCategory_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteProductCategory, bool>, DeleteProductCategory_DeleteRelationsBehavior>();
 
                 #endregion
 
                 #region ProductSpecificationAttribute
 
+                options.AddBehavior<IPipelineBehavior<DeleteProductSpecificationAttribute, bool>, DeleteProductSpecificationAttribute_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteProductSpecificationAttribute, bool>, DeleteProductSpecificationAttribute_DeleteRelationsBehavior>();
 
                 #endregion
 
                 #region ProductTag
 
+                options.AddBehavior<IPipelineBehavior<DeleteProductTag, bool>, DeleteProductTag_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteProductTag, bool>, DeleteProductTag_DeleteRelationsBehavior>();
 
                 #endregion

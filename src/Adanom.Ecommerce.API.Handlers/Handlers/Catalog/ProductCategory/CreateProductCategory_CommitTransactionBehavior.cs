@@ -71,8 +71,10 @@ namespace Adanom.Ecommerce.API.Handlers
                     Exception = exception.ToString()
                 }));
 
-                productCategoryResponse = null;
+                return null;
             }
+
+            await _mediator.Publish(new AddToCache<ProductCategoryResponse>(productCategoryResponse));
 
             return productCategoryResponse;
         }

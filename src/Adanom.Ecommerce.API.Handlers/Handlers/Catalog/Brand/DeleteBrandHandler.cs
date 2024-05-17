@@ -57,8 +57,6 @@ namespace Adanom.Ecommerce.API.Handlers
                 return false;
             }
 
-            await _mediator.Publish(new RemoveFromCache<BrandResponse>(brand.Id));
-
             await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
             {
                 UserId = userId,

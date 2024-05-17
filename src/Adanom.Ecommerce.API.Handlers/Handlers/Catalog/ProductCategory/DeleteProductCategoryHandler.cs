@@ -29,6 +29,8 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
+            await _applicationDbContext.Database.BeginTransactionAsync();
+
             var productCategory = await _applicationDbContext.ProductCategories
                 .Where(e => e.DeletedAtUtc == null &&
                             e.Id == command.Id)
@@ -54,8 +56,6 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 return false;
             }
-
-            await _mediator.Publish(new RemoveFromCache<ProductCategoryResponse>(productCategory.Id));
 
             await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
             {
