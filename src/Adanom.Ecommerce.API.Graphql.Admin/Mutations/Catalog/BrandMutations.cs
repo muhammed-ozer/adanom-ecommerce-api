@@ -41,7 +41,7 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
         #region UpdateBrandLogoAsync
 
         [GraphQLDescription("Updates a brand logo")]
-        public async Task<BrandResponse?> UpdateBrandLogoAsync(
+        public async Task<bool> UpdateBrandLogoAsync(
             UpdateBrandLogoRequest request,
             [Service] IMediator mediator,
             [Service] IMapper mapper,

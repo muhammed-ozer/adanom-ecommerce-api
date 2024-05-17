@@ -110,7 +110,7 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
            [Parent] ProductResponse productResponse,
            [Service] IMediator mediator)
         {
-            var image = await mediator.Send(new GetEntityDefaultImage(productResponse.Id, EntityType.PRODUCT));
+            var image = await mediator.Send(new GetEntityImage(productResponse.Id, EntityType.PRODUCT, true));
 
             return image;
         }

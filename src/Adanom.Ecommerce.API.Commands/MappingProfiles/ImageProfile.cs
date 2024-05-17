@@ -10,7 +10,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
 
             CreateMap<CreateImageRequest, CreateImage>();
 
-            CreateMap<CreateImage, Image>();
+            CreateMap<CreateImage, Image>()
+                .ForMember(member => member.Path, options => options.MapFrom(source => source.File.Name));
 
             CreateMap<UpdateImageRequest, UpdateImage>();
 

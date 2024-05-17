@@ -11,12 +11,12 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public string UrlSlug { get; set; } = null!;
 
-        public string? LogoPath { get; set; }
-
         public int DisplayOrder { get; set; }
 
         public MetaInformation? MetaInformation { get; set; }
 
         public ICollection<ImageResponse> Images { get; set; }
+
+        public ImageResponse? Logo { get; set; }
     }
 }

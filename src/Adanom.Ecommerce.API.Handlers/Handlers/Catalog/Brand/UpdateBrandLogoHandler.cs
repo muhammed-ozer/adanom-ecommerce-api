@@ -3,14 +3,13 @@ using Adanom.Ecommerce.API.Services.Azure;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class UpdateBrandLogoHandler : IRequestHandler<UpdateBrandLogo, BrandResponse?>
+    public sealed class UpdateBrandLogoHandler : IRequestHandler<UpdateBrandLogo, bool>
     {
         #region Fields
 
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
-        private readonly IBlobStorageService _blobStorageService;
 
         #endregion
 
@@ -19,20 +18,18 @@ namespace Adanom.Ecommerce.API.Handlers
         public UpdateBrandLogoHandler(
             ApplicationDbContext applicationDbContext,
             IMapper mapper,
-            IMediator mediator,
-            IBlobStorageService blobStorageService)
+            IMediator mediator)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _blobStorageService = blobStorageService ?? throw new ArgumentNullException(nameof(blobStorageService));
         }
 
         #endregion
 
         #region IRequestHandler Members
 
-        public async Task<BrandResponse?> Handle(UpdateBrandLogo command, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdateBrandLogo command, CancellationToken cancellationToken)
         {
             // TODO: Test this handler when azure blob storage created
 
@@ -43,16 +40,43 @@ namespace Adanom.Ecommerce.API.Handlers
                             e.Id == command.Id)
                 .SingleAsync();
 
-            var entityFolderName = AzureBlobStorageHelpers.GetFolderName(EntityType.BRAND);
-            var logoPath = $"{entityFolderName}/{brand.UrlSlug}/{AzureBlobStorageConstants.ImagesFolderName}/logo{command.Logo.Extension}";
+            var currentLogoImage = await _mediator.Send(new GetEntityImage(brand.Id, EntityType.BRAND, ImageType.LOGO));
 
-            command.Logo.Name = logoPath;
+            if (currentLogoImage != null)
+            {
+                var deleteImageRequest = new DeleteImageRequest()
+                {
+                    Id = currentLogoImage.Id,
+                };
 
-            var uploadFileResponse = await _blobStorageService.UploadFileAsync(
-                command.Logo,
-                brand.LogoPath);
+                var deleteImageCommand = _mapper.Map(deleteImageRequest, new DeleteImage(command.Identity));
 
-            brand.LogoPath = logoPath;
+                var deleteImageResult = await _mediator.Send(deleteImageCommand);
+
+                if (!deleteImageResult)
+                {
+                    return false;
+                }
+            }
+
+            var createImageRequest = new CreateImageRequest()
+            {
+                File = command.File,
+                EntityId = brand.Id,
+                EntityType = EntityType.BRAND,
+                ImageType = ImageType.LOGO
+            };
+
+            var createImageCommand = _mapper
+                    .Map(createImageRequest, new CreateImage(command.Identity));
+
+            var createImageResponse = await _mediator.Send(createImageCommand);
+
+            if (createImageResponse == null)
+            {
+                return false;
+            }
+
             brand.UpdatedAtUtc = DateTime.UtcNow;
             brand.UpdatedByUserId = userId;
 
@@ -73,10 +97,12 @@ namespace Adanom.Ecommerce.API.Handlers
                     Exception = exception.ToString()
                 }));
 
-                return null;
+                return false;
             }
 
             var brandResponse = _mapper.Map<BrandResponse>(brand);
+
+            brandResponse.Logo = createImageResponse;
 
             await _mediator.Publish(new UpdateFromCache<BrandResponse>(brandResponse));
 
@@ -88,7 +114,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, brand.Id),
             }));
 
-            return brandResponse;
+            return true;
         }
 
         #endregion

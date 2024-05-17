@@ -10,9 +10,6 @@ namespace Adanom.Ecommerce.API.Data.Models
         [StringLength(150)]
         public string UrlSlug { get; set; } = null!;
 
-        [StringLength(1000)]
-        public string? LogoPath { get; set; }
-
         public int DisplayOrder { get; set; }
 
         public DateTime CreatedAtUtc { get; set; }

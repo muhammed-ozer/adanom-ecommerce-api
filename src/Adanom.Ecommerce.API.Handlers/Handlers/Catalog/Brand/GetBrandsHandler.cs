@@ -12,6 +12,7 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Fields
 
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
         private readonly static ConcurrentDictionary<long, BrandResponse> _cache = new();
@@ -22,9 +23,11 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public GetBrandsHandler(
             ApplicationDbContext applicationDbContext,
+            IMediator mediator,
             IMapper mapper)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -52,6 +55,8 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 foreach (var item in brandResponses)
                 {
+                    item.Logo = await _mediator.Send(new GetEntityImage(item.Id, EntityType.BRAND, ImageType.LOGO));
+
                     _cache.TryAdd(item.Id, item);
                 }
             }

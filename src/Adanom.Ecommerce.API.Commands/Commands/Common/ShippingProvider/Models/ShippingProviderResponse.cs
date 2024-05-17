@@ -20,6 +20,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public bool IsDefault { get; set; }
 
-        public ImageResponse? Image { get; set; }
+        public ImageResponse? Logo { get; set; }
     }
 }

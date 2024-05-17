@@ -6,6 +6,8 @@
 
         public EntityType EntityType { get; set; }
 
+        public ImageType ImageType { get; set; }
+
         public string Name { get; set; } = null!;
 
         public string Path { get; set; } = null!;

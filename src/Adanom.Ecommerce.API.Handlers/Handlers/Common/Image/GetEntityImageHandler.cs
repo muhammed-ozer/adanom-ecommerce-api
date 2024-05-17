@@ -1,6 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class GetEntityDefaultImageHandler : IRequestHandler<GetEntityDefaultImage, ImageResponse?>
+    public sealed class GetEntityImageHandler : IRequestHandler<GetEntityImage, ImageResponse?>
     {
         #region Fields
 
@@ -11,7 +11,7 @@
 
         #region Ctor
 
-        public GetEntityDefaultImageHandler(
+        public GetEntityImageHandler(
             ApplicationDbContext applicationDbContext,
             IMapper mapper)
         {
@@ -23,15 +23,29 @@
 
         #region IRequestHandler Members
 
-        public async Task<ImageResponse?> Handle(GetEntityDefaultImage command, CancellationToken cancellationToken)
+        public async Task<ImageResponse?> Handle(GetEntityImage command, CancellationToken cancellationToken)
         {
-            var image = await _applicationDbContext.Images
+            var imagesQuery = _applicationDbContext.Images
                  .AsNoTracking()
                  .Where(e => e.DeletedAtUtc == null &&
                              e.EntityId == command.EntityId &&
-                             e.EntityType == command.EntityType &&
-                             e.IsDefault)
-                 .SingleOrDefaultAsync();
+                             e.EntityType == command.EntityType);
+
+            Image? image = null;
+
+            if (command.IsDefault != null && command.IsDefault.Value)
+            {
+                image = await imagesQuery
+                    .Where(e => e.IsDefault)
+                    .FirstOrDefaultAsync();
+            }
+            
+            if (command.ImageType != null)
+            {
+                image = await imagesQuery
+                    .Where(e => e.ImageType == command.ImageType)
+                    .FirstOrDefaultAsync();
+            }
 
             var imageResponse = _mapper.Map<ImageResponse>(image);
 

@@ -4,6 +4,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
     {
         public long Id { get; set; }
 
-        public UploadedFile Logo { get; set; } = null!;
+        public UploadedFile File { get; set; } = null!;
     }
 }
