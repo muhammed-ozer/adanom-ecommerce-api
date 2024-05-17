@@ -1,34 +1,42 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
-namespace Adanom.Ecommerce.API.Data.Models
+namespace Adanom.Ecommerce.API.Commands
 {
-    public class Company : BaseEntity<long>
+    public class UpdateCompany : IRequest<bool>
     {
+        #region Ctor
+
+        public UpdateCompany(ClaimsPrincipal identity)
+        {
+            Identity = identity ?? throw new ArgumentNullException(nameof(identity));
+        }
+
+        #endregion
+
+        #region Properties
+
+        public ClaimsPrincipal Identity { get; }
+
         public long AddressCityId { get; set; }
 
         public long AddressDistrictId { get; set; }
 
         public long TaxAdministrationId { get; set; }
 
-        [StringLength(250)]
         public string LegalName { get; set; } = null!;
 
-        [StringLength(100)]
         public string DisplayName { get; set; } = null!;
 
-        [StringLength(500)]
         public string Address { get; set; } = null!;
 
-        [StringLength(250)]
         public string Email { get; set; } = null!;
 
-        [StringLength(10)]
         public string PhoneNumber { get; set; } = null!;
 
-        [StringLength(11)]
         public string TaxNumber { get; set; } = null!;
 
-        [StringLength(50)]
         public string MersisNumber { get; set; } = null!;
+
+        #endregion
     }
 }
