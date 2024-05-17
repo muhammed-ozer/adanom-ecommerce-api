@@ -2,7 +2,7 @@ using System.Security.Claims;
 
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class UpdateBrandLogo : IRequest<BrandResponse?>
+    public class UpdateBrandLogo : IRequest<bool>
     {
         #region Ctor
 
@@ -19,7 +19,7 @@ namespace Adanom.Ecommerce.API.Commands
 
         public long Id { get; set; }
 
-        public UploadedFile Logo { get; set; } = null!;
+        public UploadedFile File { get; set; } = null!;
 
         #endregion
     }

@@ -43,12 +43,6 @@ namespace Adanom.Ecommerce.API.Handlers
             var brand = await _applicationDbContext.Brands
                     .SingleAsync(e => e.Id == command.Id && e.DeletedAtUtc.HasValue);
 
-            if (brand.LogoPath.IsNotNullOrEmpty())
-            {
-                // TODO: Test this handler when azure blob storage created
-                await _blobStorageService.DeleteFileAsync(brand.LogoPath);
-            }
-
             #region MetaInformation
 
             var deleteMetaInformationRequest = new DeleteMetaInformationRequest()

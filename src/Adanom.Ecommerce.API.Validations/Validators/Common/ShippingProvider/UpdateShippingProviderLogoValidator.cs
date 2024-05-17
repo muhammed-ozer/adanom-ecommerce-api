@@ -18,6 +18,12 @@
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                     .WithMessage("Kargo firması bulunamadı.")
                 .CustomAsync(ValidateDoesShippingProviderLogoExistsAsync);
+
+            RuleFor(e => e.File)
+                .NotNull()
+                    .WithMessage(e => "Logo dosyası bulunamadı.")
+                    .WithErrorCode(ValidationErrorCodesEnum.NULL)
+                .Custom(ValidateDoesImageExtensionAllowed);
         }
 
         #region Private Methods
@@ -37,6 +43,24 @@
                 {
                     ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
                     ErrorMessage = "Kargo firması bulunamadı."
+                });
+            }
+        }
+
+        #endregion
+
+        #region ValidateDoesImageExtensionAllowed
+
+        private void ValidateDoesImageExtensionAllowed(
+            UploadedFile value,
+            ValidationContext<UpdateShippingProviderLogo> context)
+        {
+            if (!FileConstants.AllowedImageExtensions.Contains(value.Extension))
+            {
+                context.AddFailure(new ValidationFailure(nameof(UpdateShippingProviderLogo.File), null)
+                {
+                    ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
+                    ErrorMessage = "Logo dosyası uzantısı jpeg, jpg veya png olmalıdır."
                 });
             }
         }

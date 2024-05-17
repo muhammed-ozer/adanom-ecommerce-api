@@ -35,13 +35,33 @@ namespace Adanom.Ecommerce.API.Handlers
                             e.Id == command.Id)
                 .SingleAsync();
 
+            var currentLogoImage = await _mediator.Send(new GetEntityImage(shippingProvider.Id, EntityType.SHIPPINGPROVIDER, ImageType.LOGO));
+            
+            if (currentLogoImage != null) 
+            {
+                var deleteImageRequest = new DeleteImageRequest()
+                {
+                    Id = currentLogoImage.Id,
+                };
+
+                var deleteImageCommand = _mapper.Map(deleteImageRequest, new DeleteImage(command.Identity));
+
+                var deleteImageResult = await _mediator.Send(deleteImageCommand);
+
+                if (!deleteImageResult)
+                {
+                    return false;
+                }
+            }
+
             var createImageRequest = new CreateImageRequest()
             {
                 File = command.File,
                 EntityId = shippingProvider.Id,
                 EntityType = EntityType.SHIPPINGPROVIDER,
-                IsDefault = true
+                ImageType = ImageType.LOGO
             };
+
             var createImageCommand = _mapper
                     .Map(createImageRequest, new CreateImage(command.Identity));
 

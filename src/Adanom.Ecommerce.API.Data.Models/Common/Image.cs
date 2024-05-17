@@ -8,6 +8,8 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public EntityType EntityType { get; set; }
 
+        public ImageType ImageType { get; set; }
+
         [StringLength(250)]
         public string Name { get; set; } = null!;
 

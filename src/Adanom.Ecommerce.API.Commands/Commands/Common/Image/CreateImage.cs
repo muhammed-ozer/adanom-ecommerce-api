@@ -23,6 +23,8 @@ namespace Adanom.Ecommerce.API.Commands
 
         public EntityType EntityType { get; set; }
 
+        public ImageType ImageType { get; set; }
+
         public string EntityNameAsUrlSlug { get; set; } = null!;
 
         public bool IsDefault { get; set; }

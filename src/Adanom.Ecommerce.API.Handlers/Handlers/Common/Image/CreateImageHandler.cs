@@ -44,7 +44,16 @@ namespace Adanom.Ecommerce.API.Handlers
                 return null;
             }
 
-            var fileName = $"{Guid.NewGuid()}{command.File.Extension}";
+            string fileName;
+
+            if (command.ImageType == ImageType.LOGO)
+            {
+                fileName = $"logo{command.File.Extension}";
+            }
+            else
+            {
+                fileName = $"{Guid.NewGuid()}{command.File.Extension}";
+            }
 
             command.File.Name = $"{entityFolderName}/{command.EntityNameAsUrlSlug}/{AzureBlobStorageConstants.ImagesFolderName}/{fileName}";
 
@@ -84,17 +93,15 @@ namespace Adanom.Ecommerce.API.Handlers
                 }
             }
 
-            var image = new Image()
+            var image = _mapper.Map<CreateImage, Image>(command, options =>
             {
-                Name = fileName,
-                Path = command.File.Name,
-                DisplayOrder = command.DisplayOrder,
-                EntityId = command.EntityId,
-                EntityType = command.EntityType,
-                IsDefault = command.IsDefault,
-                CreatedByUserId = userId,
-                CreatedAtUtc = DateTime.UtcNow,
-            };
+                options.AfterMap((source, target) =>
+                {
+                    target.Name = fileName;
+                    target.CreatedByUserId = userId;
+                    target.CreatedAtUtc = DateTime.UtcNow;
+                });
+            });
 
             await _applicationDbContext.AddAsync(image);
 

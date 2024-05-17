@@ -36,6 +36,7 @@
             {
                 EntityId = sliderItemResponse.Id,
                 EntityType = EntityType.SLIDERITEM,
+                ImageType = ImageType.SLIDER,
                 File = command.File,
                 EntityNameAsUrlSlug = sliderItemResponse.Name.ConvertToUrlSlug()
             };

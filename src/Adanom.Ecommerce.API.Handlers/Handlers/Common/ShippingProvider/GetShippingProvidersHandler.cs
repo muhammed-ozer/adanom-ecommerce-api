@@ -52,7 +52,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 foreach (var item in shippingProviderResponsesFromDb)
                 {
-                    item.Image = await _mediator.Send(new GetEntityDefaultImage(item.Id, EntityType.SHIPPINGPROVIDER));
+                    item.Logo = await _mediator.Send(new GetEntityImage(item.Id, EntityType.SHIPPINGPROVIDER, ImageType.LOGO));
 
                     _cache.TryAdd(item.Id, item);
                 }

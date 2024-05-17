@@ -19,7 +19,7 @@
                     .WithMessage("Marka bulunamadı.")
                 .CustomAsync(ValidateDoesBrandExistsAsync);
 
-            RuleFor(e => e.Logo)
+            RuleFor(e => e.File)
                 .NotNull()
                     .WithMessage(e => "Logo dosyası bulunamadı.")
                     .WithErrorCode(ValidationErrorCodesEnum.NULL)
@@ -57,7 +57,7 @@
         {
             if (!FileConstants.AllowedImageExtensions.Contains(value.Extension))
             {
-                context.AddFailure(new ValidationFailure(nameof(UpdateBrandLogo.Logo), null)
+                context.AddFailure(new ValidationFailure(nameof(UpdateBrandLogo.File), null)
                 {
                     ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
                     ErrorMessage = "Logo dosyası uzantısı jpeg, jpg veya png olmalıdır."
