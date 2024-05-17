@@ -33,6 +33,30 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
+            if (!command.IsDefault)
+            {
+                var hasAnyOtherShippingProvider = await _applicationDbContext.ShippingProviders
+                    .AsNoTracking()
+                    .AnyAsync(e => e.DeletedAtUtc == null);
+
+                if (!hasAnyOtherShippingProvider)
+                {
+                    command.IsDefault = true;
+                }
+            }
+            else
+            {
+                var currentDefaultShippingProvider = await _applicationDbContext.ShippingProviders
+                    .Where(e => e.DeletedAtUtc == null &&
+                                e.IsDefault)
+                    .SingleOrDefaultAsync();
+
+                if (currentDefaultShippingProvider != null)
+                {
+                    currentDefaultShippingProvider.IsDefault = false;
+                }
+            }
+
             var shippingProvider = _mapper.Map<CreateShippingProvider, ShippingProvider>(command, options =>
             {
                 options.AfterMap((source, target) =>

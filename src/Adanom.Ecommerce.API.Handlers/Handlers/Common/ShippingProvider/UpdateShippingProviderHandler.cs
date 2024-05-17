@@ -35,6 +35,23 @@ namespace Adanom.Ecommerce.API.Handlers
                             e.Id == command.Id)
                 .SingleAsync();
 
+            if (command.IsDefault && !shippingProvider.IsDefault)
+            {
+                var cuurentDefaultShippingprovider = await _applicationDbContext.ShippingProviders
+                    .Where(e => e.DeletedAtUtc == null &&
+                                e.IsDefault)
+                    .SingleOrDefaultAsync();
+
+                if (cuurentDefaultShippingprovider != null)
+                {
+                    cuurentDefaultShippingprovider.IsDefault = false;
+                }
+            }
+            else
+            {
+                command.IsDefault = true;
+            }
+
             shippingProvider = _mapper.Map(command, shippingProvider, options =>
             {
                 options.AfterMap((source, target) =>
