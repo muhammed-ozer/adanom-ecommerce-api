@@ -64,7 +64,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 File = command.File,
                 EntityId = brand.Id,
                 EntityType = EntityType.BRAND,
-                ImageType = ImageType.LOGO
+                ImageType = ImageType.LOGO,
+                EntityNameAsUrlSlug = brand.UrlSlug
             };
 
             var createImageCommand = _mapper
