@@ -32,5 +32,7 @@ public static class LogMessages
         public const string DatabaseTransactionHasFailed = "Veri tabanı transaction sırasında hata meydana geldi.";
 
         public const string BatchUpdateProductSKUNotFound = @"Toplu işlem sırasında ürün kodu bulunamadı. Kod: {0}";
+
+        public const string BatchCreateProductsError = @"Toplu işlem sırasında hata meydana geldi. ExcelRow: {0}";
     }
 }
