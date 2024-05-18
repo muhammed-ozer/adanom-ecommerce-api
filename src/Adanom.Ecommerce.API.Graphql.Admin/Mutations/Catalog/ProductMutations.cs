@@ -22,6 +22,23 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
 
         #endregion
 
+        #region BatchCreateProductsAsync
+
+        [GraphQLDescription("Creates batch products")]
+        public async Task<bool> BatchCreateProductsAsync(
+            BatchCreateProductsRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new BatchCreateProducts(identity));
+
+            return await mediator.Send(command);
+        }
+
+        #endregion
+
+
         #region UpdateProductNameAsync
 
         [GraphQLDescription("Updates a product name")]
