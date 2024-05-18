@@ -17,7 +17,7 @@
                 .GreaterThan(0)
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                     .WithMessage("Kargo firması bulunamadı.")
-                .CustomAsync(ValidateDoesShippingProviderLogoExistsAsync);
+                .CustomAsync(ValidateDoesShippingProviderExistsAsync);
 
             RuleFor(e => e.File)
                 .NotNull()
@@ -28,9 +28,9 @@
 
         #region Private Methods
 
-        #region ValidateDoesShippingProviderLogoExistsAsync
+        #region ValidateDoesShippingProviderExistsAsync
 
-        private async Task ValidateDoesShippingProviderLogoExistsAsync(
+        private async Task ValidateDoesShippingProviderExistsAsync(
             long value,
             ValidationContext<UpdateShippingProviderLogo> context,
             CancellationToken cancellationToken)
