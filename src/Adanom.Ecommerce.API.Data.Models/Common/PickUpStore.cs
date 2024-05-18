@@ -14,6 +14,9 @@ namespace Adanom.Ecommerce.API.Data.Models
         [StringLength(500)]
         public string Address { get; set; } = null!;
 
+        [StringLength(10)]
+        public string PhoneNumber { get; set; } = null!;
+
         public DateTime CreatedAtUtc { get; set; }
 
         public Guid CreatedByUserId { get; set; }
