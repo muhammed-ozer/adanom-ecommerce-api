@@ -7,7 +7,6 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
@@ -16,11 +15,9 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public BatchUpdateProductPricesHandler(
-            ApplicationDbContext applicationDbContext,
             IMapper mapper,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -41,20 +38,20 @@ namespace Adanom.Ecommerce.API.Handlers
 
             if (rowCount == 0)
             {
-                return true;
+                return false;
             }
 
-            for (int i = 0; i <= rowCount; i++)
+            for (int i = 1; i <= rowCount; i++)
             {
                 var row = worksheet.GetRow(i);
                 var productSKUCode = row.Cells[0].ToString();
-                var priceAsString = row.Cells[1].ToString();
-                var price = decimal.Parse(priceAsString!);
 
-                var productSKU = await _applicationDbContext.ProductSKUs
-                    .Where(e => e.DeletedAtUtc == null &&
-                                e.Code == productSKUCode)
-                    .SingleOrDefaultAsync();
+                if (string.IsNullOrEmpty(productSKUCode))
+                {
+                    continue;
+                }
+
+                var productSKU = await _mediator.Send(new GetProductSKU(productSKUCode));
 
                 if (productSKU == null)
                 {
@@ -69,10 +66,13 @@ namespace Adanom.Ecommerce.API.Handlers
                     continue;
                 }
 
+                var OriginalPriceAsString = row.Cells[1].ToString();
+                _ = decimal.TryParse(OriginalPriceAsString!, out decimal originalPrice);
+
                 var updateProductPrice_PriceRequest = new UpdateProductPrice_PriceRequest()
                 {
                     Id = productSKU.ProductPriceId,
-                    OriginalPrice = price
+                    OriginalPrice = originalPrice
                 };
 
                 var updateProductPrice_PriceCommand = _mapper.Map(updateProductPrice_PriceRequest, new UpdateProductPrice_Price(command.Identity));
@@ -83,6 +83,14 @@ namespace Adanom.Ecommerce.API.Handlers
                 }
                 catch
                 {
+                    await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                    {
+                        UserId = userId,
+                        EntityType = EntityType.PRODUCTPRICE,
+                        TransactionType = TransactionType.UPDATE,
+                        Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed, productSKUCode),
+                    }));
+
                     continue;
                 }
             }

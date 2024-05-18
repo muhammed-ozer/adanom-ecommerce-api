@@ -7,7 +7,6 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
@@ -16,11 +15,9 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public BatchUpdateProductSKUStocksHandler(
-            ApplicationDbContext applicationDbContext,
             IMapper mapper,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -41,20 +38,20 @@ namespace Adanom.Ecommerce.API.Handlers
 
             if (rowCount == 0)
             {
-                return true;
+                return false;
             }
 
-            for (int i = 0; i <= rowCount; i++)
+            for (int i = 1; i <= rowCount; i++)
             {
                 var row = worksheet.GetRow(i);
                 var productSKUCode = row.Cells[0].ToString();
-                var stockQuantityAsString = row.Cells[1].ToString();
-                var stockQuantity = int.Parse(stockQuantityAsString!);
 
-                var productSKU = await _applicationDbContext.ProductSKUs
-                    .Where(e => e.DeletedAtUtc == null &&
-                                e.Code == productSKUCode)
-                    .SingleOrDefaultAsync();
+                if (string.IsNullOrEmpty(productSKUCode))
+                {
+                    continue;
+                }
+
+                var productSKU = await _mediator.Send(new GetProductSKU(productSKUCode));
 
                 if (productSKU == null)
                 {
@@ -69,11 +66,14 @@ namespace Adanom.Ecommerce.API.Handlers
                     continue;
                 }
 
+                var stockQuantityAsString = row.Cells[1].ToString();
+                _ = int.TryParse(stockQuantityAsString!, out int stockQuantity);
+
                 var updateProductSKUStockRequest = new UpdateProductSKUStockRequest()
                 {
                     Id = productSKU.Id,
                     StockQuantity = stockQuantity,
-                    StockUnitType = productSKU.StockUnitType
+                    StockUnitType = productSKU.StockUnitType!.Key
                 };
 
                 var updateProductSKUStockCommand = _mapper.Map(updateProductSKUStockRequest, new UpdateProductSKUStock(command.Identity));
@@ -84,6 +84,14 @@ namespace Adanom.Ecommerce.API.Handlers
                 }
                 catch
                 {
+                    await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                    {
+                        UserId = userId,
+                        EntityType = EntityType.PRODUCTSKU,
+                        TransactionType = TransactionType.UPDATE,
+                        Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed, productSKUCode),
+                    }));
+
                     continue;
                 }
             }
