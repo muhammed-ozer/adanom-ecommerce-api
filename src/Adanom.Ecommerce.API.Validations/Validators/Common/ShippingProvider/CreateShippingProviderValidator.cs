@@ -17,8 +17,8 @@
                 .NotEmpty()
                     .WithMessage("Kargo firması görüntüleme adı gereklidir.")
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
-                .MaximumLength(100)
-                    .WithMessage("Kargo firması görüntüleme adı 100 karakterden fazla olmamalıdır.")
+                .MaximumLength(250)
+                    .WithMessage("Kargo firması görüntüleme adı 250 karakterden fazla olmamalıdır.")
                     .WithErrorCode(ValidationErrorCodesEnum.GREATER_THAN);
         }
 
