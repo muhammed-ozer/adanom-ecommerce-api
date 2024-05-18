@@ -37,7 +37,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<PickUpStoreQueries>()
                 .AddType<TaxCategoryQueries>()
                 .AddType<TaxAdministrationQueries>()
-                .AddType<UserQueries>();
+                .AddType<UserQueries>()
+                .AddType<RoleQueries>();
 
             #endregion
 
