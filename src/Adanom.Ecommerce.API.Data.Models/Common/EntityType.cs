@@ -22,6 +22,7 @@
         TAXADMINISTRATION,
         SLIDERITEM,
         COMPANY,
-        SHIPPINGPROVIDER
+        SHIPPINGPROVIDER,
+        PICKUPSTORE
     }
 }

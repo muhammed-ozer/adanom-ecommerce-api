@@ -34,6 +34,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<MetaInformationQueries>()
                 .AddType<SliderItemQueries>()
                 .AddType<ShippingProviderQueries>()
+                .AddType<PickUpStoreQueries>()
                 .AddType<TaxCategoryQueries>()
                 .AddType<TaxAdministrationQueries>();
 
@@ -62,6 +63,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ImageMutations>()
                 .AddType<SliderItemMutations>()
                 .AddType<ShippingProviderMutations>()
+                .AddType<PickUpStoreMutations>()
                 .AddType<TaxCategoryMutations>()
                 .AddType<TaxAdministrationMutations>();
 

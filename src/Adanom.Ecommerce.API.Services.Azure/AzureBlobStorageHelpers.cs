@@ -22,6 +22,12 @@ namespace Adanom.Ecommerce.API.Services.Azure
                 case EntityType.SLIDERITEM:
                     folderName = AzureBlobStorageConstants.FolderNames.SliderItems;
                     break;
+                case EntityType.SHIPPINGPROVIDER:
+                    folderName = AzureBlobStorageConstants.FolderNames.ShippingProviders;
+                    break;
+                case EntityType.PICKUPSTORE:
+                    folderName = AzureBlobStorageConstants.FolderNames.PickUpStores;
+                    break;
                 default:
                     break;
             }

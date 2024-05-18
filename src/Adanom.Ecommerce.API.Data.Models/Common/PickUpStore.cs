@@ -7,15 +7,15 @@ namespace Adanom.Ecommerce.API.Data.Models
         [StringLength(250)]
         public string DisplayName { get; set; } = null!;
 
-        [StringLength(500)]
-        public string LogoPath { get; set; } = null!;
-
         public bool IsActive { get; set; }
 
         public bool IsDefault { get; set; }
 
         [StringLength(500)]
         public string Address { get; set; } = null!;
+
+        [StringLength(10)]
+        public string PhoneNumber { get; set; } = null!;
 
         public DateTime CreatedAtUtc { get; set; }
 
