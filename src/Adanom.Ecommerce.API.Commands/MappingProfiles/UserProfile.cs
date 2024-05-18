@@ -7,6 +7,10 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<User, UserResponse>();
 
             CreateMap<UserResponse, User>();
+
+            CreateMap<UpdateUserDefaultDiscountRateRequest, UpdateUserDefaultDiscountRate>();
+
+            CreateMap<UpdateUserDefaultDiscountRate, User>();
         }
     }
 }

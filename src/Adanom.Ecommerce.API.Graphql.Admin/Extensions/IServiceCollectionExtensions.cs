@@ -67,7 +67,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ShippingProviderMutations>()
                 .AddType<PickUpStoreMutations>()
                 .AddType<TaxCategoryMutations>()
-                .AddType<TaxAdministrationMutations>();
+                .AddType<TaxAdministrationMutations>()
+                .AddType<UserMutations>();
 
             #endregion
 

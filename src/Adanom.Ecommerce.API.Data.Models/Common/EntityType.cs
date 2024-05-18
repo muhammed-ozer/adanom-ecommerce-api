@@ -23,6 +23,7 @@
         SLIDERITEM,
         COMPANY,
         SHIPPINGPROVIDER,
-        PICKUPSTORE
+        PICKUPSTORE,
+        USER
     }
 }
