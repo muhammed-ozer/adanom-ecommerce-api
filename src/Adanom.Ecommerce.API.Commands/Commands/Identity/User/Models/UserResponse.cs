@@ -1,9 +1,7 @@
 ﻿namespace Adanom.Ecommerce.API.Commands.Models
 {
-    public sealed class UserResponse
+    public sealed class UserResponse : BaseEntity<Guid>
     {
-        public Guid Id { get; set; }
-
         public string Email { get; set; } = null!;
 
         public string FirstName { get; set; } = null!;

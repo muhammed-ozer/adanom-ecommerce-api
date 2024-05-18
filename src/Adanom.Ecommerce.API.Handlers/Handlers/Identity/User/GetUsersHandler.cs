@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class GetUsersHandler : IRequestHandler<GetUsers, PaginatedData<UserResponse>>
@@ -5,18 +7,16 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public GetUsersHandler(
-            ApplicationDbContext applicationDbContext,
-            IMapper mapper)
+        public GetUsersHandler(UserManager<User> userManager, IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -26,7 +26,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<PaginatedData<UserResponse>> Handle(GetUsers command, CancellationToken cancellationToken)
         {
-            var usersQuery = _applicationDbContext.Users
+            var usersQuery = _userManager.Users
                 .Where(e => e.DeletedAtUtc == null)
                 .AsNoTracking();
 
