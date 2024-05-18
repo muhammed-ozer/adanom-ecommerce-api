@@ -49,9 +49,12 @@ namespace Adanom.Ecommerce.API.Handlers
 
             if (userResponse != null)
             {
-                var roles = await _userManager.GetRolesAsync(user);
+                if (command.IncludeRoles != null && command.IncludeRoles.Value)
+                {
+                    var roles = await _userManager.GetRolesAsync(user);
 
-                userResponse.Roles = [..roles];
+                    userResponse.Roles = [..roles];
+                }
             }
 
             return userResponse;
