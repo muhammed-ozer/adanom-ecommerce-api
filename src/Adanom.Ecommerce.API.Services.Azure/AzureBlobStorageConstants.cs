@@ -18,6 +18,10 @@
             public const string ProductCategories = "product-categories";
 
             public const string SliderItems = "slider-items";
+
+            public const string ShippingProviders = "shipping-providers";
+
+            public const string PickUpStores = "pick-up-stores";
         }
     }
 }
