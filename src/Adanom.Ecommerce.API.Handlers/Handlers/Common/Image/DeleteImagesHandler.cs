@@ -29,8 +29,7 @@
         public async Task<bool> Handle(DeleteImages command, CancellationToken cancellationToken)
         {
             var images = await _applicationDbContext.Images
-                .Where(e => e.DeletedAtUtc == null &&
-                            e.EntityId == command.EntityId &&
+                .Where(e => e.EntityId == command.EntityId &&
                             e.EntityType == command.EntityType)
                 .ToListAsync();
 

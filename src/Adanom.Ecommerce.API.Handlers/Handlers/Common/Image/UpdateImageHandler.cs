@@ -30,15 +30,13 @@ namespace Adanom.Ecommerce.API.Handlers
             var userId = command.Identity.GetUserId();
 
             var image = await _applicationDbContext.Images
-                .Where(e => e.DeletedAtUtc == null &&
-                            e.Id == command.Id)
+                .Where(e => e.Id == command.Id)
                 .SingleAsync();
 
             if (command.IsDefault && !image.IsDefault)
             {
                 var cuurentDefaultImage = await _applicationDbContext.Images
-                    .Where(e => e.DeletedAtUtc == null &&
-                                e.EntityType == image.EntityType &&
+                    .Where(e => e.EntityType == image.EntityType &&
                                 e.EntityId == image.EntityId &&
                                 e.IsDefault)
                     .SingleOrDefaultAsync();

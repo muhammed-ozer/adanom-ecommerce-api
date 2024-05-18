@@ -27,8 +27,7 @@
         {
             var images = await _applicationDbContext.Images
                  .AsNoTracking()
-                 .Where(e => e.DeletedAtUtc == null &&
-                             e.EntityId == command.EntityId &&
+                 .Where(e => e.EntityId == command.EntityId &&
                              e.EntityType == command.EntityType)
                  .OrderBy(e => e.DisplayOrder)
                  .ToListAsync();
