@@ -59,7 +59,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 File = command.File,
                 EntityId = shippingProvider.Id,
                 EntityType = EntityType.SHIPPINGPROVIDER,
-                ImageType = ImageType.LOGO
+                ImageType = ImageType.LOGO,
+                EntityNameAsUrlSlug = shippingProvider.DisplayName.ConvertToUrlSlug()
             };
 
             var createImageCommand = _mapper

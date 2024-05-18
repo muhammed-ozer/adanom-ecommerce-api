@@ -37,15 +37,13 @@ namespace Adanom.Ecommerce.API.Handlers
             var userId = command.Identity.GetUserId();
 
             var image = await _applicationDbContext.Images
-                .Where(e => e.DeletedAtUtc == null &&
-                            e.Id == command.Id)
+                .Where(e => e.Id == command.Id)
                 .SingleAsync();
 
             if (image.IsDefault)
             {
                 var randomEntityImage = await _applicationDbContext.Images
-                    .Where(e => e.DeletedAtUtc == null &&
-                                e.EntityType == image.EntityType &&
+                    .Where(e => e.EntityType == image.EntityType &&
                                 e.EntityId == image.EntityId)
                     .OrderBy(e => e.DisplayOrder)
                     .FirstOrDefaultAsync();
@@ -60,8 +58,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             var deleteImageResponse = await _blobStorageService.DeleteFileAsync(image.Path);
 
-            image.DeletedAtUtc = DateTime.UtcNow;
-            image.DeletedByUserId = userId;
+            _applicationDbContext.Remove(image);
 
             try
             {

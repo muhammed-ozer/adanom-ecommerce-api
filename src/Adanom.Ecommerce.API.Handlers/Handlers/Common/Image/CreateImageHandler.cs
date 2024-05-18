@@ -69,8 +69,7 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 var hasAnyOtherImage = await _applicationDbContext.Images
                     .AsNoTracking()
-                    .AnyAsync(e => e.DeletedAtUtc == null &&
-                                   e.EntityId == command.EntityId &&
+                    .AnyAsync(e => e.EntityId == command.EntityId &&
                                    e.EntityType == command.EntityType);
 
                 if (!hasAnyOtherImage)
@@ -81,8 +80,7 @@ namespace Adanom.Ecommerce.API.Handlers
             else
             {
                 var cuurentDefaultImage = await _applicationDbContext.Images
-                    .Where(e => e.DeletedAtUtc == null &&
-                                e.EntityType == command.EntityType &&
+                    .Where(e => e.EntityType == command.EntityType &&
                                 e.EntityId == command.EntityId &&
                                 e.IsDefault)
                     .SingleOrDefaultAsync();

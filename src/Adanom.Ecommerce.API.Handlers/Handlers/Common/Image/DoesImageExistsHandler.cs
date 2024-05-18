@@ -21,7 +21,7 @@
 
         public async Task<bool> Handle(DoesEntityExists<ImageResponse> command, CancellationToken cancellationToken)
         {
-            return await _applicationDbContext.Images.AnyAsync(e => e.DeletedAtUtc == null && e.Id == command.Id);
+            return await _applicationDbContext.Images.AnyAsync(e => e.Id == command.Id);
         }
 
         #endregion
