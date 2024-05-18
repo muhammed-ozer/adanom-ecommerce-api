@@ -7,9 +7,6 @@ namespace Adanom.Ecommerce.API.Data.Models
         [StringLength(250)]
         public string DisplayName { get; set; } = null!;
 
-        [StringLength(500)]
-        public string LogoPath { get; set; } = null!;
-
         public bool IsActive { get; set; }
 
         public bool IsDefault { get; set; }
