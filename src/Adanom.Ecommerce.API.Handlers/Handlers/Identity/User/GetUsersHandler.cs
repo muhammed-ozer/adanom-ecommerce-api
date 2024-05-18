@@ -36,7 +36,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 if (command.Filter.Query != null)
                 {
-                    usersQuery = usersQuery.Where(e => e.Email.Contains(command.Filter.Query));
+                    usersQuery = usersQuery.Where(e => e.Email.Contains(command.Filter.Query) ||
+                                                       e.FirstName.Contains(command.Filter.Query) ||
+                                                       e.LastName.Contains(command.Filter.Query));
                 }
 
                 if (command.Filter.EmailConfirmed != null)
