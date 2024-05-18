@@ -4,14 +4,17 @@ namespace Adanom.Ecommerce.API.Commands
     {
         #region Ctor
 
-        public GetUser(Guid id)
+        public GetUser(Guid id, bool? includeRoles = null)
         {
             Id = id;
+            IncludeRoles = includeRoles;
+
         }
 
-        public GetUser(string? email)
+        public GetUser(string? email, bool? includeRoles = null)
         {
             Email = email;
+            IncludeRoles = includeRoles;
         }
 
         #endregion
@@ -21,6 +24,8 @@ namespace Adanom.Ecommerce.API.Commands
         public Guid Id { get; set; }
 
         public string? Email { get; set; }
+
+        public bool? IncludeRoles { get; set; }
 
         #endregion
     }

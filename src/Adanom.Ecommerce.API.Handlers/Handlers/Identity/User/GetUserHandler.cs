@@ -40,7 +40,21 @@ namespace Adanom.Ecommerce.API.Handlers
                 user = await usersQuery.SingleOrDefaultAsync(e => e.Id == command.Id);
             }
 
-            return _mapper.Map<UserResponse>(user);
+            if (user == null)
+            {
+                return null;
+            }
+
+            var userResponse = _mapper.Map<UserResponse>(user);
+
+            if (userResponse != null)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+
+                userResponse.Roles = [..roles];
+            }
+
+            return userResponse;
         } 
 
         #endregion
