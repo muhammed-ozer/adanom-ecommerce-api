@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 
                 options.UseOpenIddict();
-            });
+            }, ServiceLifetime.Transient);
 
             return services;
         }
