@@ -26,15 +26,15 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<bool> Handle(DeleteProduct command, RequestHandlerDelegate<bool> next, CancellationToken cancellationToken)
         {
-            var deleteProductResponse = await next();
+            var transaction = await _applicationDbContext.Database.BeginTransactionAsync();
 
-            var currentTransaction = _applicationDbContext.Database.CurrentTransaction;
+            var deleteProductResponse = await next();
 
             if (!deleteProductResponse)
             {
-                if (currentTransaction != null)
+                if (transaction != null)
                 {
-                    await currentTransaction.RollbackAsync(cancellationToken);
+                    await transaction.RollbackAsync(cancellationToken);
 
                     await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
                     {
@@ -50,16 +50,16 @@ namespace Adanom.Ecommerce.API.Handlers
 
             try
             {
-                if (currentTransaction != null)
+                if (transaction != null)
                 {
-                    await currentTransaction.CommitAsync();
+                    await transaction.CommitAsync();
                 }
             }
             catch (Exception exception)
             {
-                if (currentTransaction != null)
+                if (transaction != null)
                 {
-                    await currentTransaction.RollbackAsync(cancellationToken);
+                    await transaction.RollbackAsync(cancellationToken);
                 }
 
                 await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()

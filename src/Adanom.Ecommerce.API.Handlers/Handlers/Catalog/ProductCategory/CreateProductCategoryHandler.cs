@@ -32,8 +32,6 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            await _applicationDbContext.Database.BeginTransactionAsync();
-
             var productCategory = _mapper.Map<CreateProductCategory, ProductCategory>(command, options =>
             {
                 options.AfterMap((source, target) =>

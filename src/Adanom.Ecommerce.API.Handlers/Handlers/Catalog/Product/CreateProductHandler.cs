@@ -29,8 +29,6 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var transaction = await _applicationDbContext.Database.BeginTransactionAsync();
-            
             var product = _mapper.Map<CreateProduct, Product>(command, options =>
             {
                 options.AfterMap((source, target) =>

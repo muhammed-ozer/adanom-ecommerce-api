@@ -32,8 +32,6 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            await _applicationDbContext.Database.BeginTransactionAsync();
-
             var brand = _mapper.Map<CreateBrand, Brand>(command, options =>
             {
                 options.AfterMap((source, target) =>

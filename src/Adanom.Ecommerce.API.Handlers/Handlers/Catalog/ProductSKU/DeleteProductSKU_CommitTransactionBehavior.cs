@@ -1,5 +1,4 @@
-﻿using System;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
@@ -26,15 +25,15 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<bool> Handle(DeleteProductSKU command, RequestHandlerDelegate<bool> next, CancellationToken cancellationToken)
         {
-            var deleteProductSKUResponse = await next();
+            var transaction = await _applicationDbContext.Database.BeginTransactionAsync();
 
-            var currentTransaction = _applicationDbContext.Database.CurrentTransaction;
+            var deleteProductSKUResponse = await next();
 
             if (!deleteProductSKUResponse)
             {
-                if (currentTransaction != null)
+                if (transaction != null)
                 {
-                    await currentTransaction.RollbackAsync(cancellationToken);
+                    await transaction.RollbackAsync(cancellationToken);
 
                     await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
                     {
@@ -50,16 +49,16 @@ namespace Adanom.Ecommerce.API.Handlers
 
             try
             {
-                if (currentTransaction != null)
+                if (transaction != null)
                 {
-                    await currentTransaction.CommitAsync();
+                    await transaction.CommitAsync();
                 }
             }
             catch (Exception exception)
             {
-                if (currentTransaction != null)
+                if (transaction != null)
                 {
-                    await currentTransaction.RollbackAsync(cancellationToken);
+                    await transaction.RollbackAsync(cancellationToken);
                 }
 
                 await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()

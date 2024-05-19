@@ -31,8 +31,6 @@ namespace Adanom.Ecommerce.API.Handlers
                 .Where(e => e.DeletedAtUtc == null && e.Id == command.Id)
                 .SingleAsync();
 
-            await _applicationDbContext.Database.BeginTransactionAsync();
-
             shippingProvider.DeletedAtUtc = DateTime.UtcNow;
             shippingProvider.DeletedByUserId = userId;
 
