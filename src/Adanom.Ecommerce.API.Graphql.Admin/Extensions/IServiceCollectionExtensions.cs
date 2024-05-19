@@ -23,6 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<AddressCityQueries>()
                 .AddType<AddressDistrictQueries>()
                 .AddType<BrandQueries>()
+                .AddType<FavoriteItemQueries>()
                 .AddType<ProductQueries>()
                 .AddType<ProductReviewQueries>()
                 .AddType<ProductSKUQueries>()
@@ -77,6 +78,7 @@ namespace Microsoft.Extensions.DependencyInjection
             graphqlServices
                 .AddType<AddressDistrictResolvers>()
                 .AddType<BrandResolvers>()
+                .AddType<FavoriteItemResolvers>()
                 .AddType<ProductResolvers>()
                 .AddType<ProductCategoryResolvers>()
                 .AddType<ProductSKUResolvers>()
