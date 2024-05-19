@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class LoginHandler : IRequestHandler<Login, UserResponse?>
+    public sealed class LoginHandler : IRequestHandler<Login, bool>
     {
         #region Fields
 
@@ -28,41 +28,30 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region IRequestHandler Members
 
-        public async Task<UserResponse?> Handle(Login command, CancellationToken cancellationToken)
+        public async Task<bool> Handle(Login command, CancellationToken cancellationToken)
         {
             var isValid = await ValidateAsync(command);
 
             if (!isValid)
             {
-                return null;
+                return false;
             }
 
             var user = await _userManager.FindByEmailAsync(command.Email);
 
             if (user == null)
             {
-                return null;
+                return false;
             }
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, command.Password, false);
 
             if (!signInResult.Succeeded)
             {
-                return null;
+                return false;
             }
 
-            var roles = await _userManager.GetRolesAsync(user);
-
-            return new UserResponse()
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                EmailConfirmed = user.EmailConfirmed,
-                PhoneNumber = user.PhoneNumber,
-                Roles = roles.ToList()
-            };
+            return true;
         }
 
         #endregion

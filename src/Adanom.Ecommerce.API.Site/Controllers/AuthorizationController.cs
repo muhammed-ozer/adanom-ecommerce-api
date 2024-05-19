@@ -70,9 +70,16 @@ namespace Adanom.Ecommerce.API.Site.Controllers
                     Password = request.Password!
                 });
 
-                var userResponse = await _mediator.Send(loginCommand);
+                var loginResponse = await _mediator.Send(loginCommand);
 
-                if (userResponse is null)
+                if (!loginResponse)
+                {
+                    return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+                }
+
+                var userResponse = await _mediator.Send(new GetUser(loginCommand.Email, true));
+
+                if (userResponse == null)
                 {
                     return Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
                 }

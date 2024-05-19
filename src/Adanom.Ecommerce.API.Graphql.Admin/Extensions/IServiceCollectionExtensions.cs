@@ -36,7 +36,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ShippingProviderQueries>()
                 .AddType<PickUpStoreQueries>()
                 .AddType<TaxCategoryQueries>()
-                .AddType<TaxAdministrationQueries>();
+                .AddType<TaxAdministrationQueries>()
+                .AddType<UserQueries>()
+                .AddType<RoleQueries>();
 
             #endregion
 
@@ -65,7 +67,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ShippingProviderMutations>()
                 .AddType<PickUpStoreMutations>()
                 .AddType<TaxCategoryMutations>()
-                .AddType<TaxAdministrationMutations>();
+                .AddType<TaxAdministrationMutations>()
+                .AddType<UserMutations>();
 
             #endregion
 
