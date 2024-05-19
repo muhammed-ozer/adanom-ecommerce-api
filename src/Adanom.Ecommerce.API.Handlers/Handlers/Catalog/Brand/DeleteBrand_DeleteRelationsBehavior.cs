@@ -6,25 +6,19 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
-        private readonly IBlobStorageService _blobStorageService;
 
         #endregion
 
         #region Ctor
 
         public DeleteBrand_DeleteRelationsBehavior(
-            ApplicationDbContext applicationDbContext,
             IMapper mapper,
-            IMediator mediator,
-            IBlobStorageService blobStorageService)
+            IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _blobStorageService = blobStorageService ?? throw new ArgumentNullException(nameof(blobStorageService));
         }
 
         #endregion
@@ -39,9 +33,6 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 return deleteBrandResponse;
             }
-
-            var brand = await _applicationDbContext.Brands
-                    .SingleAsync(e => e.Id == command.Id && e.DeletedAtUtc.HasValue);
 
             #region MetaInformation
 

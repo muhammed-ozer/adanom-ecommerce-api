@@ -33,8 +33,6 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            await _applicationDbContext.Database.BeginTransactionAsync();
-
             var sliderItem = _mapper.Map<CreateSliderItem, SliderItem>(command, options =>
             {
                 options.AfterMap((source, target) =>

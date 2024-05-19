@@ -29,8 +29,6 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var transaction = await _applicationDbContext.Database.BeginTransactionAsync();
-
             var product = await _applicationDbContext.Products
                 .Where(e => e.DeletedAtUtc == null &&
                             e.Id == command.Id)
