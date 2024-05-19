@@ -11,6 +11,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<UpdateUserDefaultDiscountRateRequest, UpdateUserDefaultDiscountRate>();
 
             CreateMap<UpdateUserDefaultDiscountRate, User>();
+
+            CreateMap<UpdateUserRolesRequest, UpdateUserRoles>();
         }
     }
 }

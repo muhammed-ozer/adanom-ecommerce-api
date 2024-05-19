@@ -21,5 +21,21 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
         }
 
         #endregion
+
+        #region UpdateUserRolesAsync
+
+        [GraphQLDescription("Updates an user roles")]
+        public async Task<bool> UpdateUserRolesAsync(
+            UpdateUserRolesRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new UpdateUserRoles(identity));
+
+            return await mediator.Send(command); ;
+        }
+
+        #endregion
     }
 }
