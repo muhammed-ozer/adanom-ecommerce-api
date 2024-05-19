@@ -35,6 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<MetaInformationQueries>()
                 .AddType<SliderItemQueries>()
                 .AddType<ShippingProviderQueries>()
+                .AddType<StockNotificationItemQueries>()
                 .AddType<PickUpStoreQueries>()
                 .AddType<TaxCategoryQueries>()
                 .AddType<TaxAdministrationQueries>()
@@ -85,7 +86,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductPriceResolvers>()
                 .AddType<ProductSpecificationAttributeResolvers>()
                 .AddType<ProductSpecificationAttributeGroupResolvers>()
-                .AddType<SliderItemResolvers>();
+                .AddType<SliderItemResolvers>()
+                .AddType<StockNotificationItemResolvers>();
 
             #endregion
 
