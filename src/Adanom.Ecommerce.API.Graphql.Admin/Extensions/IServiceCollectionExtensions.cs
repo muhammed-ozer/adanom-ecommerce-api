@@ -92,6 +92,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ProductSpecificationAttributeGroupResolvers>()
                 .AddType<SliderItemResolvers>()
                 .AddType<StockNotificationItemResolvers>()
+                .AddType<AnonymousShoppingCartResolvers>()
                 .AddType<AnonymousShoppingCartItemResolvers>()
                 .AddType<ShoppingCartResolvers>()
                 .AddType<ShoppingCartItemResolvers>();
