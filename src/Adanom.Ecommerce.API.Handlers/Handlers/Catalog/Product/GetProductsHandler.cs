@@ -33,15 +33,19 @@
             {
                 #region Apply filtering
 
+                if (command.Filter.ProductCategoryId != null)
+                {
+                    var childProductCategoriesIds = await GetChildProductCategoriesIdsAsync(command.Filter.ProductCategoryId.Value);
+
+                    productsQuery = _applicationDbContext.Product_ProductCategory_Mappings
+                                                .Where(e => childProductCategoriesIds.Contains(e.ProductCategoryId))
+                                                .Select(e => e.Product)
+                                                .Distinct();
+                }
+
                 if (!string.IsNullOrEmpty(command.Filter.Query))
                 {
                     productsQuery = productsQuery.Where(e => e.Name.Contains(command.Filter.Query, StringComparison.InvariantCultureIgnoreCase));
-                }
-
-                if (command.Filter.ProductCategoryId != null)
-                {
-                    productsQuery = productsQuery.Where(e => 
-                        e.Product_ProductCategory_Mappings.Select(e => e.ProductCategory).Any(e => e.Id == command.Filter.ProductCategoryId.Value));
                 }
 
                 if (command.Filter.OutOfStock != null)
@@ -125,6 +129,36 @@
                 command.Pagination?.Page ?? 1,
                 command.Pagination?.PageSize ?? totalCount);
         }
+
+        #endregion
+
+        #region Private Methods
+
+        private async Task<List<long>> GetChildProductCategoriesIdsAsync(long categoryId)
+        {
+            var allProductCategories = await _applicationDbContext.ProductCategories.ToListAsync();
+
+            List<long> childProductCategoriesIds = new List<long>();
+
+            // Helper method that finds children recursively
+            void FindChildren(long parentId)
+            {
+                var children = allProductCategories.Where(c => c.ParentId == parentId).ToList();
+
+                foreach (var child in children)
+                {
+                    childProductCategoriesIds.Add(child.Id);
+                    FindChildren(child.Id);
+                }
+            }
+
+            // Find the first category and all its children
+            childProductCategoriesIds.Add(categoryId); // Add yourself
+
+            FindChildren(categoryId);
+
+            return childProductCategoriesIds;
+        } 
 
         #endregion
     }
