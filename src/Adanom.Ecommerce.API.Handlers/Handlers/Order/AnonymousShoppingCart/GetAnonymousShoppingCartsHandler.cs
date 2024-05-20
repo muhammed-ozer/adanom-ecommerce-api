@@ -1,3 +1,5 @@
+using AutoMapper.QueryableExtensions;
+
 namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class GetAnonymousShoppingCartsHandler : IRequestHandler<GetAnonymousShoppingCarts, PaginatedData<AnonymousShoppingCartResponse>>
@@ -60,7 +62,16 @@ namespace Adanom.Ecommerce.API.Handlers
 
             #endregion
 
-            var anonymousShoppingCartResponses = _mapper.Map<IEnumerable<AnonymousShoppingCartResponse>>(await anonymousShoppingCartsQuery.ToListAsync());
+            var mappingConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateProjection<AnonymousShoppingCart, AnonymousShoppingCartResponse>()
+                        .ForMember(member => member.Total, options =>
+                            options.MapFrom(e => e.Items
+                            .Sum(e => e.Amount * e.ProductSKU.ProductPrice.DiscountedPrice ?? e.Amount * e.ProductSKU.ProductPrice.OriginalPrice)))
+                        .ForMember(e => e.Items, options => options.Ignore());
+            });
+
+            var anonymousShoppingCartResponses = await anonymousShoppingCartsQuery.ProjectTo<AnonymousShoppingCartResponse>(mappingConfiguration).ToListAsync();
 
             return new PaginatedData<AnonymousShoppingCartResponse>(
                 anonymousShoppingCartResponses,

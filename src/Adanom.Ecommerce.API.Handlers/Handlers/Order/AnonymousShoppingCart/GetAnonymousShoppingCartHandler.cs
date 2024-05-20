@@ -1,3 +1,5 @@
+using AutoMapper.QueryableExtensions;
+
 namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class GetAnonymousShoppingCartHandler : IRequestHandler<GetAnonymousShoppingCart, AnonymousShoppingCartResponse?>
@@ -26,14 +28,20 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<AnonymousShoppingCartResponse?> Handle(GetAnonymousShoppingCart command, CancellationToken cancellationToken)
         {
-            var anonymousShoppingCart = await _applicationDbContext.AnonymousShoppingCarts
+            var mappingConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateProjection<AnonymousShoppingCart, AnonymousShoppingCartResponse>()
+                        .ForMember(member => member.Total, options =>
+                            options.MapFrom(e => e.Items
+                            .Sum(e => e.Amount * e.ProductSKU.ProductPrice.DiscountedPrice ?? e.Amount * e.ProductSKU.ProductPrice.OriginalPrice)))
+                        .ForMember(e => e.Items, options => options.Ignore());
+            });
+
+            return await _applicationDbContext.AnonymousShoppingCarts
                 .AsNoTracking()
                 .Where(e => e.Id == command.Id)
+                .ProjectTo<AnonymousShoppingCartResponse>(mappingConfiguration)
                 .SingleOrDefaultAsync();
-
-            var anonymousShoppingCartResponse = _mapper.Map<AnonymousShoppingCartResponse>(anonymousShoppingCart);
-
-            return anonymousShoppingCartResponse;
         }
 
         #endregion
