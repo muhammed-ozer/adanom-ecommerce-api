@@ -19,8 +19,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public long? PickUpStoreId { get; set; }
 
-        public long OrderPaymentId { get; set; }
-
         public OrderStatusTypeResponse? OrderStatusType { get; set; }
 
         public DeliveryTypeResponse? DeliveryType { get; set; }
@@ -62,6 +60,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         //public BillingAddressResponse? BillingAddress { get; set; }
 
-        //public OrderPaymentResponse Payment { get; set; } = null!;
+        //public OrderPaymentResponse OrderPayment { get; set; } = null!;
     }
 }
