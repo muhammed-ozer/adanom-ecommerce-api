@@ -52,6 +52,8 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public DateTime CreatedAtUtc { get; set; }
 
+        public DateTime? DeliveredAtUtc { get; set; }
+
         public User User { get; set; } = null!;
 
         public ShippingProvider? ShippingProvider { get; set; }
