@@ -43,6 +43,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<AnonymousShoppingCartItemQueries>()
                 .AddType<ShoppingCartQueries>()
                 .AddType<ShoppingCartItemQueries>()
+                .AddType<OrderQueries>()
+                .AddType<OrderStatusTypeQueries>()
+                .AddType<DeliveryTypeQueries>()
                 .AddType<UserQueries>()
                 .AddType<RoleQueries>();
 
@@ -95,7 +98,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<AnonymousShoppingCartResolvers>()
                 .AddType<AnonymousShoppingCartItemResolvers>()
                 .AddType<ShoppingCartResolvers>()
-                .AddType<ShoppingCartItemResolvers>();
+                .AddType<ShoppingCartItemResolvers>()
+                .AddType<OrderResolvers>();
 
             #endregion
 
