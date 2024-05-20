@@ -1,12 +1,25 @@
-﻿namespace Adanom.Ecommerce.API.Data.Models
+﻿using Adanom.Ecommerce.API.Data.Attributes;
+
+namespace Adanom.Ecommerce.API.Data.Models
 {
     public enum OrderStatusType : byte
     {
-        RECEIVED,
+        [EnumDisplayName("Yeni Sipariş")]
+        NEW,
+
+        [EnumDisplayName("Hazırlanıyor")]
         IN_PROGRESS,
+
+        [EnumDisplayName("Hazırlandı")]
         READY,
-        PICKED_UP_BY_SHIPPING_PROVIDER,
-        DELIVERED,
+
+        [EnumDisplayName("Kargo Firmasına Teslim Edildi")]
+        DELIVERED_TO_SHIPPING_PROVIDER,
+
+        [EnumDisplayName("Teslim Edildi")]
+        DELIVERED_TO_CUSTOMER,
+
+        [EnumDisplayName("İptal")]
         CANCEL
     }
 }
