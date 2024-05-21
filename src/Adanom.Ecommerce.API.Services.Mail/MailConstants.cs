@@ -7,7 +7,12 @@
             public static class User
             {
                 public const string FullName = "{USER_FULL_NAME}";
+            }
 
+            public static class Auth
+            {
+                public const string EmailConfirmationUrl = "{AUTH_EMAIL_CONFIRMATION_URL}";
+                public const string PasswordResetUrl = "{AUTH_PASSWORD_RESET_URL}}";
             }
 
             public static class Order

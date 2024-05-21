@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using Adanom.Ecommerce.API.Logging;
+using Adanom.Ecommerce.API.Services.Mail;
 using Microsoft.AspNetCore.Identity;
 
 namespace Adanom.Ecommerce.API.Handlers
@@ -51,15 +51,13 @@ namespace Adanom.Ecommerce.API.Handlers
 
             await _mediator.Publish(new SendMail()
             {
-                Key = MailTemplateKey.PASSWORD_CHANGED_SUCCESSFUL,
+                Key = MailTemplateKey.AUTH_PASSWORD_CHANGED_SUCCESSFUL,
                 To = user.Email,
                 Replacements = new Dictionary<string, string>()
                 {
-                    { "{USER_NAME}", $"{user.FirstName} {user.LastName}" }
+                    { MailConstants.Replacements.User.FullName, $"{user.FirstName} {user.LastName}" },
                 }
             });
-
-            // TODO: Update mail template
 
             return true;
         }
