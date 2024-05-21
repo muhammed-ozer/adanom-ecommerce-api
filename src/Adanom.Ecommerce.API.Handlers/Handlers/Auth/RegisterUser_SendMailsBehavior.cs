@@ -1,4 +1,6 @@
-﻿namespace Adanom.Ecommerce.API.Handlers
+﻿using Adanom.Ecommerce.API.Services.Mail;
+
+namespace Adanom.Ecommerce.API.Handlers
 {
     public class RegisterUser_SendMailsBehavior : IPipelineBehavior<RegisterUser, bool>
     {
@@ -27,11 +29,11 @@
             {
                 await _mediator.Publish(new SendMail()
                 {
-                    Key = MailTemplateKey.WELCOME,
+                    Key = MailTemplateKey.AUTH_NEW_USER,
                     To = command.Email,
                     Replacements = new Dictionary<string, string>()
                     {
-                        { "{USER_NAME}", $"{command.FirstName} {command.LastName}" }
+                        { MailConstants.Replacements.User.FullName, $"{command.FirstName} {command.LastName}" }
                     }
                 });
 

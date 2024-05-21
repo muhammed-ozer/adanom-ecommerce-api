@@ -4,7 +4,12 @@
     {
         public static class Store
         {
-            public static string Url = "";
+            public static string BaseURL = "";
+        }
+
+        public static class Auth
+        {
+            public static string BaseURL = "";
         }
     }
 }

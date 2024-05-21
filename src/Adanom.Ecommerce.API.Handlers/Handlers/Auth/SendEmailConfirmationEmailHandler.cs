@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using Adanom.Ecommerce.API.Services.Mail;
 using Microsoft.AspNetCore.Identity;
 
 namespace Adanom.Ecommerce.API.Handlers
@@ -40,20 +41,18 @@ namespace Adanom.Ecommerce.API.Handlers
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var url = $"{UIClientConstants.Store.Url}/email-confirmation?email={user.Email}&token={HttpUtility.UrlEncode(token)}";
+            var url = $"{UIClientConstants.Auth.BaseURL}/email-confirmation?email={user.Email}&token={HttpUtility.UrlEncode(token)}";
 
             await _mediator.Publish(new SendMail()
             {
-                Key = MailTemplateKey.EMAIL_CONFIRMATION,
+                Key = MailTemplateKey.AUTH_EMAIL_CONFIRMATION,
                 To = user.Email,
                 Replacements = new Dictionary<string, string>()
                 {
-                    { "{USER_NAME}", $"{user.FirstName} {user.LastName}" },
-                    { "{EMAIL_CONFIRMATION_LINK}", url }
+                    { MailConstants.Replacements.User.FullName, $"{user.FirstName} {user.LastName}" },
+                    { MailConstants.Replacements.Auth.EmailConfirmationUrl, url },
                 }
             });
-
-            // TODO: Update mail template
 
             return true;
         } 
