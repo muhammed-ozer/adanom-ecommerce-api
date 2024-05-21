@@ -2,11 +2,11 @@
 
 namespace Adanom.Ecommerce.API.Validation.Validators
 {
-    public sealed class UpdateOrderStatusTypeValidator : AbstractValidator<UpdateOrder_OrderStatusType>
+    public sealed class UpdateOrder_OrderStatusTypeValidator : AbstractValidator<UpdateOrder_OrderStatusType>
     {
         private readonly IMediator _mediator;
 
-        public UpdateOrderStatusTypeValidator(IMediator mediator)
+        public UpdateOrder_OrderStatusTypeValidator(IMediator mediator)
         {
             _mediator = mediator;
 
