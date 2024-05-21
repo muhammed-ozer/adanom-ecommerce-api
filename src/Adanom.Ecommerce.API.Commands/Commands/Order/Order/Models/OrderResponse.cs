@@ -45,6 +45,10 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public DateTime? DeliveredAtUtc { get; set; }
 
+        public DateTime? UpdatedAtUtc { get; set; }
+
+        public Guid? UpdatedByUserId { get; set; }
+
         public UserResponse? User { get; set; }
 
         public ShippingProviderResponse? ShippingProvider { get; set; }
