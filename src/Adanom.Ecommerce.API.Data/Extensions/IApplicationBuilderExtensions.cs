@@ -7,6 +7,7 @@ namespace Microsoft.AspNetCore.Builder
         public static IApplicationBuilder UseApplicationData(this IApplicationBuilder applicationBuilder)
         {
             applicationBuilder.UseMiddleware<ApplyMigrationsMiddleware>();
+            applicationBuilder.UseMiddleware<SeedDataMiddleware>();
 
             return applicationBuilder;
         }
