@@ -1,6 +1,6 @@
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class GetStockUnitType : IRequest<StockUnitTypeResponse?>
+    public class GetStockUnitType : IRequest<StockUnitTypeResponse>
     {
         #region Ctor
 

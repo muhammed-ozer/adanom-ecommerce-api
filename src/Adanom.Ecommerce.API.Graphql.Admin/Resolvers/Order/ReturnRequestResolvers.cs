@@ -21,11 +21,11 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         #region GetReturnRequestStatusTypeAsync
 
-        public async Task<ReturnRequestStatusTypeResponse?> GetReturnRequestStatusTypeAsync(
+        public async Task<ReturnRequestStatusTypeResponse> GetReturnRequestStatusTypeAsync(
            [Parent] ReturnRequestResponse returnRequestResponse,
            [Service] IMediator mediator)
         {
-            var returnRequestStatusType = await mediator.Send(new GetReturnRequestStatusType(returnRequestResponse.ReturnRequestStatusType!.Key));
+            var returnRequestStatusType = await mediator.Send(new GetReturnRequestStatusType(returnRequestResponse.ReturnRequestStatusType.Key));
 
             return returnRequestStatusType;
         }
@@ -34,11 +34,11 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         #region GetDeliveryTypeAsync
 
-        public async Task<DeliveryTypeResponse?> GetDeliveryTypeAsync(
+        public async Task<DeliveryTypeResponse> GetDeliveryTypeAsync(
            [Parent] ReturnRequestResponse returnRequestResponse,
            [Service] IMediator mediator)
         {
-            var deliveryType = await mediator.Send(new GetDeliveryType(returnRequestResponse.DeliveryType!.Key));
+            var deliveryType = await mediator.Send(new GetDeliveryType(returnRequestResponse.DeliveryType.Key));
 
             return deliveryType;
         }

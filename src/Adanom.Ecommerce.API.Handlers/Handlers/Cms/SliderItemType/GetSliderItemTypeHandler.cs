@@ -1,6 +1,6 @@
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class GetSliderItemTypeHandler : IRequestHandler<GetSliderItemType, SliderItemTypeResponse?>
+    public sealed class GetSliderItemTypeHandler : IRequestHandler<GetSliderItemType, SliderItemTypeResponse>
 
     {
         #region Fields
@@ -20,11 +20,11 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region IRequestHandler Members
 
-        public async Task<SliderItemTypeResponse?> Handle(GetSliderItemType command, CancellationToken cancellationToken)
+        public async Task<SliderItemTypeResponse> Handle(GetSliderItemType command, CancellationToken cancellationToken)
         {
             var stockUnitTypes = await _mediator.Send(new GetSliderItemTypes());
 
-            return stockUnitTypes.SingleOrDefault(e => e.Key == command.SliderItemType);
+            return stockUnitTypes.Single(e => e.Key == command.SliderItemType);
         }
 
         #endregion

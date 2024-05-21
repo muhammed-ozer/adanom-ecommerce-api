@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public string? Url { get; set; }
 
-        public SliderItemTypeResponse? SliderItemType { get; set; }
+        public SliderItemTypeResponse SliderItemType { get; set; } = null!;
 
         public ImageResponse? Image { get; set; }
     }

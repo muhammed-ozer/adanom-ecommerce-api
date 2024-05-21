@@ -1,6 +1,6 @@
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class GetStockUnitTypeHandler : IRequestHandler<GetStockUnitType, StockUnitTypeResponse?>
+    public sealed class GetStockUnitTypeHandler : IRequestHandler<GetStockUnitType, StockUnitTypeResponse>
 
     {
         #region Fields
@@ -20,11 +20,11 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region IRequestHandler Members
 
-        public async Task<StockUnitTypeResponse?> Handle(GetStockUnitType command, CancellationToken cancellationToken)
+        public async Task<StockUnitTypeResponse> Handle(GetStockUnitType command, CancellationToken cancellationToken)
         {
             var stockUnitTypes = await _mediator.Send(new GetStockUnitTypes());
 
-            return stockUnitTypes.SingleOrDefault(e => e.Key == command.StockUnitType);
+            return stockUnitTypes.Single(e => e.Key == command.StockUnitType);
         }
 
         #endregion

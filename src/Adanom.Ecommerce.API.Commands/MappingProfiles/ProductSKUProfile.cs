@@ -6,11 +6,11 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
         {
             CreateMap<ProductSKU, ProductSKUResponse>()
                 .ForMember(member => member.StockUnitType, options =>
-                    options.MapFrom(e => new StockUnitTypeResponse(e.StockUnitType))); ;
+                    options.MapFrom(e => new StockUnitTypeResponse(e.StockUnitType)));
 
             CreateMap<ProductSKUResponse, ProductSKU>()
                 .ForMember(member => member.StockUnitType, options => 
-                    options.MapFrom(e => e.StockUnitType!.Key));
+                    options.MapFrom(e => e.StockUnitType.Key));
 
             CreateMap<CreateProductSKURequest, CreateProductSKU>();
 

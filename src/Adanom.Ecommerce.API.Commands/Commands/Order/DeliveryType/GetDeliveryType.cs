@@ -1,6 +1,6 @@
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class GetDeliveryType : IRequest<DeliveryTypeResponse?>
+    public class GetDeliveryType : IRequest<DeliveryTypeResponse>
     {
         #region Ctor
 

@@ -37,7 +37,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 return updateReturnRequest_ReturnRequestStatusTypeResponse;
             }
 
-            var returnRequestStatusType = returnRequest.ReturnRequestStatusType!.Key;
+            var returnRequestStatusType = returnRequest.ReturnRequestStatusType.Key;
 
             if (returnRequestStatusType == command.OldReturnRequestStatusType)
             {
