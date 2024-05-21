@@ -12,10 +12,10 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public DateTime LastModifiedAtUtc { get; set; }
 
-        public ProductResponse Product { get; set; } = null!;
+        public ProductResponse? Product { get; set; }
 
-        public ProductSKUResponse ProductSKU { get; set; } = null!;
+        public ProductSKUResponse? ProductSKU { get; set; }
 
-        public ShoppingCartResponse ShoppingCart { get; set; } = null!;
+        public ShoppingCartResponse? ShoppingCart { get; set; }
     }
 }
