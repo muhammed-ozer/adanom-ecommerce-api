@@ -24,6 +24,7 @@
         COMPANY,
         SHIPPINGPROVIDER,
         PICKUPSTORE,
-        USER
+        USER,
+        ORDER
     }
 }

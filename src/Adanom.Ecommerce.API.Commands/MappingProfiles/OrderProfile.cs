@@ -15,6 +15,12 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
                     options.MapFrom(e => e.OrderStatusType!.Key))
                 .ForMember(member => member.DeliveryType, options =>
                     options.MapFrom(e => e.DeliveryType!.Key));
+
+            CreateMap<UpdateOrder_OrderStatusTypeRequest, UpdateOrder_OrderStatusType>();
+
+            CreateMap<UpdateOrder_OrderStatusType, Order>()
+                .ForMember(member => member.OrderStatusType, options =>
+                    options.MapFrom(e => e.NewOrderStatusType));
         }
     }
 }
