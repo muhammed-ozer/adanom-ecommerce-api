@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Adanom.Ecommerce.API.Commands.Models
 {
     public class OrderResponse : BaseResponseEntity<long>
@@ -23,7 +21,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public DeliveryTypeResponse? DeliveryType { get; set; }
 
-        [StringLength(25)]
         public string OrderNumber { get; set; } = null!;
 
         public decimal SubTotal { get; set; }
