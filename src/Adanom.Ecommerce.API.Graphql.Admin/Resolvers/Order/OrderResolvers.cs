@@ -3,6 +3,22 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
     [ExtendObjectType(typeof(OrderResponse))]
     public sealed class OrderResolvers
     {
+        #region GetItemsAsync
+
+        public async Task<IEnumerable<OrderItemResponse>> GetItemsAsync(
+           [Parent] OrderResponse orderResponse,
+           [Service] IMediator mediator)
+        {
+            var orderItems = await mediator.Send(new GetOrderItems(new GetOrderItemsFilter()
+            {
+                OrderId = orderResponse.Id
+            }));
+
+            return orderItems;
+        }
+
+        #endregion
+
         #region GetUserAsync
 
         public async Task<UserResponse?> GetUserAsync(

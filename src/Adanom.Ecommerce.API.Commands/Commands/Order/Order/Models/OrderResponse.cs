@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
     {
         public OrderResponse()
         {
-            //Items = new List<OrderItemResponse>();
+            Items = new List<OrderItemResponse>();
         }
 
         public Guid UserId { get; set; }
@@ -54,7 +54,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public PickUpStoreResponse? PickUpStore { get; set; }
 
-        //public ICollection<OrderItemResponse> Items { get; set; }
+        public ICollection<OrderItemResponse> Items { get; set; }
 
         //public ShippingAddressResponse ShippingAddress { get; set; } = null!;
 
