@@ -73,7 +73,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 {
                     Id = productSKU.Id,
                     StockQuantity = stockQuantity,
-                    StockUnitType = productSKU.StockUnitType!.Key
+                    StockUnitType = productSKU.StockUnitType.Key
                 };
 
                 var updateProductSKUStockCommand = _mapper.Map(updateProductSKUStockRequest, new UpdateProductSKUStock(command.Identity));

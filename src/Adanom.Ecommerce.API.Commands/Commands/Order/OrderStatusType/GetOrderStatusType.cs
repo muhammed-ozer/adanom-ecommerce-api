@@ -1,6 +1,6 @@
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class GetOrderStatusType : IRequest<OrderStatusTypeResponse?>
+    public class GetOrderStatusType : IRequest<OrderStatusTypeResponse>
     {
         #region Ctor
 

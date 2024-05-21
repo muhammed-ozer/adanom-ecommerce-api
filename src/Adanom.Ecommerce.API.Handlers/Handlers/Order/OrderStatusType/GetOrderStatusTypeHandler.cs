@@ -1,6 +1,6 @@
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class GetOrderStatusTypeHandler : IRequestHandler<GetOrderStatusType, OrderStatusTypeResponse?>
+    public sealed class GetOrderStatusTypeHandler : IRequestHandler<GetOrderStatusType, OrderStatusTypeResponse>
 
     {
         #region Fields
@@ -20,11 +20,11 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region IRequestHandler Members
 
-        public async Task<OrderStatusTypeResponse?> Handle(GetOrderStatusType command, CancellationToken cancellationToken)
+        public async Task<OrderStatusTypeResponse> Handle(GetOrderStatusType command, CancellationToken cancellationToken)
         {
             var orderStatusTypes = await _mediator.Send(new GetOrderStatusTypes());
 
-            return orderStatusTypes.SingleOrDefault(e => e.Key == command.OrderStatusType);
+            return orderStatusTypes.Single(e => e.Key == command.OrderStatusType);
         }
 
         #endregion

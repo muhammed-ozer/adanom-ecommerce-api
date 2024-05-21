@@ -44,8 +44,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 return updateOrder_OrderStatusTypeResponse;
             }
 
-            var orderStatusType = order.OrderStatusType!.Key;
-            var deliveryType = order.DeliveryType!.Key;
+            var orderStatusType = order.OrderStatusType.Key;
+            var deliveryType = order.DeliveryType.Key;
 
             if (orderStatusType == command.OldOrderStatusType || orderStatusType == OrderStatusType.NEW)
             {

@@ -12,7 +12,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public int StockQuantity { get; set; }
 
-        public StockUnitTypeResponse? StockUnitType { get; set; }
+        public StockUnitTypeResponse StockUnitType { get; set; } = null!;
 
         public string? Barcodes { get; set; }
 

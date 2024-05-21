@@ -10,7 +10,7 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
 
             CreateMap<SliderItemResponse, SliderItem>()
                 .ForMember(member => member.SliderItemType, options =>
-                    options.MapFrom(e => e.SliderItemType!.Key));
+                    options.MapFrom(e => e.SliderItemType.Key));
 
             CreateMap<CreateSliderItemRequest, CreateSliderItem>();
 

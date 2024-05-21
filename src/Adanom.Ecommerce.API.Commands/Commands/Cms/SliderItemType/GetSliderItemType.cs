@@ -1,6 +1,6 @@
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class GetSliderItemType : IRequest<SliderItemTypeResponse?>
+    public class GetSliderItemType : IRequest<SliderItemTypeResponse>
     {
         #region Ctor
 

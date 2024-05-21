@@ -17,9 +17,9 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public long? PickUpStoreId { get; set; }
 
-        public OrderStatusTypeResponse? OrderStatusType { get; set; }
+        public OrderStatusTypeResponse OrderStatusType { get; set; } = null!;
 
-        public DeliveryTypeResponse? DeliveryType { get; set; }
+        public DeliveryTypeResponse DeliveryType { get; set; } = null!;
 
         public string OrderNumber { get; set; } = null!;
 

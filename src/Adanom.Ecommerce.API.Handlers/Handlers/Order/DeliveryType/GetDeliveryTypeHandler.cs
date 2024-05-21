@@ -1,6 +1,6 @@
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class GetDeliveryTypeHandler : IRequestHandler<GetDeliveryType, DeliveryTypeResponse?>
+    public sealed class GetDeliveryTypeHandler : IRequestHandler<GetDeliveryType, DeliveryTypeResponse>
 
     {
         #region Fields
@@ -20,11 +20,11 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region IRequestHandler Members
 
-        public async Task<DeliveryTypeResponse?> Handle(GetDeliveryType command, CancellationToken cancellationToken)
+        public async Task<DeliveryTypeResponse> Handle(GetDeliveryType command, CancellationToken cancellationToken)
         {
             var deliveryTypes = await _mediator.Send(new GetDeliveryTypes());
 
-            return deliveryTypes.SingleOrDefault(e => e.Key == command.DeliveryType);
+            return deliveryTypes.Single(e => e.Key == command.DeliveryType);
         }
 
         #endregion
