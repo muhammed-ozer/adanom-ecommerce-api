@@ -97,6 +97,16 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
+                #region Order
+
+                #region Order
+
+                options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeSendMailsBehavior>();
+
+                #endregion
+
+                #endregion
+
                 #region Auth
 
                 #region RegisterUser

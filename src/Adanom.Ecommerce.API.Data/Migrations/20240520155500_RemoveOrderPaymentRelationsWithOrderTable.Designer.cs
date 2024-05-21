@@ -4,6 +4,7 @@ using Adanom.Ecommerce.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Adanom.Ecommerce.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240520155500_RemoveOrderPaymentRelationsWithOrderTable")]
+    partial class RemoveOrderPaymentRelationsWithOrderTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -540,7 +543,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<long?>("ShippingProviderId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("ShippingTrackingCode")
+                    b.Property<string>("ShippingTransactionCode")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
@@ -555,12 +558,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<decimal>("TaxTotal")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
-
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UpdatedByUserId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -671,8 +668,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
 
                     b.ToTable("OrderPayments");
                 });
@@ -2288,17 +2283,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("ProductSKU");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.OrderPayment", b =>
-                {
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Product", b =>

@@ -1,0 +1,21 @@
+namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
+{
+    [ExtendObjectType(OperationTypeNames.Query)]
+    // TODO: Implement authorize [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
+    public class OrderItemQueries
+    {
+        #region GetOrderItemsAsync
+
+        [GraphQLDescription("Gets order items")]
+        public async Task<IEnumerable<OrderItemResponse>> GetOrderItemsAsync(
+            GetOrderItemsFilter filter,
+            [Service] IMediator mediator)
+        {
+            var command = new GetOrderItems(filter);
+
+            return await mediator.Send(command);
+        }
+
+        #endregion
+    }
+}
