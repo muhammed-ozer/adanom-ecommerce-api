@@ -26,10 +26,20 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<OrderResponse?> Handle(GetOrder command, CancellationToken cancellationToken)
         {
-            var order = await _applicationDbContext.Orders
-                    .AsNoTracking()
-                    .Where(e => e.Id == command.Id)
-                    .SingleOrDefaultAsync();
+            var ordersQuery = _applicationDbContext.Orders.AsNoTracking();
+
+            Order? order;
+
+            if (command.OrderNumber.IsNotNullOrEmpty())
+            {
+                order = await ordersQuery.Where(e => e.OrderNumber == command.OrderNumber)
+                                         .SingleOrDefaultAsync();
+            }
+            else
+            {
+                order = await ordersQuery.Where(e => e.Id == command.Id)
+                                         .SingleOrDefaultAsync();
+            }
 
             var orderResponse = _mapper.Map<OrderResponse>(order);
 
