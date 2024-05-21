@@ -39,7 +39,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public string? Note { get; set; }
 
-        public string? ShippingTransactionCode { get; set; }
+        public string? ShippingTrackingCode { get; set; }
 
         public DateTime CreatedAtUtc { get; set; }
 
@@ -53,10 +53,10 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public ICollection<OrderItemResponse> Items { get; set; }
 
+        public OrderPaymentResponse? OrderPayment { get; set; }
+
         //public ShippingAddressResponse ShippingAddress { get; set; } = null!;
 
         //public BillingAddressResponse? BillingAddress { get; set; }
-
-        //public OrderPaymentResponse OrderPayment { get; set; } = null!;
     }
 }
