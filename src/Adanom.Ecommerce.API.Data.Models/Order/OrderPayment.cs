@@ -14,5 +14,7 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         [StringLength(1000)]
         public string? GatewayResponse { get; set; }
+
+        public Order Order { get; set; } = null!;
     }
 }
