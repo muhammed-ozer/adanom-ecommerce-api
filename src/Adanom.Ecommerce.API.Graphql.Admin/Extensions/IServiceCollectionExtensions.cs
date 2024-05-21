@@ -48,6 +48,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<OrderPaymentQueries>()
                 .AddType<OrderStatusTypeQueries>()
                 .AddType<DeliveryTypeQueries>()
+                .AddType<ReturnRequestQueries>()
+                .AddType<ReturnRequestItemQueries>()
+                .AddType<ReturnRequestStatusTypeQueries>()
                 .AddType<UserQueries>()
                 .AddType<RoleQueries>();
 
@@ -80,7 +83,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<TaxCategoryMutations>()
                 .AddType<TaxAdministrationMutations>()
                 .AddType<UserMutations>()
-                .AddType<OrderMutations>();
+                .AddType<OrderMutations>()
+                .AddType<ReturnRequestMutations>();
 
             #endregion
 
@@ -103,7 +107,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ShoppingCartResolvers>()
                 .AddType<ShoppingCartItemResolvers>()
                 .AddType<OrderResolvers>()
-                .AddType<OrderItemResolvers>();
+                .AddType<OrderItemResolvers>()
+                .AddType<ReturnRequestResolvers>()
+                .AddType<ReturnRequestItemResolvers>();
 
             #endregion
 

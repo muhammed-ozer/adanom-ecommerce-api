@@ -21,6 +21,11 @@
                 public const string ShippingTrackingCode = "{ORDER_SHIPPING_TRACKING_CODE}";
                 public const string ShippingProviderName = "{ORDER_SHIPPING_PROVIDER_NAME}";
             }
+
+            public static class ReturnRequest
+            {
+                public const string Number = "{RETURN_REQUEST_NUMBER}";
+            }
         }
     }
 }
