@@ -46,11 +46,15 @@ namespace Adanom.Ecommerce.API.Data.Models
         public string? Note { get; set; }
 
         [StringLength(250)]
-        public string? ShippingTransactionCode { get; set; }
+        public string? ShippingTrackingCode { get; set; }
 
         public DateTime CreatedAtUtc { get; set; }
 
         public DateTime? DeliveredAtUtc { get; set; }
+
+        public DateTime? UpdatedAtUtc { get; set; }
+
+        public Guid? UpdatedByUserId { get; set; }
 
         public User User { get; set; } = null!;
 
