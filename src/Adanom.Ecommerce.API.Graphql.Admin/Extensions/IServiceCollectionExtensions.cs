@@ -45,6 +45,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ShoppingCartItemQueries>()
                 .AddType<OrderQueries>()
                 .AddType<OrderItemQueries>()
+                .AddType<OrderPaymentQueries>()
                 .AddType<OrderStatusTypeQueries>()
                 .AddType<DeliveryTypeQueries>()
                 .AddType<UserQueries>()
