@@ -53,12 +53,16 @@ namespace Adanom.Ecommerce.API.Handlers
 
                     if (command.Filter.StartDate != null)
                     {
-                        ordersQuery = ordersQuery.Where(e => e.CreatedAtUtc.Date > command.Filter.StartDate.Value.Date);
+                        var startDate = command.Filter.StartDate.Value.StartOfDate();
+
+                        ordersQuery = ordersQuery.Where(e => e.CreatedAtUtc.Date >= startDate);
                     }
 
                     if (command.Filter.EndDate != null)
                     {
-                        ordersQuery = ordersQuery.Where(e => e.CreatedAtUtc.Date < command.Filter.EndDate.Value.Date);
+                        var endDate = command.Filter.EndDate.Value.EndOfDate();
+
+                        ordersQuery = ordersQuery.Where(e => e.CreatedAtUtc.Date <= endDate);
                     }
 
                     #endregion
