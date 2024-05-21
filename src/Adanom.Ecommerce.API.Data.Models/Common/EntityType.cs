@@ -25,6 +25,7 @@
         SHIPPINGPROVIDER,
         PICKUPSTORE,
         USER,
-        ORDER
+        ORDER,
+        RETURNREQUEST
     }
 }
