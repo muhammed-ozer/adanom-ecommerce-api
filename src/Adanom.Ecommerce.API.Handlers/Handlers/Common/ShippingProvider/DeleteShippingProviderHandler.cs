@@ -34,6 +34,18 @@ namespace Adanom.Ecommerce.API.Handlers
             shippingProvider.DeletedAtUtc = DateTime.UtcNow;
             shippingProvider.DeletedByUserId = userId;
 
+            if (shippingProvider.IsDefault)
+            {
+                var randomShippingProvider = await _applicationDbContext.ShippingProviders
+                    .Where(e => e.DeletedAtUtc == null && e.Id != command.Id)
+                    .FirstOrDefaultAsync();
+
+                if (randomShippingProvider != null)
+                {
+                    randomShippingProvider.IsDefault = true;
+                }
+            }
+
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
