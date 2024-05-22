@@ -46,5 +46,19 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
         }
 
         #endregion
+
+        #region GetOrdersTotalGrandTotalAsync
+
+        [GraphQLDescription("Gets orders total grand total")]
+        public async Task<decimal> GetOrdersTotalGrandTotalAsync(
+            GetOrdersTotalGrandTotalFilter? filter,
+            [Service] IMediator mediator)
+        {
+            var command = new GetOrdersTotalGrandTotal(filter);
+
+            return await mediator.Send(command);
+        }
+
+        #endregion
     }
 }
