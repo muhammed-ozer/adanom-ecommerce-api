@@ -1,5 +1,3 @@
-using AutoMapper.QueryableExtensions;
-
 namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class GetAnonymousShoppingCartsCountHandler : IRequestHandler<GetAnonymousShoppingCartsCount, int>
