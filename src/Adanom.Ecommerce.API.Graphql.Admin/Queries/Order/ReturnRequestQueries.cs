@@ -32,5 +32,19 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
         }
 
         #endregion
+
+        #region GetReturnRequestsCountAsync
+
+        [GraphQLDescription("Gets return requests count")]
+        public async Task<int> GetReturnRequestsCountAsync(
+            GetReturnRequestsCountFilter? filter,
+            [Service] IMediator mediator)
+        {
+            var command = new GetReturnRequestsCount(filter);
+
+            return await mediator.Send(command);
+        }
+
+        #endregion
     }
 }
