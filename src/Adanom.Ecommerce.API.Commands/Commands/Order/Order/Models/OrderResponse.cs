@@ -61,6 +61,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public ShippingAddressResponse? ShippingAddress { get; set; }
 
-        //public BillingAddressResponse? BillingAddress { get; set; }
+        public BillingAddressResponse? BillingAddress { get; set; }
     }
 }
