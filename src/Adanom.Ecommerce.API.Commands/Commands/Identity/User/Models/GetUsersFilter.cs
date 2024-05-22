@@ -10,6 +10,10 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public bool? AllowCommercialSMS { get; set; }
 
+        public DateTime? StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
+
         [DefaultValue(GetUsersOrderByEnum.CREATED_AT_DESC)]
         public GetUsersOrderByEnum? OrderBy { get; set; }
     }
