@@ -32,5 +32,33 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
         }
 
         #endregion
+
+        #region GetOrdersCountAsync
+
+        [GraphQLDescription("Gets orders count")]
+        public async Task<int> GetOrdersCountAsync(
+            GetOrdersCountFilter? filter,
+            [Service] IMediator mediator)
+        {
+            var command = new GetOrdersCount(filter);
+
+            return await mediator.Send(command);
+        }
+
+        #endregion
+
+        #region GetOrdersTotalGrandTotalAsync
+
+        [GraphQLDescription("Gets orders total grand total")]
+        public async Task<decimal> GetOrdersTotalGrandTotalAsync(
+            GetOrdersTotalGrandTotalFilter? filter,
+            [Service] IMediator mediator)
+        {
+            var command = new GetOrdersTotalGrandTotal(filter);
+
+            return await mediator.Send(command);
+        }
+
+        #endregion
     }
 }

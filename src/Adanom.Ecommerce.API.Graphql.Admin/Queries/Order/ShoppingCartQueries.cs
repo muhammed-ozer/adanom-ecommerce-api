@@ -32,5 +32,17 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
         }
 
         #endregion
+
+        #region GetShoppingCartsCountAsync
+
+        [GraphQLDescription("Gets shopping carts count")]
+        public async Task<int> GetShoppingCartsCountAsync([Service] IMediator mediator)
+        {
+            var command = new GetShoppingCartsCount();
+
+            return await mediator.Send(command);
+        }
+
+        #endregion
     }
 }

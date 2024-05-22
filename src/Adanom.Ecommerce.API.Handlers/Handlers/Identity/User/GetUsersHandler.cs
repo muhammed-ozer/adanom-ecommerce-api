@@ -56,6 +56,20 @@ namespace Adanom.Ecommerce.API.Handlers
                     usersQuery = usersQuery.Where(e => e.AllowCommercialSMS);
                 }
 
+                if (command.Filter.StartDate != null)
+                {
+                    var startDate = command.Filter.StartDate.Value.StartOfDate();
+
+                    usersQuery = usersQuery.Where(e => e.CreatedAtUtc.Date >= startDate);
+                }
+
+                if (command.Filter.EndDate != null)
+                {
+                    var endDate = command.Filter.EndDate.Value.EndOfDate();
+
+                    usersQuery = usersQuery.Where(e => e.CreatedAtUtc.Date <= endDate);
+                }
+
                 #endregion
 
                 #region Apply ordering
