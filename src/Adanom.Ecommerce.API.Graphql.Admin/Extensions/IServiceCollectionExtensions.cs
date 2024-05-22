@@ -52,7 +52,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ReturnRequestItemQueries>()
                 .AddType<ReturnRequestStatusTypeQueries>()
                 .AddType<UserQueries>()
-                .AddType<RoleQueries>();
+                .AddType<RoleQueries>()
+                .AddType<NotificationQueries>()
+                .AddType<NotificationTypeQueries>();
 
             #endregion
 
@@ -109,7 +111,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<OrderResolvers>()
                 .AddType<OrderItemResolvers>()
                 .AddType<ReturnRequestResolvers>()
-                .AddType<ReturnRequestItemResolvers>();
+                .AddType<ReturnRequestItemResolvers>()
+                .AddType<NotificationResolvers>();
 
             #endregion
 
