@@ -28,7 +28,6 @@ namespace Adanom.Ecommerce.API.Handlers
 
             if (command.Filter != null)
             {
-
                 if (command.Filter.ReturnRequestStatusType != null)
                 {
                     returnRequestsQuery = returnRequestsQuery.Where(e => e.ReturnRequestStatusType == command.Filter.ReturnRequestStatusType);
@@ -47,12 +46,11 @@ namespace Adanom.Ecommerce.API.Handlers
 
                     returnRequestsQuery = returnRequestsQuery.Where(e => e.CreatedAtUtc.Date <= endDate);
                 }
-
             }
 
             #endregion
 
-            return await returnRequestsQuery.CountAsync(); ;
+            return await returnRequestsQuery.CountAsync();
         }
 
         #endregion
