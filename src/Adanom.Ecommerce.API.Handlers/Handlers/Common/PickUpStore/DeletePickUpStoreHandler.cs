@@ -34,6 +34,18 @@ namespace Adanom.Ecommerce.API.Handlers
             pickUpStore.DeletedAtUtc = DateTime.UtcNow;
             pickUpStore.DeletedByUserId = userId;
 
+            if (pickUpStore.IsDefault)
+            {
+                var randomPickUpStore = await _applicationDbContext.PickUpStores
+                    .Where(e => e.DeletedAtUtc == null && e.Id != command.Id)
+                    .FirstOrDefaultAsync();
+
+                if (randomPickUpStore != null)
+                {
+                    randomPickUpStore.IsDefault = true;
+                }
+            }
+
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
