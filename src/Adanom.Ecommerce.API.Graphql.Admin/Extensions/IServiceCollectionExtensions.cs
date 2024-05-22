@@ -94,6 +94,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             graphqlServices
                 .AddType<AddressDistrictResolvers>()
+                .AddType<ShippingAddressResolvers>()
                 .AddType<BrandResolvers>()
                 .AddType<FavoriteItemResolvers>()
                 .AddType<ProductResolvers>()
