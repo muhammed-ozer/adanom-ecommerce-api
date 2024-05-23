@@ -23,19 +23,6 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         #endregion
 
-        #region GetMetaInformationAsync
-
-        public async Task<MetaInformationResponse?> GetMetaInformationAsync(
-           [Parent] ProductCategoryResponse productCategoryResponse,
-           [Service] IMediator mediator)
-        {
-            var metaInformation = await mediator.Send(new GetMetaInformation(productCategoryResponse.Id, EntityType.PRODUCTCATEGORY));
-
-            return metaInformation;
-        }
-
-        #endregion
-
         #region GetImagesAsync
 
         public async Task<IEnumerable<ImageResponse>> GetImagesAsync(

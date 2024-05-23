@@ -98,21 +98,6 @@
 
                 #endregion
 
-                #region MetaInformation
-
-                var deleteMetaInformationRequest = new DeleteMetaInformationRequest()
-                {
-                    EntityId = command.Id,
-                    EntityType = EntityType.PRODUCT
-                };
-
-                var deleteMetaInformationCommand = _mapper
-                    .Map(deleteMetaInformationRequest, new DeleteMetaInformation(command.Identity));
-
-                await _mediator.Send(deleteMetaInformationCommand);
-
-                #endregion
-
                 #region Images
 
                 var deleteImagesRequest = new DeleteImagesRequest()

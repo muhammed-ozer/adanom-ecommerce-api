@@ -22,8 +22,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public string MersisNumber { get; set; } = null!;
 
-        public MetaInformationResponse? MetaInformation { get; set; }
-
         public AddressCityResponse? AddressCity { get; set; }
 
         public AddressDistrictResponse? AddressDistrict { get; set; }

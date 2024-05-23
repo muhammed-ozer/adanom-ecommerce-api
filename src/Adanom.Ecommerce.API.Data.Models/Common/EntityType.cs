@@ -16,7 +16,6 @@
         BRAND,
         TAXCATEGORY,
         NOTIFICATION,
-        METAINFORMATION,
         IMAGE,
         PRODUCTREVIEW,
         TAXADMINISTRATION,

@@ -20,7 +20,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 #region Brand
 
                 options.AddBehavior<IPipelineBehavior<CreateBrand, BrandResponse?>, CreateBrand_CommitTransactionBehavior>();
-                options.AddBehavior<IPipelineBehavior<CreateBrand, BrandResponse?>, CreateBrand_CreateMetaInformationBehavior>();
 
                 options.AddBehavior<IPipelineBehavior<DeleteBrand, bool>, DeleteBrand_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteBrand, bool>, DeleteBrand_DeleteRelationsBehavior>();
@@ -30,7 +29,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 #region Product
 
                 options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CommitTransactionBehavior>();
-                options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CreateMetaInformationBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CreateProduct_ProductCategoryBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CreateProductSKUBehavior>();
 
@@ -49,7 +47,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 #region ProductCategory
 
                 options.AddBehavior<IPipelineBehavior<CreateProductCategory, ProductCategoryResponse?>, CreateProductCategory_CommitTransactionBehavior>();
-                options.AddBehavior<IPipelineBehavior<CreateProductCategory, ProductCategoryResponse?>, CreateProductCategory_CreateMetaInformationBehavior>();
 
                 options.AddBehavior<IPipelineBehavior<DeleteProductCategory, bool>, DeleteProductCategory_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteProductCategory, bool>, DeleteProductCategory_DeleteRelationsBehavior>();
