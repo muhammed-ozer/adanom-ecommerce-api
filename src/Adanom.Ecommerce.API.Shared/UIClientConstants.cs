@@ -11,5 +11,10 @@
         {
             public static string BaseURL = "";
         }
+
+        public static class Admin
+        {
+            public static string BaseURL = "";
+        }
     }
 }
