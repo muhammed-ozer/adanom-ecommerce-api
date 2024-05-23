@@ -30,8 +30,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public BrandResponse? Brand { get; set; }
 
-        public MetaInformation? MetaInformation { get; set; }
-
         public ICollection<ProductSKUResponse> ProductSKUs { get; set; }
 
         public ICollection<ProductCategoryResponse> ProductCategories { get; set; }

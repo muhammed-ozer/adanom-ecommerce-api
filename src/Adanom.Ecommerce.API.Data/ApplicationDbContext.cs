@@ -264,11 +264,5 @@ namespace Adanom.Ecommerce.API.Data
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; } = null!;
 
         #endregion
-
-        #region Seo DbSets
-
-        public DbSet<MetaInformation> MetaInformations { get; set; } = null!;
-
-        #endregion
     }
 }

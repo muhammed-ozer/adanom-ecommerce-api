@@ -22,8 +22,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public ICollection<ProductCategoryResponse> Children { get; set; }
 
-        public MetaInformation? MetaInformation { get; set; }
-
         public ICollection<ImageResponse> Images { get; set; }
     }
 }
