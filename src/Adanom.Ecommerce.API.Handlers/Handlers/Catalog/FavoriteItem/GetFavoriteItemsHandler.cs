@@ -51,6 +51,10 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 #endregion
             }
+            else
+            {
+                favoriteItemsQuery.OrderByDescending(e => e.CreatedAtUtc);
+            }
 
             var totalCount = favoriteItemsQuery.Count();
 

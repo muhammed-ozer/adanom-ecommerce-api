@@ -58,7 +58,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 }
             }
 
-            var shippingProviders = _cache.Values.AsEnumerable();
+            var shippingProviders = _cache.Values.OrderBy(e => e.IsDefault).ThenBy(e => e.DisplayName).AsEnumerable();
 
             var totalCount = shippingProviders.Count();
 

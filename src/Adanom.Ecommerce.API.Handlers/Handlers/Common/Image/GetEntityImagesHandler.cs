@@ -29,7 +29,8 @@
                  .AsNoTracking()
                  .Where(e => e.EntityId == command.EntityId &&
                              e.EntityType == command.EntityType)
-                 .OrderBy(e => e.DisplayOrder)
+                 .OrderBy(e => e.IsDefault)  
+                 .ThenBy(e => e.DisplayOrder)
                  .ToListAsync();
 
             var imageResponses = _mapper.Map<IEnumerable<ImageResponse>>(images);

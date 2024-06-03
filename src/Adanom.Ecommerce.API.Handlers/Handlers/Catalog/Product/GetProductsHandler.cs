@@ -110,6 +110,10 @@
 
                 #endregion
             }
+            else
+            {
+                productsQuery = productsQuery.OrderBy(e => e.DisplayOrder);
+            }
 
             var totalCount = productsQuery.Count();
 
