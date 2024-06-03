@@ -82,6 +82,10 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 #endregion
             }
+            else
+            {
+                productTags = productTags.OrderBy(e => e.Value);
+            }
 
             var totalCount = productTags.Count();
 

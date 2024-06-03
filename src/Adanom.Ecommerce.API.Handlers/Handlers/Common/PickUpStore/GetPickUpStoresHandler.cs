@@ -58,7 +58,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 }
             }
 
-            var pickUpStores = _cache.Values.AsEnumerable();
+            var pickUpStores = _cache.Values.OrderBy(e => e.IsDefault).ThenBy(e => e.DisplayName).AsEnumerable();
 
             var totalCount = pickUpStores.Count();
 

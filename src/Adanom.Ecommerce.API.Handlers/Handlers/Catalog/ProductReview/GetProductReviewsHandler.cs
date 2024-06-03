@@ -58,15 +58,19 @@ namespace Adanom.Ecommerce.API.Handlers
                         productReviewsQuery.OrderByDescending(e => e.Points),
                     GetProductReviewsOrderByEnum.CREATED_AT_ASC =>
                         productReviewsQuery.OrderBy(e => e.CreatedAtUtc),
-                    GetProductReviewsOrderByEnum.CREATED_AT_DESC =>
-                        productReviewsQuery.OrderByDescending(e => e.CreatedAtUtc),
+                    GetProductReviewsOrderByEnum.APPROVED_AT_ASC =>
+                        productReviewsQuery.OrderByDescending(e => e.ApprovedAtUtc),
                     GetProductReviewsOrderByEnum.APPROVED_AT_DESC =>
                         productReviewsQuery.OrderByDescending(e => e.ApprovedAtUtc),
                     _ =>
-                        productReviewsQuery.OrderBy(e => e.ApprovedAtUtc)
+                        productReviewsQuery.OrderBy(e => e.CreatedAtUtc)
                 };
 
                 #endregion
+            }
+            else
+            {
+                productReviewsQuery = productReviewsQuery.OrderByDescending(e => e.CreatedAtUtc);
             }
 
             var totalCount = productReviewsQuery.Count();

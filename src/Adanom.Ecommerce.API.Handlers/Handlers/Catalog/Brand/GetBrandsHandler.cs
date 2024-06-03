@@ -63,7 +63,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             var brands = _cache.Values.AsEnumerable();
 
-            if (command.Filter is not null)
+            if (command.Filter != null)
             {
                 #region Apply filtering
 
@@ -89,6 +89,10 @@ namespace Adanom.Ecommerce.API.Handlers
                 };
 
                 #endregion
+            }
+            else
+            {
+                brands = brands.OrderBy(e => e.DisplayOrder);
             }
 
             var totalCount = brands.Count();

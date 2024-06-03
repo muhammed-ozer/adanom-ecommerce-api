@@ -93,6 +93,10 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 #endregion
             }
+            else
+            {
+                productSpecificationAttributes = productSpecificationAttributes.OrderBy(e => e.DisplayOrder);
+            }
 
             var totalCount = productSpecificationAttributes.Count();
 

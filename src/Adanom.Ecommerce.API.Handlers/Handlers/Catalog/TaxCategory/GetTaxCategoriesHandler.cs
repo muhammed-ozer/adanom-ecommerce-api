@@ -84,6 +84,10 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 #endregion
             }
+            else
+            {
+                taxCategories = taxCategories.OrderBy(e => e.DisplayOrder);
+            }
 
             var totalCount = taxCategories.Count();
 

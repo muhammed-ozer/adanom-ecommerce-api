@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public long? ProductId { get; set; }
 
-        [DefaultValue(GetProductReviewsOrderByEnum.APPROVED_AT_ASC)]
+        [DefaultValue(GetProductReviewsOrderByEnum.CREATED_AT_DESC)]
         public GetProductReviewsOrderByEnum? OrderBy { get; set; }
     }
 }

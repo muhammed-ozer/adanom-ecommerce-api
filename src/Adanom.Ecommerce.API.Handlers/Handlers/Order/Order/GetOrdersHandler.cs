@@ -90,6 +90,10 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 #endregion
             }
+            else
+            {
+                ordersQuery = ordersQuery.OrderByDescending(e => e.CreatedAtUtc);
+            }
 
             var totalCount = ordersQuery.Count();
 
