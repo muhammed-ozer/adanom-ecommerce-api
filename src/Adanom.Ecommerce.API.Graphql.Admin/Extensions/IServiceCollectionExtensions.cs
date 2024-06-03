@@ -62,6 +62,7 @@ namespace Microsoft.Extensions.DependencyInjection
             graphqlServices
                 .AddMutationType(e => e.Name(OperationTypeNames.Mutation))
                 .AddType<CompanyMutations>()
+                .AddType<NotificationMutations>()
                 .AddType<AddressCityMutations>()
                 .AddType<AddressDistrictMutations>()
                 .AddType<BrandMutations>()

@@ -11,6 +11,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<NotificationResponse, Notification>()
                 .ForMember(member => member.NotificationType, options =>
                     options.MapFrom(e => e.NotificationType.Key));
+
+            CreateMap<MarkAsReadNotificationsRequest, MarkAsReadNotifications>();
         }
     }
 }
