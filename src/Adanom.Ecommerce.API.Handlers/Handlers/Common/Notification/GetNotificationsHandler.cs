@@ -37,6 +37,18 @@ namespace Adanom.Ecommerce.API.Handlers
                     notificationsQuery = notificationsQuery.Where(e => e.Content.Contains(command.Filter.Query));
                 }
 
+                if (command.Filter.UnRead.HasValue)
+                {
+                    if (command.Filter.UnRead.Value)
+                    {
+                        notificationsQuery = notificationsQuery.Where(e => e.ReadAtUtc == null);
+                    }
+                    else
+                    {
+                        notificationsQuery = notificationsQuery.Where(e => e.ReadAtUtc != null);
+                    }
+                }
+
                 if (command.Filter.NotificationType != null)
                 {
                     notificationsQuery = notificationsQuery.Where(e => e.NotificationType == command.Filter.NotificationType);
@@ -64,15 +76,19 @@ namespace Adanom.Ecommerce.API.Handlers
                 {
                     GetNotificationsOrderByEnum.CREATED_AT_ASC =>
                         notificationsQuery.OrderBy(e => e.CreatedAtUtc),
+                    GetNotificationsOrderByEnum.CREATED_AT_DESC =>
+                        notificationsQuery.OrderByDescending(e => e.CreatedAtUtc),
+                    GetNotificationsOrderByEnum.READ_AT_ASC =>
+                        notificationsQuery.OrderBy(e => e.ReadAtUtc),
                     _ =>
-                        notificationsQuery.OrderByDescending(e => e.CreatedAtUtc)
+                        notificationsQuery.OrderByDescending(e => e.ReadAtUtc)
                 };
 
                 #endregion
             }
             else
             {
-                notificationsQuery = notificationsQuery.OrderByDescending(e => e.CreatedAtUtc);
+                notificationsQuery = notificationsQuery.OrderBy(e => e.ReadAtUtc);
             }
 
             var totalCount = notificationsQuery.Count();
