@@ -4,6 +4,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
     {
         public string? Query { get; set; }
 
+        public bool? UnRead { get; set; }
+
         public NotificationType? NotificationType { get; set; }
 
         public DateTime? StartDate { get; set; }
