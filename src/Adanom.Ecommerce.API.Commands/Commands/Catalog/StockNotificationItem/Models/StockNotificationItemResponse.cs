@@ -6,11 +6,15 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public long ProductId { get; set; }
 
+        public long ProductSKUId { get; set; }
+
         public DateTime CreatedAtUtc { get; set; }
 
         public DateTime? EmailSentAtUtc { get; set; }
 
         public ProductResponse? Product { get; set; }
+
+        public ProductSKUResponse? ProductSKU { get; set; }
 
         public UserResponse? User { get; set; }
     }
