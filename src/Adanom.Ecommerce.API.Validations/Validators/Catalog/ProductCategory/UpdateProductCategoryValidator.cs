@@ -94,15 +94,22 @@
             UpdateProductCategory value,
             CancellationToken cancellationToken)
         {
-            if (value.ProductCategoryLevel == ProductCategoryLevel.THIRD && value.ParentId != null)
+            if (value.ParentId != null)
             {
                 var parentCategory = await _mediator.Send(new GetProductCategory(value.ParentId.Value));
 
                 if (parentCategory != null)
                 {
-                    if (parentCategory.ProductCategoryLevel == ProductCategoryLevel.THIRD)
+                    if (parentCategory.ParentId != null)
                     {
-                        return false;
+                        var parent_ParentCategory = await _mediator.Send(new GetProductCategory(parentCategory.ParentId.Value));
+                        {
+                            if (parent_ParentCategory != null && parent_ParentCategory.ParentId != null)
+                            {
+                                return false;
+                            }
+                        }
+
                     }
                 }
             }

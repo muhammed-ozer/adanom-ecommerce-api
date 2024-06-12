@@ -10,8 +10,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public long? ParentId { get; set; }
 
-        public ProductCategoryLevel ProductCategoryLevel { get; set; }
-
         public string Name { get; set; } = null!;
 
         public string UrlSlug { get; set; } = null!;
