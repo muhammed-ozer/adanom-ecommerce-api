@@ -23,6 +23,22 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         #endregion
 
+        #region GetChildrenAsync
+
+        public async Task<IEnumerable<ProductCategoryResponse>> GetChildrenAsync(
+           [Parent] ProductCategoryResponse productCategoryResponse,
+           [Service] IMediator mediator)
+        {
+            var children = await mediator.Send(new GetProductCategories(new GetProductCategoriesFilter()
+            { 
+                ParentId = productCategoryResponse.ParentId
+            }));
+
+            return children.Rows;
+        }
+
+        #endregion
+
         #region GetImagesAsync
 
         public async Task<IEnumerable<ImageResponse>> GetImagesAsync(

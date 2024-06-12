@@ -12,8 +12,6 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public long? ParentId { get; set; }
 
-        public ProductCategoryLevel ProductCategoryLevel { get; set; }
-
         [StringLength(100)]
         public string Name { get; set; } = null!;
 

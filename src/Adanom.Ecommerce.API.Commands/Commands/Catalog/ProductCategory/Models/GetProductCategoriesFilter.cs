@@ -6,8 +6,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public long? ParentId { get; set; }
 
-        public ProductCategoryLevel? ProductCategoryLevel { get; set; }
-
         [DefaultValue(GetProductCategoriesOrderByEnum.DISPLAY_ORDER_ASC)]
         public GetProductCategoriesOrderByEnum? OrderBy { get; set; }
     }
