@@ -18,8 +18,7 @@
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                     .WithMessage("Ürün stok detayı bulunamadı.")
                 .CustomAsync(ValidateDoesProductSKUExistsAsync)
-                .CustomAsync(ValidateDoesNotProductSKUInUseAsync)
-                .CustomAsync(ValidateDoesProductSKUValidToDeleteAsync);
+                .CustomAsync(ValidateDoesNotProductSKUInUseAsync);
         }
 
         #region Private Methods
@@ -60,27 +59,6 @@
                 {
                     ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
                     ErrorMessage = "Bu ürün stok detayı bir siparişte yer aldığından dolayı silinemez."
-                });
-            }
-        }
-
-        #endregion
-
-        #region ValidateDoesProductSKUValidToDeleteAsync
-
-        private async Task ValidateDoesProductSKUValidToDeleteAsync(
-            long value,
-            ValidationContext<DeleteProductSKU> context,
-            CancellationToken cancellationToken)
-        {
-            var productSKUValidToDelete = await _mediator.Send(new DoesProductSKUValidToDelete(value));
-
-            if (!productSKUValidToDelete)
-            {
-                context.AddFailure(new ValidationFailure(nameof(DeleteProductSKU.Id), null)
-                {
-                    ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
-                    ErrorMessage = "Bu ürün stok detayı ürüne ait başka bir stok detayı olmadığı için silinemez."
                 });
             }
         }

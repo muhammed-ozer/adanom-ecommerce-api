@@ -28,18 +28,5 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
         }
 
         #endregion
-
-        #region GetProductSKUAsync
-
-        public async Task<ProductSKUResponse?> GetProductSKUAsync(
-           [Parent] ShoppingCartItemResponse shoppingCartItemResponse,
-           [Service] IMediator mediator)
-        {
-            var productSKU = await mediator.Send(new GetProductSKU(shoppingCartItemResponse.ProductSKUId));
-
-            return productSKU;
-        }
-
-        #endregion
     }
 }

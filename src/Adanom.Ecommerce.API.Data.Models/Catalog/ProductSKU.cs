@@ -6,10 +6,6 @@ namespace Adanom.Ecommerce.API.Data.Models
     [Index(nameof(Code), IsUnique = true)]
     public class ProductSKU : BaseEntity<long>
     {
-        public long ProductId { get; set; }
-
-        public long? ProductAttributeId { get; set; }
-
         public long ProductPriceId { get; set; }
 
         [StringLength(100)]
@@ -38,10 +34,6 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public Guid? DeletedByUserId { get; set; }
 
-        public Product Product { get; set; } = null!;
-
         public ProductPrice ProductPrice { get; set; } = null!;
-
-        public ProductAttribute? ProductAttribute { get; set; }
     }
 }

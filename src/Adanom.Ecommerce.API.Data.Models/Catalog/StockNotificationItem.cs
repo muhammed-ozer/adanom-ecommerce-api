@@ -6,8 +6,6 @@
 
         public long ProductId { get; set; }
 
-        public long ProductSKUId { get; set; }
-
         public DateTime CreatedAtUtc { get; set; }
 
         public DateTime? EmailSentAtUtc { get; set; }

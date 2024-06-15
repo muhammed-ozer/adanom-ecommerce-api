@@ -4,7 +4,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
     {
         public ProductResponse()
         {
-            ProductSKUs = new List<ProductSKUResponse>();
             ProductCategories = new List<ProductCategoryResponse>();
             ProductSpecificationAttributes = new List<ProductSpecificationAttributeResponse>();
             ProductTags = new List<ProductTagResponse>();
@@ -13,6 +12,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
         }
 
         public long? BrandId { get; set; }
+
+        public long ProductSKUId { get; set; }
 
         public string Name { get; set; } = null!;
 
@@ -30,7 +31,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public BrandResponse? Brand { get; set; }
 
-        public ICollection<ProductSKUResponse> ProductSKUs { get; set; }
+        public ProductSKU? ProductSKU { get; set; }
 
         public ICollection<ProductCategoryResponse> ProductCategories { get; set; }
 

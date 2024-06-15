@@ -15,12 +15,6 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                     .WithMessage("Kullanıcı bilgilerine erişilemiyor.");
 
-            RuleFor(e => e.ProductId)
-                .GreaterThan(0)
-                    .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
-                    .WithMessage("Ürün bulunamadı.")
-                .CustomAsync(ValidateDoesProductExistsAsync);
-
             RuleFor(e => e.Code)
                 .NotEmpty()
                     .WithMessage("Ürün stok kodu gereklidir.")
@@ -42,27 +36,6 @@ namespace Adanom.Ecommerce.API.Validation.Validators
         }
 
         #region Private Methods
-
-        #region ValidateDoesProductExistsAsync
-
-        private async Task ValidateDoesProductExistsAsync(
-            long value,
-            ValidationContext<CreateProductSKU> context,
-            CancellationToken cancellationToken)
-        {
-            var productExists = await _mediator.Send(new DoesEntityExists<ProductResponse>(value));
-
-            if (!productExists)
-            {
-                context.AddFailure(new ValidationFailure(nameof(CreateProductSKU.ProductId), null)
-                {
-                    ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
-                    ErrorMessage = "Ürün bulunamadı."
-                });
-            }
-        }
-
-        #endregion
 
         #region ValidateDoesProductSKUCodeNotExistsAsync
 

@@ -53,20 +53,6 @@ namespace Adanom.Ecommerce.API.Handlers
 
             productSKU.ProductPriceId = productPriceResponse.Id;
 
-            if (command.CreateProductAttributeRequest != null)
-            {
-                var createProductAttributeCommand = _mapper.Map(command.CreateProductAttributeRequest, new CreateProductAttribute(command.Identity));
-
-                var productAttributeResponse = await _mediator.Send(createProductAttributeCommand);
-
-                if (productAttributeResponse == null)
-                {
-                    return null;
-                }
-
-                productSKU.ProductAttributeId = productAttributeResponse.Id;
-            }
-
             await _applicationDbContext.AddAsync(productSKU);
 
             try
