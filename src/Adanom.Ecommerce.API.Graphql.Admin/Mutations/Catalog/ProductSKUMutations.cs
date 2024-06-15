@@ -86,22 +86,6 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
 
         #endregion
 
-        #region UpdateProductSKU_ProductAttributeAsync
-
-        [GraphQLDescription("Updates a product SKU product attribute")]
-        public async Task<bool> UpdateProductSKU_ProductAttributeAsync(
-            UpdateProductSKU_ProductAttributeRequest request,
-            [Service] IMediator mediator,
-            [Service] IMapper mapper,
-            [Identity] ClaimsPrincipal identity)
-        {
-            var command = mapper.Map(request, new UpdateProductSKU_ProductAttribute(identity));
-
-            return await mediator.Send(command);
-        }
-
-        #endregion
-
         #region DeleteProductSKUAsync
 
         [GraphQLDescription("Deletes a product SKU")]

@@ -6,8 +6,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public long ProductId { get; set; }
 
-        public long ProductSKUId { get; set; }
-
         public int Amount { get; set; }
 
         public DateTime LastModifiedAtUtc { get; set; }

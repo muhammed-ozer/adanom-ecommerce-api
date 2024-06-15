@@ -17,8 +17,6 @@ namespace Adanom.Ecommerce.API.Commands
 
         public ClaimsPrincipal Identity { get; }
 
-        public long ProductId { get; set; }
-
         public string Code { get; set; } = null!;
 
         public int StockQuantity { get; set; }
@@ -32,8 +30,6 @@ namespace Adanom.Ecommerce.API.Commands
         public byte MaximumInstallmentCount { get; set; }
 
         public CreateProductPriceRequest CreateProductPriceRequest { get; set; } = null!;
-
-        public CreateProductAttributeRequest? CreateProductAttributeRequest { get; set; }
 
         #endregion
     }

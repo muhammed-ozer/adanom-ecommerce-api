@@ -45,18 +45,20 @@
 
                 if (!string.IsNullOrEmpty(command.Filter.Query))
                 {
-                    productsQuery = productsQuery.Where(e => e.Name.Contains(command.Filter.Query));
+                    productsQuery = productsQuery.Where(e => 
+                        e.Name.Contains(command.Filter.Query) ||
+                        e.ProductSKU.Code.Contains(command.Filter.Query));
                 }
 
                 if (command.Filter.OutOfStock != null)
                 {
                     if (command.Filter.OutOfStock.Value)
                     {
-                        productsQuery = productsQuery.Where(e => e.ProductSKUs.Any(e => e.StockQuantity == 0));
+                        productsQuery = productsQuery.Where(e => e.ProductSKU.StockQuantity == 0);
                     }
                     else
                     {
-                        productsQuery = productsQuery.Where(e => e.ProductSKUs.Any(e => e.StockQuantity > 0));
+                        productsQuery = productsQuery.Where(e => e.ProductSKU.StockQuantity > 0);
                     }
                 }
 
@@ -97,13 +99,9 @@
                     GetProductsOrderByEnum.NAME_DESC =>
                         productsQuery.OrderByDescending(e => e.Name),
                     GetProductsOrderByEnum.STOCK_QUANTITY_ASC =>
-                        productsQuery.OrderBy(e => e.ProductSKUs
-                            .Where(e => e.DeletedAtUtc == null)
-                            .Sum(e => e.StockQuantity)),
+                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity),
                     GetProductsOrderByEnum.STOCK_QUANTITY_DESC =>
-                        productsQuery.OrderByDescending(e => e.ProductSKUs
-                            .Where(e => e.DeletedAtUtc == null)
-                            .Sum(e => e.StockQuantity)),
+                        productsQuery.OrderByDescending(e => e.ProductSKU.StockQuantity),
                     _ =>
                         productsQuery.OrderBy(e => e.DisplayOrder)
                 };

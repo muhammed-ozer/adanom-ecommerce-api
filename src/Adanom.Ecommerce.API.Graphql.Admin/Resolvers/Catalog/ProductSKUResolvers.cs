@@ -33,28 +33,5 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
         }
 
         #endregion
-
-        #region GetProductAttributeAsync
-
-        public async Task<ProductAttributeResponse?> GetProductAttributeAsync(
-           [Parent] ProductSKUResponse productSKUResponse,
-           [Service] IMediator mediator)
-        {
-            if (productSKUResponse == null)
-            {
-                return null;
-            }
-
-            if (productSKUResponse.ProductAttributeId == null)
-            {
-                return null;
-            }
-
-            var productAttribute = await mediator.Send(new GetProductAttribute(productSKUResponse.ProductAttributeId.Value));
-
-            return productAttribute;
-        }
-
-        #endregion
     }
 }

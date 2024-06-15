@@ -8,8 +8,6 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public long ProductId { get; set; }
 
-        public long ProductSKUId { get; set; }
-
         public decimal Price { get; set; }
 
         public int Amount { get; set; }
@@ -32,7 +30,5 @@ namespace Adanom.Ecommerce.API.Data.Models
         public Order Order { get; set; } = null!;
 
         public Product Product { get; set; } = null!;
-
-        public ProductSKU ProductSKU { get; set; } = null!;
     }
 }

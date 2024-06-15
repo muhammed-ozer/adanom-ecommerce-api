@@ -19,6 +19,8 @@ namespace Adanom.Ecommerce.API.Commands
 
         public long ProductCategoryId { get; set; }
 
+        public long ProductSKUId { get; set; }
+
         public long? BrandId { get; set; }
 
         public string Name { get; set; } = null!;
