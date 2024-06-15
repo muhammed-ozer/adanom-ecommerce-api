@@ -45,7 +45,7 @@
 
                 if (!string.IsNullOrEmpty(command.Filter.Query))
                 {
-                    productsQuery = productsQuery.Where(e => e.Name.Contains(command.Filter.Query, StringComparison.InvariantCultureIgnoreCase));
+                    productsQuery = productsQuery.Where(e => e.Name.Contains(command.Filter.Query));
                 }
 
                 if (command.Filter.OutOfStock != null)
