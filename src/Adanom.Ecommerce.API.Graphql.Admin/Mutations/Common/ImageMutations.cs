@@ -38,10 +38,10 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
 
         #endregion
 
-        #region DeletesImageAsync
+        #region DeleteImageAsync
 
         [GraphQLDescription("Deletes an image")]
-        public async Task<bool> DeletesImageAsync(
+        public async Task<bool> DeleteImageAsync(
             DeleteImageRequest request,
             [Service] IMediator mediator,
             [Service] IMapper mapper,
