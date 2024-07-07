@@ -10,8 +10,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public ProductResponse? Product { get; set; }
 
-        public ProductSKUResponse? ProductSKU { get; set; }
-
         public AnonymousShoppingCartResponse? AnonymousShoppingCart { get; set; }
     }
 }

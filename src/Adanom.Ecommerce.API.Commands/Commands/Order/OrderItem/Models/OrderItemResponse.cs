@@ -27,7 +27,5 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public OrderResponse? Order { get; set; }
 
         public ProductResponse? Product { get; set; }
-
-        public ProductSKUResponse? ProductSKU { get; set; }
     }
 }
