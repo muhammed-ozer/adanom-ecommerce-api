@@ -22,6 +22,22 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
 
         #endregion
 
+        #region UpdateProductPrice_DiscountedPriceAsync
+
+        [GraphQLDescription("Updates a product price discounted price")]
+        public async Task<bool> UpdateProductPrice_DiscountedPriceAsync(
+            UpdateProductPrice_DiscountedPriceRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new UpdateProductPrice_DiscountedPrice(identity));
+
+            return await mediator.Send(command); ;
+        }
+
+        #endregion
+
         #region BatchUpdateProductPricesAsync
 
         [GraphQLDescription("Updates batch product price price")]
