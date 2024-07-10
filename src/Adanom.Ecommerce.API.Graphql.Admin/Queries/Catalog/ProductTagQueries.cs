@@ -1,7 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
 {
     [ExtendObjectType(OperationTypeNames.Query)]
-    [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
     public sealed class ProductTagQueries
     {
         #region GetProductTagAsync
