@@ -19,5 +19,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public string Description { get; set; } = null!;
 
         public ReturnRequestResponse? ReturnRequest { get; set; }
+
+        public OrderItemResponse? OrderItem { get; set; }
     }
 }

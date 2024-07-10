@@ -102,6 +102,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
+                #region Order
+
+                options.AddBehavior<IPipelineBehavior<UpdateReturnRequest_ReturnRequestStatusType, bool>, UpdateReturnRequest_ReturnRequestStatusTypeSendMailsBehavior>();
+
+                #endregion
+
                 #endregion
 
                 #region Auth

@@ -44,5 +44,18 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
         }
 
         #endregion
+
+        #region GetOrderAsync
+
+        public async Task<OrderResponse?> GetOrderAsync(
+           [Parent] ReturnRequestResponse returnRequestResponse,
+           [Service] IMediator mediator)
+        {
+            var order = await mediator.Send(new GetOrder(returnRequestResponse.OrderId));
+
+            return order;
+        }
+
+        #endregion
     }
 }

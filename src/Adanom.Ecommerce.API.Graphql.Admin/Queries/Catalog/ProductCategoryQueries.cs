@@ -1,7 +1,7 @@
 ﻿namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
 {
     [ExtendObjectType(OperationTypeNames.Query)]
-    // TODO: Implement authorize [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
+    [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
     public sealed class ProductCategoryQueries
     {
         #region GetProductCategoryByIdAsync

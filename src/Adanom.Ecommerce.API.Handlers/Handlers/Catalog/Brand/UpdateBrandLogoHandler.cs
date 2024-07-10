@@ -31,8 +31,6 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<bool> Handle(UpdateBrandLogo command, CancellationToken cancellationToken)
         {
-            // TODO: Test this handler when azure blob storage created
-
             var userId = command.Identity.GetUserId();
 
             var brand = await _applicationDbContext.Brands

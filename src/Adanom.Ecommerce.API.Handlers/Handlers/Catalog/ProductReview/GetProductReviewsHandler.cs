@@ -39,7 +39,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 if (command.Filter.IsApproved != null)
                 {
-                    productReviewsQuery = productReviewsQuery.Where(e => e.IsApproved);
+                    productReviewsQuery = productReviewsQuery.Where(e => e.IsApproved == command.Filter.IsApproved);
                 }
 
                 #endregion

@@ -1,7 +1,7 @@
 ﻿namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
 {
     [ExtendObjectType(OperationTypeNames.Mutation)]
-    // TODO: Implement authorize [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
+    [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
     public sealed class AddressCityMutations
     {
         #region ClearAddressCitiesCacheAsync

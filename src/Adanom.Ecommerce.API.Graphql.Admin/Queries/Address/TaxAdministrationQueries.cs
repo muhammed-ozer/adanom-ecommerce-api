@@ -1,7 +1,7 @@
 ﻿namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
 {
     [ExtendObjectType(OperationTypeNames.Query)]
-    // TODO: Implement authorize [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
+    [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
     public sealed class TaxAdministrationQueries
     {
         #region GetTaxAdministrationAsync
@@ -22,7 +22,7 @@
 
         [GraphQLDescription("Gets tax administrations")]
         public async Task<PaginatedData<TaxAdministrationResponse>> GetTaxAdministrationsAsync(
-            GetTaxAdministrationsFilter filter,
+            GetTaxAdministrationsFilter? filter,
             PaginationRequest? paginationRequest,
             [Service] IMediator mediator)
         {

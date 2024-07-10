@@ -19,5 +19,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public DateTime? ApprovedAtUtc { get; set; }
 
         public Guid? ApprovedByUserId { get; set; }
+
+        public UserResponse? User { get; set; }
     }
 }
