@@ -107,6 +107,11 @@ namespace Adanom.Ecommerce.API.Handlers
                 sendMailCommand.Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_CANCEL;
             }
 
+            if (sendMailCommand.Key == MailTemplateKey.AUTH_NEW_USER)
+            {
+                return updateOrder_OrderStatusTypeResponse;
+            }
+
             await _mediator.Publish(sendMailCommand);
 
             return updateOrder_OrderStatusTypeResponse;

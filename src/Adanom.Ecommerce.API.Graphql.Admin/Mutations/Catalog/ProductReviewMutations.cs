@@ -3,13 +3,13 @@
 namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
 {
     [ExtendObjectType(OperationTypeNames.Mutation)]
-    // TODO: Implement authorize [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
+    [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
     public sealed class ProductReviewMutations
     {
-        #region UpdateProductRewiewAsync
+        #region UpdateProductReviewAsync
 
         [GraphQLDescription("Updates a product review")]
-        public async Task<bool> UpdateProductRewiewAsync(
+        public async Task<bool> UpdateProductReviewAsync(
             UpdateProductReviewRequest request,
             [Service] IMediator mediator,
             [Service] IMapper mapper,

@@ -38,7 +38,6 @@
                 return true;
             }
 
-            // TODO: Test here after blob storage created
             foreach (var image in images) 
             {
                 var deleteImageRequest = new DeleteImageRequest()

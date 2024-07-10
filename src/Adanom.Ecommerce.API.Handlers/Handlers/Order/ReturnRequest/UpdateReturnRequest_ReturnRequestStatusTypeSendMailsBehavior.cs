@@ -89,6 +89,11 @@ namespace Adanom.Ecommerce.API.Handlers
                 sendMailCommand.Key = MailTemplateKey.RETURN_REQUEST_REFUND_MADE;
             }
 
+            if (sendMailCommand.Key == MailTemplateKey.AUTH_NEW_USER)
+            {
+                return updateReturnRequest_ReturnRequestStatusTypeResponse;
+            }
+
             await _mediator.Publish(sendMailCommand);
 
             return updateReturnRequest_ReturnRequestStatusTypeResponse;

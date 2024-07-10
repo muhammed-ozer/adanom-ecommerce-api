@@ -1,9 +1,23 @@
 namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
 {
     [ExtendObjectType(OperationTypeNames.Query)]
-    // TODO: Implement authorize [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
+    [Authorize(Policy = SecurityConstants.Policies.Admin.Name)]
     public class AnonymousShoppingCartQueries
     {
+        #region GetAnonymousShoppingCartAsync
+
+        [GraphQLDescription("Gets anonymous shopping cart")]
+        public async Task<AnonymousShoppingCartResponse?> GetAnonymousShoppingCartAsync(
+            Guid id,
+            [Service] IMediator mediator)
+        {
+            var command = new GetAnonymousShoppingCart(id);
+
+            return await mediator.Send(command);
+        }
+
+        #endregion
+
         #region GetAnonymousShoppingCartsAsync
 
         [GraphQLDescription("Gets anonymous shopping carts")]

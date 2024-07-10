@@ -113,7 +113,23 @@
 
                 #endregion
 
-                // TODO: Remove product SKUs
+                var product = await _applicationDbContext.Products
+                    .Where(e => e.Id == command.Id)
+                    .SingleAsync();
+
+                #region ProductSKU
+
+                var deleteProductSKURequest = new DeleteProductSKURequest()
+                {
+                    Id = product.ProductSKUId,
+                };
+
+                var deleteProductSKUCommand = _mapper
+                    .Map(deleteProductSKURequest, new DeleteProductSKU(command.Identity));
+
+                await _mediator.Send(deleteProductSKUCommand);
+
+                #endregion
 
                 // TODO: Remove shopping cart items
 

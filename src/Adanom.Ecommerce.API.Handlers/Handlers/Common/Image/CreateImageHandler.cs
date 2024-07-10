@@ -57,7 +57,6 @@ namespace Adanom.Ecommerce.API.Handlers
 
             command.File.Name = $"{entityFolderName}/{command.EntityNameAsUrlSlug}/{AzureBlobStorageConstants.ImagesFolderName}/{fileName}";
 
-            // TODO: Test here after Azure storage created
             var uploadFileResponse = await _blobStorageService.UploadFileAsync(command.File);
 
             if (!uploadFileResponse)
