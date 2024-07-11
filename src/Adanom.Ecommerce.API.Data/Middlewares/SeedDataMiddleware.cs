@@ -56,6 +56,17 @@ namespace Adanom.Ecommerce.API.Data.Middlewares
                 return;
             }
 
+            var dbHasAddressCities = await dbContext.AddressCities.AnyAsync();
+
+            if (!dbHasAddressCities)
+            {
+                await dbContext.Database.ExecuteSqlRawAsync(AddressDataScripts.AddressCitiesScript);
+
+                Thread.Sleep(1000);
+
+                await dbContext.Database.ExecuteSqlRawAsync(AddressDataScripts.AddressDistrictsScript);
+            }
+
             foreach (var mailTemplate in SeedMailTemplateData.MailTemplates)
             {
                 var mailTemplateExists = await dbContext.MailTemplates.AnyAsync(e => e.Key == mailTemplate.Key);
@@ -69,6 +80,15 @@ namespace Adanom.Ecommerce.API.Data.Middlewares
 
                 await dbContext.SaveChangesAsync();
             }
+
+            //var companyExists = await dbContext.Companies.AnyAsync();
+
+            //if (!companyExists)
+            //{
+            //    await dbContext.Companies.AddAsync(SeedCompanyData.Company);
+
+            //    await dbContext.SaveChangesAsync();
+            //}
 
             _hasDataSeed = true;
             _lockSlim.Release(1);
