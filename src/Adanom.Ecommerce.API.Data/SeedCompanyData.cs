@@ -17,7 +17,7 @@ namespace Adanom.Ecommerce.API.Data
                 AddressDistrictId = 361,
                 PhoneNumber = "8503462366",
                 Email = "info@adanom.com",
-                TaxAdministrationId = 0,
+                TaxAdministration = "PAMUKKALE",
                 TaxNumber = "0071233691",
                 MersisNumber = "0007123369100001"
             };

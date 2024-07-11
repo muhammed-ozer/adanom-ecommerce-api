@@ -48,7 +48,6 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 companyResponse.AddressCity = await _mediator.Send(new GetAddressCity(companyResponse.AddressCityId));
                 companyResponse.AddressDistrict = await _mediator.Send(new GetAddressDistrict(companyResponse.AddressDistrictId));
-                companyResponse.TaxAdministration = await _mediator.Send(new GetTaxAdministration(companyResponse.TaxAdministrationId));
 
                 _cache.TryAdd(companyResponse.Id, companyResponse);
             }

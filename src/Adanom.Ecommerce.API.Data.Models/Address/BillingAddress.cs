@@ -10,8 +10,6 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public long AddressDistrictId { get; set; }
 
-        public long TaxAdministrationId { get; set; }
-
         [StringLength(50)]
         public string Title { get; set; } = null!;
 
@@ -23,6 +21,9 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         [StringLength(20)]
         public string? PostalCode { get; set; }
+
+        [StringLength(100)]
+        public string TaxAdministration { get; set; } = null!;
 
         [StringLength(11)]
         public string TaxNumber { get; set; } = null!;
@@ -46,7 +47,5 @@ namespace Adanom.Ecommerce.API.Data.Models
         public AddressCity AddressCity { get; set; } = null!;
 
         public AddressDistrict AddressDistrict { get; set; } = null!;
-
-        public TaxAdministration TaxAdministration { get; set; } = null!;
     }
 }

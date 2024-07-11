@@ -243,8 +243,6 @@ namespace Adanom.Ecommerce.API.Data
 
         public DbSet<ShippingProvider> ShippingProviders { get; set; } = null!;
 
-        public DbSet<TaxAdministration> TaxAdministrations { get; set; } = null!;
-
         public DbSet<PickUpStore> PickUpStores { get; set; } = null!;
 
         #endregion
