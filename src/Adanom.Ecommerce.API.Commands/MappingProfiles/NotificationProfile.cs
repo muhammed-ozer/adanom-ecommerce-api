@@ -13,6 +13,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
                     options.MapFrom(e => e.NotificationType.Key));
 
             CreateMap<MarkAsReadNotificationsRequest, MarkAsReadNotifications>();
+
+            CreateMap<CreateNotification, Notification>();
         }
     }
 }
