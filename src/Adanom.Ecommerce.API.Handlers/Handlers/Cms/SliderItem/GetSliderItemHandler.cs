@@ -23,12 +23,12 @@
 
         public async Task<SliderItemResponse?> Handle(GetSliderItem command, CancellationToken cancellationToken)
         {
-            var taxAdministration = await _applicationDbContext.SliderItems
+            var sliderItem = await _applicationDbContext.SliderItems
                 .AsNoTracking()
                 .Where(e => e.Id == command.Id)
                 .SingleOrDefaultAsync();
            
-            return _mapper.Map<SliderItemResponse>(taxAdministration);
+            return _mapper.Map<SliderItemResponse>(sliderItem);
         } 
 
         #endregion

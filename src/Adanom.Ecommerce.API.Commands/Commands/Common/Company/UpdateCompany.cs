@@ -21,8 +21,6 @@ namespace Adanom.Ecommerce.API.Commands
 
         public long AddressDistrictId { get; set; }
 
-        public long TaxAdministrationId { get; set; }
-
         public string LegalName { get; set; } = null!;
 
         public string DisplayName { get; set; } = null!;
@@ -32,6 +30,8 @@ namespace Adanom.Ecommerce.API.Commands
         public string Email { get; set; } = null!;
 
         public string PhoneNumber { get; set; } = null!;
+
+        public string TaxAdministration { get; set; } = null!;
 
         public string TaxNumber { get; set; } = null!;
 

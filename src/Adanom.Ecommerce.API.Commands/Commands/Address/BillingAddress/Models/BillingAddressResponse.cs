@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Adanom.Ecommerce.API.Commands.Models
 {
     public class BillingAddressResponse : BaseResponseEntity<long>
@@ -8,8 +10,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public long AddressDistrictId { get; set; }
 
-        public long TaxAdministrationId { get; set; }
-
         public string Title { get; set; } = null!;
 
         public string Name { get; set; } = null!;
@@ -17,6 +17,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public string Address { get; set; } = null!;
 
         public string? PostalCode { get; set; }
+
+        public string TaxAdministration { get; set; } = null!;
 
         public string TaxNumber { get; set; } = null!;
 
@@ -31,7 +33,5 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public AddressCityResponse? AddressCity { get; set; }
 
         public AddressDistrictResponse? AddressDistrict { get; set; }
-
-        public TaxAdministrationResponse? TaxAdministration { get; set; }
     }
 }

@@ -27,12 +27,6 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                     .WithMessage("İlçe bulunamadı.")
                 .CustomAsync(ValidateDoesAddressDistrictExistsAsync);
 
-            RuleFor(e => e.TaxAdministrationId)
-                .GreaterThan(0)
-                    .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
-                    .WithMessage("Vergi dairesi bulunamadı.")
-                .CustomAsync(ValidateDoesTaxAdministrationExistsAsync);
-
             RuleFor(e => e.LegalName)
                 .NotEmpty()
                     .WithMessage("Şirket resmi adı gereklidir.")
@@ -71,6 +65,14 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                 .Matches(new Regex(@"^\d{10}"))
                     .WithMessage(e => "Şirket telefon numarası 10 karakterden oluşmalıdır Örnek: 5300000000.")
+                    .WithErrorCode(ValidationErrorCodesEnum.GREATER_THAN);
+
+            RuleFor(e => e.TaxAdministration)
+                .NotEmpty()
+                    .WithMessage("Şirket vergi dairesi adı gereklidir.")
+                    .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
+                .MaximumLength(100)
+                    .WithMessage("Şirket vergi dairesi adı 100 karakterden fazla olmamalıdır.")
                     .WithErrorCode(ValidationErrorCodesEnum.GREATER_THAN);
 
             RuleFor(e => e.TaxNumber)
@@ -128,27 +130,6 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                 {
                     ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
                     ErrorMessage = "İlçe bulunamadı."
-                });
-            }
-        }
-
-        #endregion
-
-        #region ValidateDoesTaxAdministrationExistsAsync
-
-        private async Task ValidateDoesTaxAdministrationExistsAsync(
-            long value,
-            ValidationContext<UpdateCompany> context,
-            CancellationToken cancellationToken)
-        {
-            var taxAdministrationExists = await _mediator.Send(new DoesEntityExists<TaxAdministrationResponse>(value));
-
-            if (!taxAdministrationExists)
-            {
-                context.AddFailure(new ValidationFailure(nameof(UpdateCompany.TaxAdministrationId), null)
-                {
-                    ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
-                    ErrorMessage = "Vergi dairesi bulunamadı."
                 });
             }
         }

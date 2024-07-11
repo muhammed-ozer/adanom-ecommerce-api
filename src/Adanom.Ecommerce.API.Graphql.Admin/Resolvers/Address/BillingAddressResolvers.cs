@@ -28,18 +28,5 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
         }
 
         #endregion
-
-        #region GetTaxAdministrationAsync
-
-        public async Task<TaxAdministrationResponse?> GetTaxAdministrationAsync(
-           [Parent] BillingAddressResponse billingAddressResponse,
-           [Service] IMediator mediator)
-        {
-            var taxAdministration = await mediator.Send(new GetTaxAdministration(billingAddressResponse.TaxAdministrationId));
-
-            return taxAdministration;
-        }
-
-        #endregion
     }
 }

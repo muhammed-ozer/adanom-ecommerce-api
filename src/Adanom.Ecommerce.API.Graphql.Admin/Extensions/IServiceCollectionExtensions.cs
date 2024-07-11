@@ -38,7 +38,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<StockNotificationItemQueries>()
                 .AddType<PickUpStoreQueries>()
                 .AddType<TaxCategoryQueries>()
-                .AddType<TaxAdministrationQueries>()
                 .AddType<AnonymousShoppingCartQueries>()
                 .AddType<AnonymousShoppingCartItemQueries>()
                 .AddType<ShoppingCartQueries>()
@@ -83,7 +82,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ShippingProviderMutations>()
                 .AddType<PickUpStoreMutations>()
                 .AddType<TaxCategoryMutations>()
-                .AddType<TaxAdministrationMutations>()
                 .AddType<UserMutations>()
                 .AddType<OrderMutations>()
                 .AddType<ReturnRequestMutations>();
