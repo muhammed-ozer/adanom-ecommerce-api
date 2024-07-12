@@ -81,14 +81,14 @@ namespace Adanom.Ecommerce.API.Data.Middlewares
                 await dbContext.SaveChangesAsync();
             }
 
-            //var companyExists = await dbContext.Companies.AnyAsync();
+            var companyExists = await dbContext.Companies.AnyAsync();
 
-            //if (!companyExists)
-            //{
-            //    await dbContext.Companies.AddAsync(SeedCompanyData.Company);
+            if (!companyExists)
+            {
+                await dbContext.Companies.AddAsync(SeedCompanyData.Company);
 
-            //    await dbContext.SaveChangesAsync();
-            //}
+                await dbContext.SaveChangesAsync();
+            }
 
             _hasDataSeed = true;
             _lockSlim.Release(1);

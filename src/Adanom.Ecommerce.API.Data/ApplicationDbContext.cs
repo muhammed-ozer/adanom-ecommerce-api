@@ -17,13 +17,13 @@ namespace Adanom.Ecommerce.API.Data
                 relationship.DeleteBehavior = DeleteBehavior.NoAction;
             }
 
-            //modelBuilder.Entity<AddressCity>()
-            //    .Property(e => e.Id)
-            //    .ValueGeneratedNever();
+            modelBuilder.Entity<AddressCity>()
+                .Property(e => e.Id)
+                .ValueGeneratedNever();
 
-            //modelBuilder.Entity<AddressDistrict>()
-            //    .Property(e => e.Id)
-            //    .ValueGeneratedNever();
+            modelBuilder.Entity<AddressDistrict>()
+                .Property(e => e.Id)
+                .ValueGeneratedNever();
 
             #region Product
 

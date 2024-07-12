@@ -1,6 +1,4 @@
-﻿using Adanom.Ecommerce.API.Data.Models;
-
-namespace Adanom.Ecommerce.API.Data
+﻿namespace Adanom.Ecommerce.API.Data
 {
     internal static class AddressDataScripts
     {

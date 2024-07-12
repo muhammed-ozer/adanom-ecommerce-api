@@ -25,10 +25,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.AddressCity", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<byte>("Code")
                         .HasColumnType("tinyint");
@@ -46,10 +43,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.AddressDistrict", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("AddressCityId")
                         .HasColumnType("bigint");
