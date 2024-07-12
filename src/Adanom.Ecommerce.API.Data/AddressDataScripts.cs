@@ -89,7 +89,10 @@
                 INSERT INTO [dbo].[AddressCities] values ('78', 'Karabük', '78'); 
                 INSERT INTO [dbo].[AddressCities] values ('79', 'Kilis', '79'); 
                 INSERT INTO [dbo].[AddressCities] values ('80', 'Osmaniye', '80'); 
-                INSERT INTO [dbo].[AddressCities] values ('81', 'Düzce', '81');";
+                INSERT INTO [dbo].[AddressCities] values ('81', 'Düzce', '81');
+
+                UPDATE [dbo].[AddressCities]
+                SET [Name] = UPPER([Name] COLLATE Turkish_CI_AS);";
 
             AddressDistrictsScript = @"
                 INSERT INTO [dbo].[AddressDistricts](Id, Name, AddressCityId) VALUES 
