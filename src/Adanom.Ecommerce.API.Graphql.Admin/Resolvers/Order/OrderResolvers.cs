@@ -71,33 +71,33 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         #endregion
 
-        #region GetShippingAddressAsync
+        #region GetOrderShippingAddressAsync
 
-        public async Task<ShippingAddressResponse?> GetShippingAddressAsync(
+        public async Task<OrderShippingAddressResponse?> GetOrderShippingAddressAsync(
            [Parent] OrderResponse orderResponse,
            [Service] IMediator mediator)
         {
-            var shippingAddress = await mediator.Send(new GetShippingAddress(orderResponse.ShippingAddressId, true));
+            var orderShippingAddress = await mediator.Send(new GetOrderShippingAddress(orderResponse.OrderShippingAddressId));
 
-            return shippingAddress;
+            return orderShippingAddress;
         }
 
         #endregion
 
-        #region GetBillingAddressAsync
+        #region GetOrderBillingAddressAsync
 
-        public async Task<BillingAddressResponse?> GetBillingAddressAsync(
+        public async Task<OrderBillingAddressResponse?> GetOrderBillingAddressAsync(
            [Parent] OrderResponse orderResponse,
            [Service] IMediator mediator)
         {
-            if (orderResponse.BillingAddressId == null)
+            if (orderResponse.OrderBillingAddressId == null)
             {
                 return null;
             }
 
-            var billingAddress = await mediator.Send(new GetBillingAddress(orderResponse.BillingAddressId.Value, true));
+            var orderBillingAddress = await mediator.Send(new GetOrderBillingAddress(orderResponse.OrderBillingAddressId.Value));
 
-            return billingAddress;
+            return orderBillingAddress;
         }
 
         #endregion
