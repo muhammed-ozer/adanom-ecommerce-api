@@ -267,6 +267,10 @@ namespace Adanom.Ecommerce.API.Data
 
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; } = null!;
 
+        public DbSet<OrderBillingAddress> OrderBillingAddresses { get; set; } = null!;
+
+        public DbSet<OrderShippingAddress> OrderShippingAddresses { get; set; } = null!;
+
         #endregion
     }
 }

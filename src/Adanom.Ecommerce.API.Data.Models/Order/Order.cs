@@ -13,9 +13,9 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public Guid UserId { get; set; }
 
-        public long ShippingAddressId { get; set; }
+        public long OrderShippingAddressId { get; set; }
 
-        public long? BillingAddressId { get; set; }
+        public long? OrderBillingAddressId { get; set; }
 
         public long? ShippingProviderId { get; set; }
 
@@ -64,8 +64,8 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public ICollection<OrderItem> Items { get; set; }
 
-        public ShippingAddress ShippingAddress { get; set; } = null!;
+        public OrderShippingAddress OrderShippingAddress { get; set; } = null!;
 
-        public BillingAddress? BillingAddress { get; set; }
+        public OrderBillingAddress? OrderBillingAddress { get; set; }
     }
 }

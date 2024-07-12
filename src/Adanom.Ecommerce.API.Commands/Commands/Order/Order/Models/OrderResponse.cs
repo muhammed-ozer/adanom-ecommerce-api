@@ -9,9 +9,9 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public Guid UserId { get; set; }
 
-        public long ShippingAddressId { get; set; }
+        public long OrderShippingAddressId { get; set; }
 
-        public long? BillingAddressId { get; set; }
+        public long? OrderBillingAddressId { get; set; }
 
         public long? ShippingProviderId { get; set; }
 
@@ -59,8 +59,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public OrderPaymentResponse? OrderPayment { get; set; }
 
-        public ShippingAddressResponse? ShippingAddress { get; set; }
+        public OrderShippingAddressResponse? OrderShippingAddress { get; set; }
 
-        public BillingAddressResponse? BillingAddress { get; set; }
+        public OrderBillingAddressResponse? OrderBillingAddress { get; set; }
     }
 }
