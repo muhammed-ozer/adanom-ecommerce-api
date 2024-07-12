@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Adanom.Ecommerce.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240428091052_UpdateImageAndMetaInformationMappingsBetweenEntities")]
-    partial class UpdateImageAndMetaInformationMappingsBetweenEntities
+    [Migration("20240712052704_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,10 +28,10 @@ namespace Adanom.Ecommerce.API.Data.Migrations
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.AddressCity", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    b.Property<byte>("Code")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -46,10 +46,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.AddressDistrict", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<long>("AddressCityId")
                         .HasColumnType("bigint");
@@ -115,14 +112,9 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<long>("ProductId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("ProductSKUId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("ProductSKUId");
 
                     b.HasIndex("AnonymousShoppingCartId", "ProductId")
                         .IsUnique();
@@ -177,8 +169,10 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<long>("TaxAdministrationId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("TaxAdministration")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("TaxNumber")
                         .IsRequired()
@@ -201,8 +195,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.HasIndex("AddressCityId");
 
                     b.HasIndex("AddressDistrictId");
-
-                    b.HasIndex("TaxAdministrationId");
 
                     b.HasIndex("UserId");
 
@@ -231,10 +223,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
-
-                    b.Property<string>("LogoPath")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -281,6 +269,11 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
                     b.Property<string>("LegalName")
                         .IsRequired()
                         .HasMaxLength(250)
@@ -291,16 +284,15 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<long>("MetaInformationId")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<long>("TaxAdministrationId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("TaxAdministration")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("TaxNumber")
                         .IsRequired()
@@ -308,8 +300,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasColumnType("nvarchar(11)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MetaInformationId");
 
                     b.ToTable("Companies");
                 });
@@ -357,14 +347,20 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<Guid>("CreatedByUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("DeletedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
+
+                    b.Property<long>("EntityId")
+                        .HasColumnType("bigint");
+
+                    b.Property<byte>("EntityType")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte>("ImageType")
+                        .HasColumnType("tinyint");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -385,34 +381,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Images");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Image_Entity_Mapping", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("EntityId")
-                        .HasColumnType("bigint");
-
-                    b.Property<byte>("EntityType")
-                        .HasColumnType("tinyint");
-
-                    b.Property<long>("ImageId")
-                        .HasColumnType("bigint");
-
-                    b.Property<byte>("ImageType")
-                        .HasColumnType("tinyint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ImageId")
-                        .IsUnique();
-
-                    b.ToTable("Image_Entity_Mappings");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.MailTemplate", b =>
@@ -444,59 +412,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MailTemplates");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.MetaInformation", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Keywords")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MetaInformations");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.MetaInformation_Entity_Mapping", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("EntityId")
-                        .HasColumnType("bigint");
-
-                    b.Property<byte>("EntityType")
-                        .HasColumnType("tinyint");
-
-                    b.Property<long>("MetaInformationId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MetaInformationId")
-                        .IsUnique();
-
-                    b.ToTable("MetaInformation_Entity_Mappings");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Notification", b =>
@@ -543,6 +458,12 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DeliveredAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("DeliveryType")
+                        .HasColumnType("tinyint");
+
                     b.Property<decimal>("GrandTotal")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
@@ -559,13 +480,10 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
-                    b.Property<long>("OrderPaymentId")
-                        .HasColumnType("bigint");
-
                     b.Property<byte>("OrderStatusType")
                         .HasColumnType("tinyint");
 
-                    b.Property<long>("PaymentId")
+                    b.Property<long?>("PickUpStoreId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("ShippingAddressId")
@@ -579,10 +497,10 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<long>("ShippingProviderId")
+                    b.Property<long?>("ShippingProviderId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("ShippingTransactionCode")
+                    b.Property<string>("ShippingTrackingCode")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
@@ -598,6 +516,12 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -608,7 +532,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.HasIndex("OrderNumber")
                         .IsUnique();
 
-                    b.HasIndex("PaymentId");
+                    b.HasIndex("PickUpStoreId");
 
                     b.HasIndex("ShippingAddressId");
 
@@ -652,9 +576,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<long>("ProductId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("ProductSKUId")
-                        .HasColumnType("bigint");
-
                     b.Property<decimal>("SubTotal")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
@@ -675,8 +596,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("ProductSKUId");
 
                     b.ToTable("OrderItems");
                 });
@@ -708,7 +627,61 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrderId");
+
                     b.ToTable("OrderPayments");
+                });
+
+            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.PickUpStore", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PickUpStores");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Product", b =>
@@ -755,6 +728,9 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<double>("OverallReviewPoints")
                         .HasColumnType("float");
 
+                    b.Property<long>("ProductSKUId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
 
@@ -770,90 +746,12 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     b.HasIndex("BrandId");
 
+                    b.HasIndex("ProductSKUId");
+
                     b.HasIndex("UrlSlug")
                         .IsUnique();
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductAttribute", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UpdatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProductAttributes");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductAttributeOption", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("ProductAttributeId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UpdatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductAttributeId");
-
-                    b.ToTable("ProductAttributeOptions");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductCategory", b =>
@@ -886,9 +784,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     b.Property<long?>("ParentId")
                         .HasColumnType("bigint");
-
-                    b.Property<byte>("ProductCategoryLevel")
-                        .HasColumnType("tinyint");
 
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
@@ -936,7 +831,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<long>("ProductTaxId")
+                    b.Property<long>("TaxCategoryId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatedAtUtc")
@@ -947,7 +842,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductTaxId");
+                    b.HasIndex("TaxCategoryId");
 
                     b.ToTable("ProductPrices");
                 });
@@ -960,7 +855,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime?>("ApprovedAt")
+                    b.Property<DateTime?>("ApprovedAtUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("ApprovedByUserId")
@@ -1026,11 +921,11 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<Guid?>("DeletedByUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<long?>("ProductAttributeOptionId")
-                        .HasColumnType("bigint");
+                    b.Property<bool>("IsEligibleToInstallment")
+                        .HasColumnType("bit");
 
-                    b.Property<long>("ProductId")
-                        .HasColumnType("bigint");
+                    b.Property<byte>("MaximumInstallmentCount")
+                        .HasColumnType("tinyint");
 
                     b.Property<long>("ProductPriceId")
                         .HasColumnType("bigint");
@@ -1051,10 +946,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     b.HasIndex("Code")
                         .IsUnique();
-
-                    b.HasIndex("ProductAttributeOptionId");
-
-                    b.HasIndex("ProductId");
 
                     b.HasIndex("ProductPriceId");
 
@@ -1086,8 +977,8 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<long>("ProductSpecificationAttributeGroupId")
                         .HasColumnType("bigint");
@@ -1097,6 +988,11 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     b.Property<Guid?>("UpdatedByUserId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
@@ -1144,50 +1040,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.ToTable("ProductSpecificationAttributeGroups");
                 });
 
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductSpecificationAttributeOption", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<long>("ProductSpecificationAttributeId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UpdatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductSpecificationAttributeId");
-
-                    b.ToTable("ProductSpecificationAttributeOptions");
-                });
-
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductTag", b =>
                 {
                     b.Property<long>("Id")
@@ -1208,64 +1060,20 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<Guid?>("DeletedByUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("UpdatedByUserId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
                     b.ToTable("ProductTags");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductTax", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeletedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("GroupName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<byte>("Rate")
-                        .HasColumnType("tinyint");
-
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UpdatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProductTaxes");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Product_ProductCategory_Mapping", b =>
@@ -1276,9 +1084,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<long>("ProductId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
-
                     b.HasKey("ProductCategoryId", "ProductId");
 
                     b.HasIndex("ProductId");
@@ -1286,26 +1091,23 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.HasIndex("ProductCategoryId", "ProductId")
                         .IsUnique();
 
-                    b.ToTable("Product_ProductCategory_Mapping");
+                    b.ToTable("Product_ProductCategory_Mappings");
                 });
 
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Product_ProductSpecificationAttributeOption_Mapping", b =>
+            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Product_ProductSpecificationAttribute_Mapping", b =>
                 {
                     b.Property<long>("ProductId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("ProductSpecificationAttributeOptionId")
+                    b.Property<long>("ProductSpecificationAttributeId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
+                    b.HasKey("ProductId", "ProductSpecificationAttributeId");
 
-                    b.HasKey("ProductId", "ProductSpecificationAttributeOptionId");
-
-                    b.HasIndex("ProductSpecificationAttributeOptionId", "ProductId")
+                    b.HasIndex("ProductSpecificationAttributeId", "ProductId")
                         .IsUnique();
 
-                    b.ToTable("Product_ProductSpecificationAttributeOption_Mappings");
+                    b.ToTable("Product_ProductSpecificationAttribute_Mappings");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Product_ProductTag_Mapping", b =>
@@ -1314,9 +1116,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long>("ProductTagId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("Id")
                         .HasColumnType("bigint");
 
                     b.HasKey("ProductId", "ProductTagId");
@@ -1338,11 +1137,17 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte>("DeliveryType")
+                        .HasColumnType("tinyint");
+
                     b.Property<decimal>("GrandTotal")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<long>("OrderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("PickUpStoreId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("ReturnRequestNumber")
@@ -1353,12 +1158,18 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<byte>("ReturnRequestStatusType")
                         .HasColumnType("tinyint");
 
-                    b.Property<long>("ShippingProviderId")
+                    b.Property<long?>("ShippingProviderId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("ShippingTransactionCode")
+                    b.Property<string>("ShippingTrackingCode")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedByUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -1366,6 +1177,8 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("PickUpStoreId");
 
                     b.HasIndex("ReturnRequestNumber")
                         .IsUnique();
@@ -1527,15 +1340,11 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Address")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<Guid>("CreateByUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DeletedAtUtc")
                         .HasColumnType("datetime2");
@@ -1547,38 +1356,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LogoPath")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<long>("ShippingSettingsId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UpdatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShippingSettingsId");
-
-                    b.ToTable("ShippingProviders");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ShippingSettings", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<decimal>("FeeTax")
                         .HasPrecision(10, 2)
@@ -1592,6 +1369,12 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("MinimumFreeShippingTotalPrice")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
@@ -1599,15 +1382,18 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<byte>("ShippingInDays")
                         .HasColumnType("tinyint");
 
-                    b.Property<byte>("ShippingType")
-                        .HasColumnType("tinyint");
-
                     b.Property<byte>("TaxRate")
                         .HasColumnType("tinyint");
 
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.ToTable("ShippingSettings");
+                    b.ToTable("ShippingProviders");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ShoppingCart", b =>
@@ -1646,17 +1432,12 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<long>("ProductId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("ProductSKUId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("ShoppingCartId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("ProductSKUId");
 
                     b.HasIndex("ShoppingCartId");
 
@@ -1679,11 +1460,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1735,7 +1511,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.ToTable("StockNotificationItems");
                 });
 
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.TaxAdministration", b =>
+            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.TaxCategory", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1743,16 +1519,11 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<Guid>("CreateByUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("DeletedAtUtc")
                         .HasColumnType("datetime2");
@@ -1760,10 +1531,18 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<Guid?>("DeletedByUserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("GroupName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<byte>("Rate")
+                        .HasColumnType("tinyint");
 
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("datetime2");
@@ -1773,10 +1552,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Code")
-                        .IsUnique();
-
-                    b.ToTable("TaxAdministrations");
+                    b.ToTable("TaxCategories");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.User", b =>
@@ -2242,17 +2018,9 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.ProductSKU", "ProductSKU")
-                        .WithMany()
-                        .HasForeignKey("ProductSKUId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.Navigation("AnonymousShoppingCart");
 
                     b.Navigation("Product");
-
-                    b.Navigation("ProductSKU");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.BillingAddress", b =>
@@ -2269,12 +2037,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.TaxAdministration", "TaxAdministration")
-                        .WithMany()
-                        .HasForeignKey("TaxAdministrationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.User", "User")
                         .WithMany("BillingAddresses")
                         .HasForeignKey("UserId")
@@ -2285,20 +2047,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     b.Navigation("AddressDistrict");
 
-                    b.Navigation("TaxAdministration");
-
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Company", b =>
-                {
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.MetaInformation", "MetaInformation")
-                        .WithMany()
-                        .HasForeignKey("MetaInformationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("MetaInformation");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.FavoriteItem", b =>
@@ -2325,11 +2074,10 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasForeignKey("BillingAddressId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.OrderPayment", "Payment")
+                    b.HasOne("Adanom.Ecommerce.API.Data.Models.PickUpStore", "PickUpStore")
                         .WithMany()
-                        .HasForeignKey("PaymentId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .HasForeignKey("PickUpStoreId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.ShippingAddress", "ShippingAddress")
                         .WithMany()
@@ -2340,8 +2088,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.ShippingProvider", "ShippingProvider")
                         .WithMany()
                         .HasForeignKey("ShippingProviderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.User", "User")
                         .WithMany("Orders")
@@ -2351,7 +2098,7 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
                     b.Navigation("BillingAddress");
 
-                    b.Navigation("Payment");
+                    b.Navigation("PickUpStore");
 
                     b.Navigation("ShippingAddress");
 
@@ -2374,17 +2121,20 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.ProductSKU", "ProductSKU")
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.OrderPayment", b =>
+                {
+                    b.HasOne("Adanom.Ecommerce.API.Data.Models.Order", "Order")
                         .WithMany()
-                        .HasForeignKey("ProductSKUId")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Order");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("ProductSKU");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Product", b =>
@@ -2394,18 +2144,15 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.Navigation("Brand");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductAttributeOption", b =>
-                {
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.ProductAttribute", "ProductAttribute")
-                        .WithMany("ProductAttributeOptions")
-                        .HasForeignKey("ProductAttributeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("Adanom.Ecommerce.API.Data.Models.ProductSKU", "ProductSKU")
+                        .WithMany()
+                        .HasForeignKey("ProductSKUId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("ProductAttribute");
+                    b.Navigation("Brand");
+
+                    b.Navigation("ProductSKU");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductCategory", b =>
@@ -2420,13 +2167,13 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductPrice", b =>
                 {
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.ProductTax", "ProductTax")
+                    b.HasOne("Adanom.Ecommerce.API.Data.Models.TaxCategory", "TaxCategory")
                         .WithMany()
-                        .HasForeignKey("ProductTaxId")
+                        .HasForeignKey("TaxCategoryId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("ProductTax");
+                    b.Navigation("TaxCategory");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductReview", b =>
@@ -2450,26 +2197,11 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductSKU", b =>
                 {
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.ProductAttributeOption", "ProductAttributeOption")
-                        .WithMany()
-                        .HasForeignKey("ProductAttributeOptionId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.Product", "Product")
-                        .WithMany("ProductSKUs")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.ProductPrice", "ProductPrice")
                         .WithMany()
                         .HasForeignKey("ProductPriceId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("ProductAttributeOption");
 
                     b.Navigation("ProductPrice");
                 });
@@ -2483,17 +2215,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("SpecificationAttributeGroup");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductSpecificationAttributeOption", b =>
-                {
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.ProductSpecificationAttribute", "SpecificationAttribute")
-                        .WithMany("SpecificationAttributeOptions")
-                        .HasForeignKey("ProductSpecificationAttributeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SpecificationAttribute");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Product_ProductCategory_Mapping", b =>
@@ -2515,23 +2236,23 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Navigation("ProductCategory");
                 });
 
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Product_ProductSpecificationAttributeOption_Mapping", b =>
+            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Product_ProductSpecificationAttribute_Mapping", b =>
                 {
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.Product", "Product")
-                        .WithMany("Product_ProductSpecificationAttributeOption_Mappings")
+                        .WithMany("Product_ProductSpecificationAttribute_Mappings")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.ProductSpecificationAttributeOption", "ProductSpecificationAttributeOption")
-                        .WithMany("Product_ProductSpecificationAttributeOption_Mappings")
-                        .HasForeignKey("ProductSpecificationAttributeOptionId")
+                    b.HasOne("Adanom.Ecommerce.API.Data.Models.ProductSpecificationAttribute", "ProductSpecificationAttribute")
+                        .WithMany("Product_ProductSpecificationAttribute_Mappings")
+                        .HasForeignKey("ProductSpecificationAttributeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Product");
 
-                    b.Navigation("ProductSpecificationAttributeOption");
+                    b.Navigation("ProductSpecificationAttribute");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Product_ProductTag_Mapping", b =>
@@ -2561,11 +2282,15 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("Adanom.Ecommerce.API.Data.Models.PickUpStore", "PickUpStore")
+                        .WithMany()
+                        .HasForeignKey("PickUpStoreId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.ShippingProvider", "ShippingProvider")
                         .WithMany()
                         .HasForeignKey("ShippingProviderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.User", null)
                         .WithMany("ReturnRequests")
@@ -2573,6 +2298,8 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Order");
+
+                    b.Navigation("PickUpStore");
 
                     b.Navigation("ShippingProvider");
                 });
@@ -2615,28 +2342,11 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ShippingProvider", b =>
-                {
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.ShippingSettings", "ShippingSettings")
-                        .WithMany()
-                        .HasForeignKey("ShippingSettingsId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("ShippingSettings");
-                });
-
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ShoppingCartItem", b =>
                 {
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.ProductSKU", "ProductSKU")
-                        .WithMany()
-                        .HasForeignKey("ProductSKUId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -2647,8 +2357,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-
-                    b.Navigation("ProductSKU");
 
                     b.Navigation("ShoppingCart");
                 });
@@ -2754,16 +2462,9 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                 {
                     b.Navigation("ProductReviews");
 
-                    b.Navigation("ProductSKUs");
-
                     b.Navigation("Product_ProductCategory_Mappings");
 
-                    b.Navigation("Product_ProductSpecificationAttributeOption_Mappings");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductAttribute", b =>
-                {
-                    b.Navigation("ProductAttributeOptions");
+                    b.Navigation("Product_ProductSpecificationAttribute_Mappings");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductCategory", b =>
@@ -2775,17 +2476,12 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductSpecificationAttribute", b =>
                 {
-                    b.Navigation("SpecificationAttributeOptions");
+                    b.Navigation("Product_ProductSpecificationAttribute_Mappings");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductSpecificationAttributeGroup", b =>
                 {
                     b.Navigation("SpecificationAttributes");
-                });
-
-            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ProductSpecificationAttributeOption", b =>
-                {
-                    b.Navigation("Product_ProductSpecificationAttributeOption_Mappings");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ReturnRequest", b =>
