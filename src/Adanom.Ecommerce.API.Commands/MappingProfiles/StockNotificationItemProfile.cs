@@ -7,6 +7,10 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<StockNotificationItem, StockNotificationItemResponse>();
 
             CreateMap<StockNotificationItemResponse, StockNotificationItem>();
+
+            CreateMap<CreateStockNotificationItemRequest, CreateStockNotificationItem>();
+
+            CreateMap<CreateStockNotificationItem, StockNotificationItem>();
         }
     }
 }
