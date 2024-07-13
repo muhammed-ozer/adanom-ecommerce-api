@@ -19,6 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddQueryType(e => e.Name(OperationTypeNames.Query))
                 .AddType<AddressCityQueries>()
                 .AddType<AddressDistrictQueries>()
+                .AddType<CompanyQueries>()
                 .AddType<ShippingAddressQueries>()
                 .AddType<BillingAddressQueries>()
                 .AddType<SliderItemQueries>();
