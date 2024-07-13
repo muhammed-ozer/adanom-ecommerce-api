@@ -7,6 +7,12 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<FavoriteItem, FavoriteItemResponse>();
 
             CreateMap<FavoriteItemResponse, FavoriteItem>();
+
+            CreateMap<CreateFavoriteItemRequest, CreateFavoriteItem>();
+
+            CreateMap<CreateFavoriteItem, FavoriteItem>();
+
+            CreateMap<DeleteFavoriteItemRequest, DeleteFavoriteItem>();
         }
     }
 }

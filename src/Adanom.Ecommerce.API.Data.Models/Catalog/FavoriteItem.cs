@@ -8,8 +8,6 @@
 
         public DateTime CreatedAtUtc { get; set; }
 
-        public DateTime? DeletedAtUtc { get; set; }
-
         public Product Product { get; set; } = null!;
     }
 }

@@ -26,6 +26,7 @@
         ORDER,
         RETURNREQUEST,
         SHIPPINGADDRESS,
-        BILLINGADDRESS
+        BILLINGADDRESS,
+        FAVORITEITEM
     }
 }
