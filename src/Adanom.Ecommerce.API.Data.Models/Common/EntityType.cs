@@ -25,6 +25,7 @@
         USER,
         ORDER,
         RETURNREQUEST,
-        SHIPPINGADDRESS
+        SHIPPINGADDRESS,
+        BILLINGADDRESS
     }
 }
