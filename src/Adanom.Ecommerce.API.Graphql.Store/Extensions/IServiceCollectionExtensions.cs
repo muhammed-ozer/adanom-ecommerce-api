@@ -15,7 +15,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             graphqlServices
                 .AddQueryType(e => e.Name(OperationTypeNames.Query))
-                .AddType<TestQueries>();
+                .AddType<AddressCityQueries>()
+                .AddType<AddressDistrictQueries>();
 
             return services;
         }
