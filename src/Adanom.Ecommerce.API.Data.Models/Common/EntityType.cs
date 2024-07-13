@@ -24,6 +24,7 @@
         PICKUPSTORE,
         USER,
         ORDER,
-        RETURNREQUEST
+        RETURNREQUEST,
+        SHIPPINGADDRESS
     }
 }
