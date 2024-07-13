@@ -5,6 +5,7 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Queries
     {
         #region GetAddressDistrictAsync
 
+        [AllowAnonymous]
         [GraphQLDescription("Gets address district")]
         public async Task<AddressDistrictResponse?> GetAddressDistrictAsync(
             long id,
@@ -19,6 +20,7 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Queries
 
         #region GetAddressDistrictsAsync
 
+        [AllowAnonymous]
         [GraphQLDescription("Gets address districts")]
         public async Task<IEnumerable<AddressDistrictResponse>> GetAddressDistrictsAsync(
             long? addressCityId,

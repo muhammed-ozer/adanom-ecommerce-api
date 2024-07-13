@@ -7,6 +7,16 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<ShippingAddress, ShippingAddressResponse>();
 
             CreateMap<ShippingAddressResponse, ShippingAddress>();
+
+            CreateMap<CreateShippingAddressRequest, CreateShippingAddress>();
+
+            CreateMap<CreateShippingAddress, ShippingAddress>();
+
+            CreateMap<UpdateShippingAddressRequest, UpdateShippingAddress>();
+
+            CreateMap<UpdateShippingAddress, ShippingAddress>();
+
+            CreateMap<DeleteShippingAddressRequest, DeleteShippingAddress>();
         }
     }
 }

@@ -35,4 +35,13 @@ public static class LogMessages
 
         public const string BatchCreateProductsError = @"Toplu işlem sırasında hata meydana geldi. ExcelRow: {0}";
     }
+
+    public static class CustomerTransaction
+    {
+        public const string DatabaseSaveChangesSuccessful = @"Veri tabanı işlemi başarılı bir şekilde gerçekleştirildi. Id: {0}";
+
+        public const string DatabaseSaveChangesHasFailed = "Veri tabanı işlemi sırasında hata meydana geldi.";
+
+        public const string DatabaseTransactionHasFailed = "Veri tabanı transaction sırasında hata meydana geldi.";
+    }
 }
