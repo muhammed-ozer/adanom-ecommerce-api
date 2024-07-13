@@ -20,7 +20,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<AddressCityQueries>()
                 .AddType<AddressDistrictQueries>()
                 .AddType<ShippingAddressQueries>()
-                .AddType<BillingAddressQueries>();
+                .AddType<BillingAddressQueries>()
+                .AddType<SliderItemQueries>();
 
             graphqlServices
                 .AddMutationType(e => e.Name(OperationTypeNames.Mutation))
@@ -29,7 +30,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             graphqlServices
                 .AddType<ShippingAddressResolvers>()
-                .AddType<BillingAddressResolvers>();
+                .AddType<BillingAddressResolvers>()
+                .AddType<SliderItemResolvers>();
 
             return services;
         }
