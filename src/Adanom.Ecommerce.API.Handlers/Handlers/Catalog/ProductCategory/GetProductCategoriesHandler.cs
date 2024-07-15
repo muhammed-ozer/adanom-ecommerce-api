@@ -62,6 +62,11 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 #region Apply filtering
 
+                if (command.Filter.FirstLevelCategories != null && command.Filter.FirstLevelCategories.Value)
+                {
+                    productCategories = productCategories.Where(e => e.ParentId == null);
+                }
+
                 if (command.Filter.ParentId != null)
                 {
                     productCategories = productCategories.Where(e => e.ParentId == command.Filter.ParentId);
