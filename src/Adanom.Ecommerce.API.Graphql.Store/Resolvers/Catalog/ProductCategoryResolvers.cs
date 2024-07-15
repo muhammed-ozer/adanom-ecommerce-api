@@ -1,0 +1,55 @@
+using Adanom.Ecommerce.API.Data.Models;
+
+namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
+{
+    [ExtendObjectType(typeof(ProductCategoryResponse))]
+    public sealed class ProductCategoryResolvers
+    {
+        #region GetParentAsync
+
+        public async Task<ProductCategoryResponse?> GetParentAsync(
+           [Parent] ProductCategoryResponse productCategoryResponse,
+           [Service] IMediator mediator)
+        {
+            if (productCategoryResponse.ParentId == null)
+            {
+                return null;
+            }
+
+            var parent = await mediator.Send(new GetProductCategory(productCategoryResponse.ParentId.Value));
+
+            return parent;
+        }
+
+        #endregion
+
+        #region GetChildrenAsync
+
+        public async Task<IEnumerable<ProductCategoryResponse>> GetChildrenAsync(
+           [Parent] ProductCategoryResponse productCategoryResponse,
+           [Service] IMediator mediator)
+        {
+            var children = await mediator.Send(new GetProductCategories(new GetProductCategoriesFilter()
+            { 
+                ParentId = productCategoryResponse.ParentId
+            }));
+
+            return children.Rows;
+        }
+
+        #endregion
+
+        #region GetImagesAsync
+
+        public async Task<IEnumerable<ImageResponse>> GetImagesAsync(
+           [Parent] ProductCategoryResponse productCategoryResponse,
+           [Service] IMediator mediator)
+        {
+            var images = await mediator.Send(new GetEntityImages(productCategoryResponse.Id, EntityType.PRODUCTCATEGORY));
+
+            return images;
+        }
+
+        #endregion
+    }
+}

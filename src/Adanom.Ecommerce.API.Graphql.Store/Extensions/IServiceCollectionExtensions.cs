@@ -20,6 +20,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<AddressCityQueries>()
                 .AddType<AddressDistrictQueries>()
                 .AddType<BrandQueries>()
+                .AddType<ProductCategoryQueries>()
                 .AddType<FavoriteItemQueries>()
                 .AddType<StockNotificationItemQueries>()
                 .AddType<CompanyQueries>()
@@ -38,6 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             graphqlServices
                 .AddType<BrandResolvers>()
+                .AddType<ProductCategoryResolvers>()
                 .AddType<FavoriteItemResolvers>()
                 .AddType<StockNotificationItemResolvers>()
                 .AddType<ShippingAddressResolvers>()
