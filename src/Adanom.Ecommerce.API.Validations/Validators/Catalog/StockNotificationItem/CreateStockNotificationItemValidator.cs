@@ -22,9 +22,8 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                .CustomAsync(ValidateDoesProductExistsAsync);
 
             RuleFor(e => e)
-               .CustomAsync(CanUserAddProductToStockNotificationItemsAsync);
-
-            // TODO: Implement stock control
+               .CustomAsync(CanUserAddProductToStockNotificationItemsAsync)
+               .CustomAsync(DoesProductOutOfStocksAsync);
         }
 
         #region Private Methods
@@ -67,6 +66,27 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                 {
                     ErrorCode = ValidationErrorCodesEnum.NOT_EXISTS.ToString(),
                     ErrorMessage = "Ürün stok bildirim listenize eklenmiş durumda."
+                });
+            }
+        }
+
+        #endregion
+
+        #region DoesProductOutOfStocksAsync
+
+        private async Task DoesProductOutOfStocksAsync(
+            CreateStockNotificationItem value,
+            ValidationContext<CreateStockNotificationItem> context,
+            CancellationToken cancellationToken)
+        {
+            var doesProductHasStocks = await _mediator.Send(new DoesProductHasStocks(value.ProductId));
+
+            if (doesProductHasStocks)
+            {
+                context.AddFailure(new ValidationFailure(nameof(CreateStockNotificationItem.ProductId), null)
+                {
+                    ErrorCode = ValidationErrorCodesEnum.NOT_EXISTS.ToString(),
+                    ErrorMessage = "Ürün stoğu mevcut olduğu için bildirim listesine eklenemez."
                 });
             }
         }

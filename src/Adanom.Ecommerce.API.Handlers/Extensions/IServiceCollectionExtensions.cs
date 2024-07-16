@@ -67,6 +67,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
+                #region ProductReview
+
+                options.AddBehavior<IPipelineBehavior<CreateProductReview, bool>, CreateProductReveiw_UpdatePointsBehavior>();
+
+                #endregion
+
                 #endregion
 
                 #region Common

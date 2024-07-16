@@ -1,10 +1,11 @@
-﻿namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
+﻿namespace Adanom.Ecommerce.API.Graphql.Store.Queries
 {
     [ExtendObjectType(OperationTypeNames.Query)]
     public sealed class ProductQueries
     {
         #region GetProductByIdAsync
 
+        [AllowAnonymous]
         [GraphQLDescription("Gets product by id")]
         public async Task<ProductResponse?> GetProductByIdAsync(
             long id,
@@ -19,6 +20,7 @@
 
         #region GetProductByUrlSlugAsync
 
+        [AllowAnonymous]
         [GraphQLDescription("Gets product by url slug")]
         public async Task<ProductResponse?> GetProductByUrlSlugAsync(
             string urlSlug,
@@ -33,17 +35,24 @@
 
         #region GetProductsAsync
 
+        [AllowAnonymous]
         [GraphQLDescription("Gets products")]
         public async Task<ProductCatalogResponse> GetProductsAsync(
             PaginationRequest paginationRequest,
             GetProductsFilter? filter,
             [Service] IMediator mediator)
         {
+            if (filter != null)
+            {
+                filter.IsRequestFromStoreClient = true;
+            }
+
             var command = new GetProducts(paginationRequest, filter);
 
             return await mediator.Send(command);
         }
 
         #endregion
+
     }
 }

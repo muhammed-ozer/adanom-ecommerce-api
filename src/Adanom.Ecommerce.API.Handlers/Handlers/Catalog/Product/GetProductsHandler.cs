@@ -1,6 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class GetProductsHandler : IRequestHandler<GetProducts, PaginatedData<ProductResponse>>
+    public sealed class GetProductsHandler : IRequestHandler<GetProducts, ProductCatalogResponse>
     {
         #region Fields
 
@@ -23,11 +23,13 @@
 
         #region IRequestHandler Members
 
-        public async Task<PaginatedData<ProductResponse>> Handle(GetProducts command, CancellationToken cancellationToken)
+        public async Task<ProductCatalogResponse> Handle(GetProducts command, CancellationToken cancellationToken)
         {
             var productsQuery = _applicationDbContext.Products
                 .Where(e => e.DeletedAtUtc == null)
                 .AsNoTracking();
+
+            var productCatalogResponse = new ProductCatalogResponse();
 
             if (command.Filter != null)
             {
@@ -43,11 +45,35 @@
                                                 .Distinct();
                 }
 
+                if (command.Filter.ProductSpecificationAttributeIds != null && command.Filter.ProductSpecificationAttributeIds.Count > 0)
+                {
+                    productsQuery = _applicationDbContext.Product_ProductSpecificationAttribute_Mappings
+                                                .Where(e => command.Filter.ProductSpecificationAttributeIds.Contains(e.ProductSpecificationAttributeId))
+                                                .Select(e => e.Product)
+                                                .Distinct();
+                }
+
+                if (command.Filter.BrandId != null)
+                {
+                    productsQuery = _applicationDbContext.Products
+                                            .Where(e => e.BrandId == command.Filter.BrandId);
+                }
+
                 if (!string.IsNullOrEmpty(command.Filter.Query))
                 {
-                    productsQuery = productsQuery.Where(e => 
-                        e.Name.Contains(command.Filter.Query) ||
-                        e.ProductSKU.Code.Contains(command.Filter.Query));
+                    if (command.Filter.IsRequestFromStoreClient != null && command.Filter.IsRequestFromStoreClient.Value)
+                    {
+                        productsQuery = productsQuery.Where(e =>
+                           e.Name.Contains(command.Filter.Query) ||
+                           e.ProductSKU.Code.Contains(command.Filter.Query) ||
+                           e.Product_ProductTag_Mappings.Any(e => e.ProductTag.Value.Contains(command.Filter.Query)));
+                    }
+                    else
+                    {
+                        productsQuery = productsQuery.Where(e =>
+                           e.Name.Contains(command.Filter.Query) ||
+                           e.ProductSKU.Code.Contains(command.Filter.Query));
+                    }
                 }
 
                 if (command.Filter.OutOfStock != null)
@@ -84,6 +110,35 @@
                     {
                         productsQuery = productsQuery.Where(e => !e.IsNew);
                     }
+                }
+
+                if (command.Filter.IsInHighlights != null)
+                {
+                    productsQuery = productsQuery.Where(e => e.IsInHighlights);
+                }
+
+                if (command.Filter.MinimumPrice != null)
+                {
+                    productsQuery = productsQuery.Where(e => 
+                            e.ProductSKU.ProductPrice.OriginalPrice > command.Filter.MinimumPrice ||
+                            e.ProductSKU.ProductPrice.DiscountedPrice > command.Filter.MinimumPrice);
+                }
+
+                if (command.Filter.MaximumPrice != null)
+                {
+                    productsQuery = productsQuery.Where(e =>
+                            e.ProductSKU.ProductPrice.OriginalPrice < command.Filter.MaximumPrice ||
+                            e.ProductSKU.ProductPrice.DiscountedPrice < command.Filter.MaximumPrice);
+                }
+
+                if (command.Filter.ReviewPoint != null)
+                {
+                    productsQuery.Where(e => e.ProductReviews.Any(e => e.Points == command.Filter.ReviewPoint.Value));
+                }
+
+                if (command.Filter.IncludeFilterResponse != null && command.Filter.IncludeFilterResponse.Value)
+                {
+                    productCatalogResponse.ProductFilterResponse = await GetProductFilterResponseAsync(productsQuery);
                 }
 
                 #endregion
@@ -125,16 +180,21 @@
 
             var productResponses = _mapper.Map<IEnumerable<ProductResponse>>(await productsQuery.ToListAsync());
 
-            return new PaginatedData<ProductResponse>(
-                productResponses,
-                totalCount,
-                command.Pagination?.Page ?? 1,
-                command.Pagination?.PageSize ?? totalCount);
+            productCatalogResponse.PaginatedDataOfProducts = 
+                new PaginatedData<ProductResponse>(
+                    productResponses,
+                    totalCount,
+                    command.Pagination?.Page ?? 1,
+                    command.Pagination?.PageSize ?? totalCount);
+
+            return productCatalogResponse;
         }
 
         #endregion
 
         #region Private Methods
+
+        #region GetChildProductCategoriesIdsAsync
 
         private async Task<List<long>> GetChildProductCategoriesIdsAsync(long categoryId)
         {
@@ -160,7 +220,55 @@
             FindChildren(categoryId);
 
             return childProductCategoriesIds;
-        } 
+        }  
+
+        #endregion
+
+        private async Task<ProductFilterResponse> GetProductFilterResponseAsync(IQueryable<Product> productsQuery)
+        {
+            var productFilterResponse = new ProductFilterResponse();
+
+            if (!await productsQuery.AnyAsync())
+            {
+                return productFilterResponse;
+            }
+
+            productFilterResponse.MinimumPrice = await productsQuery.MinAsync(e => 
+                e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ? 
+                e.ProductSKU.ProductPrice.DiscountedPrice.Value : 
+                e.ProductSKU.ProductPrice.OriginalPrice);
+
+            productFilterResponse.MaximumPrice = await productsQuery.MaxAsync(e =>
+                e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
+                e.ProductSKU.ProductPrice.DiscountedPrice.Value :
+                e.ProductSKU.ProductPrice.OriginalPrice);
+
+            var productCategoriesQuery = productsQuery
+                .SelectMany(e => e.Product_ProductCategory_Mappings)
+                .Select(e => e.ProductCategory)
+                .Distinct();
+
+            productFilterResponse.ProductCategories = _mapper
+                .Map<IEnumerable<ProductCategoryResponse>>(await productCategoriesQuery.ToListAsync());
+
+            var productSpecificationAttributesQuery = productsQuery
+                .SelectMany(e => e.Product_ProductSpecificationAttribute_Mappings
+                .Select(e => e.ProductSpecificationAttribute))
+                .Distinct();
+
+            productFilterResponse.ProductSpecificationAttributes = _mapper
+                .Map<IEnumerable<ProductSpecificationAttributeResponse>>(await productSpecificationAttributesQuery.ToListAsync());
+
+            var brandsQuery = productsQuery
+                .Where(e => e.BrandId != null)
+                .Select(e => e.Brand)
+                .Distinct();
+
+            productFilterResponse.Brands = _mapper
+                .Map<IEnumerable<BrandResponse>>(await brandsQuery.ToListAsync());
+
+            return productFilterResponse;
+        }
 
         #endregion
     }

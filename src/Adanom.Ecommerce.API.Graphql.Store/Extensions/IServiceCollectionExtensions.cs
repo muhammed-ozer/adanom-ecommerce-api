@@ -19,6 +19,13 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddQueryType(e => e.Name(OperationTypeNames.Query))
                 .AddType<AddressCityQueries>()
                 .AddType<AddressDistrictQueries>()
+                .AddType<ProductQueries>()
+                .AddType<ProductReviewQueries>()
+                .AddType<ProductSKUQueries>()
+                .AddType<ProductSpecificationAttributeGroupQueries>()
+                .AddType<ProductSpecificationAttributeQueries>()
+                .AddType<ProductTagQueries>()
+                .AddType<TaxCategoryQueries>()
                 .AddType<BrandQueries>()
                 .AddType<ProductCategoryQueries>()
                 .AddType<FavoriteItemQueries>()
@@ -32,6 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             graphqlServices
                 .AddMutationType(e => e.Name(OperationTypeNames.Mutation))
+                .AddType<ProductReveiwMutations>()
                 .AddType<FavoriteItemMutations>()
                 .AddType<StockNotificationItemMutations>()
                 .AddType<ShippingAddressMutations>()
@@ -40,6 +48,11 @@ namespace Microsoft.Extensions.DependencyInjection
             graphqlServices
                 .AddType<BrandResolvers>()
                 .AddType<ProductCategoryResolvers>()
+                .AddType<ProductPriceResolvers>()
+                .AddType<ProductResolvers>()
+                .AddType<ProductReviewResolvers>()
+                .AddType<ProductSpecificationAttributeGroupResolvers>()
+                .AddType<ProductSpecificationAttributeResolvers>()
                 .AddType<FavoriteItemResolvers>()
                 .AddType<StockNotificationItemResolvers>()
                 .AddType<ShippingAddressResolvers>()

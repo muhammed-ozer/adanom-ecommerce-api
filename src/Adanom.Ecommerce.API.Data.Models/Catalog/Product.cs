@@ -11,6 +11,7 @@ namespace Adanom.Ecommerce.API.Data.Models
             ProductReviews = new List<ProductReview>();
             Product_ProductCategory_Mappings = new List<Product_ProductCategory_Mapping>();
             Product_ProductSpecificationAttribute_Mappings = new List<Product_ProductSpecificationAttribute_Mapping>();
+            Product_ProductTag_Mappings = new List<Product_ProductTag_Mapping>();
         }
 
         public long ProductSKUId { get; set; }
@@ -29,6 +30,8 @@ namespace Adanom.Ecommerce.API.Data.Models
         public bool IsActive { get; set; }
 
         public bool IsNew { get; set; }
+
+        public bool IsInHighlights { get; set; }
 
         public double OverallReviewPoints { get; set; }
 
@@ -55,5 +58,7 @@ namespace Adanom.Ecommerce.API.Data.Models
         public ICollection<Product_ProductCategory_Mapping> Product_ProductCategory_Mappings { get; set; }
 
         public ICollection<Product_ProductSpecificationAttribute_Mapping> Product_ProductSpecificationAttribute_Mappings { get; set; }
+
+        public ICollection<Product_ProductTag_Mapping> Product_ProductTag_Mappings { get; set; }
     }
 }

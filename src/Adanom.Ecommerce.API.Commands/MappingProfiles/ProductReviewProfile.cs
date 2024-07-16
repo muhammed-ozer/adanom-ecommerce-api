@@ -8,6 +8,10 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
 
             CreateMap<ProductReviewResponse, ProductReview>();
 
+            CreateMap<CreateProductReviewRequest, CreateProductReview>();
+
+            CreateMap<CreateProductReview, ProductReview>();
+
             CreateMap<UpdateProductReviewRequest, UpdateProductReview>();
 
             CreateMap<UpdateProductReview, ProductReview>();

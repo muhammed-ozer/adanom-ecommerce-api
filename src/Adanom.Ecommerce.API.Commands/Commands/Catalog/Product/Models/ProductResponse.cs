@@ -25,6 +25,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public bool IsNew { get; set; }
 
+        public bool IsInHighlights { get; set; }
+
         public double OverallReviewPoints { get; set; }
 
         public int DisplayOrder { get; set; }
