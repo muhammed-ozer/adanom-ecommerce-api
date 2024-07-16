@@ -1,6 +1,6 @@
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class GetProducts : IRequest<PaginatedData<ProductResponse>>
+    public class GetProducts : IRequest<ProductCatalogResponse>
     {
         #region Ctor
 
