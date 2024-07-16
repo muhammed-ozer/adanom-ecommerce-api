@@ -114,6 +114,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
+                #region ShoppingCartItem
+
+                options.AddBehavior<IPipelineBehavior<DeleteShoppingCartItem, bool>, DeleteShoppingCartItem_DeleteShoppingCartBehavior>();
+
+                #endregion
+
                 #endregion
 
                 #region Auth
