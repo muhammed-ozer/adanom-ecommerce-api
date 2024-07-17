@@ -32,7 +32,7 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var shoppingCart = await _mediator.Send(new GetShoppingCart(userId));
+            var shoppingCart = await _mediator.Send(new GetShoppingCart(userId, true));
 
             if (shoppingCart == null)
             {

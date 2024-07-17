@@ -42,7 +42,7 @@ namespace Adanom.Ecommerce.API.Handlers
                     .Where(e => e.UserId == command.UserId)
                     .SingleOrDefaultAsync();
 
-                if (shoppingCart != null)
+                if (shoppingCart != null && command.UpdateItems)
                 {
                     updateShoppingCartItemsResponse = await _mediator.Send(new UpdateShoppingCartItems(command.UserId.Value));
                 }
@@ -55,7 +55,7 @@ namespace Adanom.Ecommerce.API.Handlers
                     .Where(e => e.UserId == userId)
                     .SingleOrDefaultAsync();
 
-                if (shoppingCart != null)
+                if (shoppingCart != null && command.UpdateItems)
                 {
                     updateShoppingCartItemsResponse = await _mediator.Send(new UpdateShoppingCartItems(command.Identity));
                 }
@@ -66,7 +66,7 @@ namespace Adanom.Ecommerce.API.Handlers
                     .Where(e => e.Id == command.Id)
                     .SingleOrDefaultAsync();
 
-                if (shoppingCart != null)
+                if (shoppingCart != null && command.UpdateItems)
                 {
                     updateShoppingCartItemsResponse = await _mediator.Send(new UpdateShoppingCartItems(command.Id));
                 }

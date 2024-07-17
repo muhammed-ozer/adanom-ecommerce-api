@@ -6,19 +6,22 @@ namespace Adanom.Ecommerce.API.Commands
     {
         #region Ctor
 
-        public GetShoppingCart(long id)
+        public GetShoppingCart(long id, bool updateItems)
         {
             Id = id;
+            UpdateItems = updateItems;
         }
 
-        public GetShoppingCart(Guid userId)
+        public GetShoppingCart(Guid userId, bool updateItems)
         {
             UserId = userId;
+            UpdateItems = updateItems;
         }
 
-        public GetShoppingCart(ClaimsPrincipal identity)
+        public GetShoppingCart(ClaimsPrincipal identity, bool updateItems)
         {
             Identity = identity ?? throw new ArgumentNullException(nameof(identity));
+            UpdateItems = updateItems;
         }
 
         #endregion
@@ -30,6 +33,8 @@ namespace Adanom.Ecommerce.API.Commands
         public Guid? UserId { get; set; }
 
         public ClaimsPrincipal? Identity { get; }
+
+        public bool UpdateItems { get; }
 
         #endregion
     }

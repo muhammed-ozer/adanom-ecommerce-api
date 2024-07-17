@@ -10,7 +10,7 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Queries
             long id,
             [Service] IMediator mediator)
         {
-            var command = new GetShoppingCart(id);
+            var command = new GetShoppingCart(id, false);
 
             return await mediator.Send(command);
         }
