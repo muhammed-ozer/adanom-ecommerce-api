@@ -1,5 +1,4 @@
 ﻿using Adanom.Ecommerce.API.Logging;
-using MediatR;
 
 namespace Adanom.Ecommerce.API.Commands
 {
