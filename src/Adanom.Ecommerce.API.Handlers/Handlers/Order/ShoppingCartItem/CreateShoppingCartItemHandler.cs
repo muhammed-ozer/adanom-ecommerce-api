@@ -69,6 +69,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 _applicationDbContext.Update(shoppingCartItem);
             }
 
+            await _mediator.Send(new UpdateShoppingCart_LastModifiedDate(shoppingCart.Id));
+
             try
             {
                 await _applicationDbContext.SaveChangesAsync();

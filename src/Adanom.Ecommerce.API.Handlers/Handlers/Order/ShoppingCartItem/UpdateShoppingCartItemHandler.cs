@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Adanom.Ecommerce.API.Data.Models;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
@@ -64,6 +65,8 @@ namespace Adanom.Ecommerce.API.Handlers
                     return false;
                 }
             }
+
+            await _mediator.Send(new UpdateShoppingCart_LastModifiedDate(shoppingCartItem.ShoppingCartId));
 
             try
             {
