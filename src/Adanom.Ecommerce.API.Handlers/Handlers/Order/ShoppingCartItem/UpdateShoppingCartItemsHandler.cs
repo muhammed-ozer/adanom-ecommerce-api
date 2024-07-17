@@ -65,17 +65,11 @@ namespace Adanom.Ecommerce.API.Handlers
             foreach (var item in shoppingCartItems)
             {
                 var productPrice = await _mediator.Send(new GetProductPriceByProductId(item.ProductId));
+                var productSKU = await _mediator.Send(new GetProductSKUByProductId(item.ProductId));
 
-                if (productPrice == null && command.Identity != null)
+                if ((productPrice == null || productSKU == null) && command.Identity != null)
                 {
-                    var deleteShoppingCartItemRequest = new DeleteShoppingCartItemRequest()
-                    {
-                        Id = item.Id
-                    };
-
-                    var deleteShoppingCartItemCommand = _mapper.Map(deleteShoppingCartItemRequest, new DeleteShoppingCartItem(command.Identity));
-
-                    await _mediator.Send(deleteShoppingCartItemCommand);
+                    await DeleteShoppingCartItemAsync(command.Identity, item.Id);
 
                     response.HasProductDeleted = true;
 
@@ -90,9 +84,27 @@ namespace Adanom.Ecommerce.API.Handlers
 
                     response.HasPriceChanges = true;
                 }
+
+                if (productSKU!.StockQuantity == 0 && command.Identity != null)
+                {
+                    await DeleteShoppingCartItemAsync(command.Identity, item.Id);
+
+                    response.HasProductDeleted = true;
+
+                    continue;
+                }
+
+                if (item.Amount > productSKU.StockQuantity)
+                {
+                    item.Amount = productSKU.StockQuantity;
+
+                    response.HasStocksChanges = true;
+
+                    continue;
+                }
             }
 
-            if (response.HasProductDeleted || response.HasPriceChanges)
+            if (response.HasProductDeleted || response.HasPriceChanges || response.HasStocksChanges)
             {
                 var shoppingCartId = shoppingCartItems.Select(e => e.ShoppingCartId).FirstOrDefault();
 
@@ -101,6 +113,22 @@ namespace Adanom.Ecommerce.API.Handlers
             }
 
             return response;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private async Task DeleteShoppingCartItemAsync(ClaimsPrincipal identity, long shoppingCartItemId)
+        {
+            var deleteShoppingCartItemRequest = new DeleteShoppingCartItemRequest()
+            {
+                Id = shoppingCartItemId
+            };
+
+            var deleteShoppingCartItemCommand = _mapper.Map(deleteShoppingCartItemRequest, new DeleteShoppingCartItem(identity));
+
+            await _mediator.Send(deleteShoppingCartItemCommand);
         }
 
         #endregion
