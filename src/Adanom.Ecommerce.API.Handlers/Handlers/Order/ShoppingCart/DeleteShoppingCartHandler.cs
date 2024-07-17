@@ -57,7 +57,7 @@ namespace Adanom.Ecommerce.API.Handlers
             }
             catch (Exception exception)
             {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
+                await _mediator.Publish(new CreateLog(new CustomerTransactionLogRequest()
                 {
                     UserId = Guid.Empty,
                     EntityType = EntityType.SHOPPINGCART,

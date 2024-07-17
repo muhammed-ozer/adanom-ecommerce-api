@@ -31,6 +31,9 @@ namespace Adanom.Ecommerce.API.Logging
                 case AdminTransactionLogRequest adminTransactionLogRequest:
                     await CreateAdminTransactionLogAsync(adminTransactionLogRequest);
                     break;
+                case CustomerTransactionLogRequest customerTransactionLogRequest:
+                    await CreateCustomerTransactionLogAsync(customerTransactionLogRequest);
+                    break;
                 default:
                     break;
             }
@@ -74,6 +77,27 @@ namespace Adanom.Ecommerce.API.Logging
             };
 
             await _logDbContext.AdminTransactionLogs.AddAsync(log);
+            await _logDbContext.SaveChangesAsync();
+        }
+
+        #endregion
+
+        #region CreateCustomerTransactionLogAsync
+
+        private async Task CreateCustomerTransactionLogAsync(CustomerTransactionLogRequest request)
+        {
+            var log = new CustomerTransactionLog()
+            {
+                LogLevel = request.LogLevel,
+                EntityType = request.EntityType,
+                TransactionType = request.TransactionType,
+                UserId = request.UserId,
+                Description = request.Description,
+                Exception = request.Exception,
+                CreatedAtUtc = DateTime.UtcNow,
+            };
+
+            await _logDbContext.CustomerTransactionLogs.AddAsync(log);
             await _logDbContext.SaveChangesAsync();
         }
 
