@@ -1,8 +1,6 @@
-﻿using System.Security.Claims;
-
-namespace Adanom.Ecommerce.API.Handlers
+﻿namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class DeleteShoppingCartHandler : IRequestHandler<DeleteShoppingCart, bool>
+    public sealed class UpdateShoppingCart_LastModifiedDateHandler : IRequestHandler<UpdateShoppingCart_LastModifiedDate, bool>
     {
         #region Fields
 
@@ -13,7 +11,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region Ctor
 
-        public DeleteShoppingCartHandler(
+        public UpdateShoppingCart_LastModifiedDateHandler(
             ApplicationDbContext applicationDbContext,
             IMediator mediator)
         {
@@ -25,31 +23,18 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region IRequestHandler Members
 
-        public async Task<bool> Handle(DeleteShoppingCart command, CancellationToken cancellationToken)
+        public async Task<bool> Handle(UpdateShoppingCart_LastModifiedDate command, CancellationToken cancellationToken)
         {
-            ShoppingCart? shoppingCart = null;
-
-            if (command.Identity != null)
-            {
-                var userId = command.Identity.GetUserId();
-
-                shoppingCart = await _applicationDbContext.ShoppingCarts
-                    .Where(e => e.UserId == userId)
-                    .SingleOrDefaultAsync();
-            }
-            else
-            {
-                shoppingCart = await _applicationDbContext.ShoppingCarts
-                    .Where(e => e.Id == command.Id)
-                    .SingleOrDefaultAsync();
-            }
+            var shoppingCart = await _applicationDbContext.ShoppingCarts
+                .Where(e => e.Id == command.Id)
+                .SingleOrDefaultAsync();
 
             if (shoppingCart == null)
             {
                 return true;
             }
 
-            _applicationDbContext.Remove(shoppingCart);
+            shoppingCart.LastModifiedAtUtc = DateTime.UtcNow;
 
             try
             {
@@ -61,7 +46,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 {
                     UserId = Guid.Empty,
                     EntityType = EntityType.SHOPPINGCART,
-                    TransactionType = TransactionType.DELETE,
+                    TransactionType = TransactionType.UPDATE,
                     Description = LogMessages.CustomerTransaction.DatabaseSaveChangesHasFailed,
                     Exception = exception.ToString()
                 }));

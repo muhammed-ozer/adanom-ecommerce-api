@@ -174,6 +174,11 @@ namespace Adanom.Ecommerce.API.Data
                 e.Property(e => e.MinimumFreeShippingTotalPrice).HasPrecision(10, 2);
             });
 
+            modelBuilder.Entity<ShoppingCartItem>(e =>
+            {
+                e.Property(e => e.Price).HasPrecision(10, 2);
+            });
+
             #endregion
 
             base.OnModelCreating(modelBuilder);

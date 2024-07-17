@@ -2,16 +2,11 @@ using System.Security.Claims;
 
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class DeleteShoppingCart : IRequest<bool>
+    public class ClearShoppingCart : IRequest<bool>
     {
         #region Ctor
 
-        public DeleteShoppingCart(long id)
-        {
-            Id = id;
-        }
-
-        public DeleteShoppingCart(ClaimsPrincipal identity)
+        public ClearShoppingCart(ClaimsPrincipal identity)
         {
             Identity = identity ?? throw new ArgumentNullException(nameof(identity));
         }
@@ -20,9 +15,7 @@ namespace Adanom.Ecommerce.API.Commands
 
         #region Properties
 
-        public long Id { get; }
-
-        public ClaimsPrincipal? Identity { get; }
+        public ClaimsPrincipal Identity { get; }
 
         #endregion
     }

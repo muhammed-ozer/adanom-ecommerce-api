@@ -1,4 +1,4 @@
-using AutoMapper.QueryableExtensions;
+using System.Security.Claims;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
@@ -9,6 +9,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
         #endregion
 
@@ -16,10 +17,12 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public GetShoppingCartHandler(
             ApplicationDbContext applicationDbContext,
-            IMapper mapper)
+            IMapper mapper,
+            IMediator mediator)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         #endregion
@@ -28,32 +31,51 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<ShoppingCartResponse?> Handle(GetShoppingCart command, CancellationToken cancellationToken)
         {
-            var mappingConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateProjection<ShoppingCart, ShoppingCartResponse>()
-                        .ForMember(member => member.Total, options =>
-                            options.MapFrom(e => e.Items
-                            .Sum(e => e.Amount * e.Product.ProductSKU.ProductPrice.DiscountedPrice ?? e.Amount * e.Product.ProductSKU.ProductPrice.OriginalPrice)))
-                        .ForMember(e => e.Items, options => options.Ignore());
-            });
+            var shoppingCartsQuery = _applicationDbContext.ShoppingCarts.AsNoTracking();
 
-            var shoppingCartsQuery = _applicationDbContext.ShoppingCarts
-                    .AsNoTracking();
+            ShoppingCart? shoppingCart = null;
+            var updateShoppingCartItemsResponse = new UpdateShoppingCartItemsResponse();
 
             if (command.UserId != null && command.UserId != Guid.Empty)
             {
-                return await shoppingCartsQuery
+                shoppingCart = await shoppingCartsQuery
                     .Where(e => e.UserId == command.UserId)
-                    .ProjectTo<ShoppingCartResponse>(mappingConfiguration)
                     .SingleOrDefaultAsync();
+
+                if (shoppingCart != null)
+                {
+                    updateShoppingCartItemsResponse = await _mediator.Send(new UpdateShoppingCartItems(command.UserId.Value));
+                }
+            }
+            else if (command.Identity != null)
+            {
+                var userId = command.Identity.GetUserId();
+
+                shoppingCart = await shoppingCartsQuery
+                    .Where(e => e.UserId == userId)
+                    .SingleOrDefaultAsync();
+
+                if (shoppingCart != null)
+                {
+                    updateShoppingCartItemsResponse = await _mediator.Send(new UpdateShoppingCartItems(command.Identity));
+                }
             }
             else 
             {
-                return await shoppingCartsQuery
+                shoppingCart = await shoppingCartsQuery
                     .Where(e => e.Id == command.Id)
-                    .ProjectTo<ShoppingCartResponse>(mappingConfiguration)
                     .SingleOrDefaultAsync();
+
+                if (shoppingCart != null)
+                {
+                    updateShoppingCartItemsResponse = await _mediator.Send(new UpdateShoppingCartItems(command.Id));
+                }
             }
+
+            var shoppingCartResponse = _mapper.Map<ShoppingCartResponse>(shoppingCart);
+            shoppingCartResponse = _mapper.Map(updateShoppingCartItemsResponse, shoppingCartResponse);
+
+            return shoppingCartResponse;
         }
 
         #endregion

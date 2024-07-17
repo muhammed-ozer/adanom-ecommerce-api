@@ -18,5 +18,18 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
         }
 
         #endregion
+
+        #region GetTotalAsync
+
+        public async Task<decimal> GetTotalAsync(
+           [Parent] ShoppingCartResponse shoppingCartResponse,
+           [Service] IMediator mediator)
+        {
+            var total = await mediator.Send(new GetShoppingCartTotal(shoppingCartResponse.Id));
+
+            return total;
+        }
+
+        #endregion
     }
 }
