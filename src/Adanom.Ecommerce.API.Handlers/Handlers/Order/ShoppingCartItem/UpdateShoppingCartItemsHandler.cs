@@ -92,7 +92,13 @@ namespace Adanom.Ecommerce.API.Handlers
                 }
             }
 
-            await _applicationDbContext.SaveChangesAsync();
+            if (response.HasProductDeleted || response.HasPriceChanges)
+            {
+                var shoppingCartId = shoppingCartItems.Select(e => e.ShoppingCartId).FirstOrDefault();
+
+                await _mediator.Send(new UpdateShoppingCart_LastModifiedDate(shoppingCartId));
+                await _applicationDbContext.SaveChangesAsync();
+            }
 
             return response;
         }
