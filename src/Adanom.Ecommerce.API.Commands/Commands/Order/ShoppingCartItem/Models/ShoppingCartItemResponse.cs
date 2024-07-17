@@ -8,6 +8,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public int Amount { get; set; }
 
+        public decimal Price { get; set; }
+
         public DateTime LastModifiedAtUtc { get; set; }
 
         public ProductResponse? Product { get; set; }

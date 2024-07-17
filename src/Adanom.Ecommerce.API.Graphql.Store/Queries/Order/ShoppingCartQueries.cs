@@ -11,8 +11,7 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Queries
             [Service] IMediator mediator,
             [Identity] ClaimsPrincipal identity)
         {
-            var userId = identity.GetUserId();
-            var command = new GetShoppingCart(userId);
+            var command = new GetShoppingCart(identity);
 
             return await mediator.Send(command);
         }

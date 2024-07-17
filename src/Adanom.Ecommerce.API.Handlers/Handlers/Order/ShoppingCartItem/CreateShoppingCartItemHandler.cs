@@ -45,6 +45,12 @@ namespace Adanom.Ecommerce.API.Handlers
             }
 
             var shoppingCartItemResponse = await _mediator.Send(new GetShoppingCartItem(userId, command.ProductId));
+            var productPrice = await _mediator.Send(new GetProductPriceByProductId(command.ProductId));
+
+            if (productPrice == null)
+            {
+                return false;
+            }
 
             if (shoppingCartItemResponse == null)
             {
@@ -54,6 +60,7 @@ namespace Adanom.Ecommerce.API.Handlers
                     {
                         target.ShoppingCartId = shoppingCart.Id;
                         target.LastModifiedAtUtc = DateTime.UtcNow;
+                        target.Price = productPrice.DiscountedPrice ?? productPrice.OriginalPrice;
                     });
                 });
 
@@ -65,6 +72,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 shoppingCartItem.Amount += command.Amount;
                 shoppingCartItem.LastModifiedAtUtc = DateTime.UtcNow;
+                shoppingCartItem.Price = productPrice.DiscountedPrice ?? productPrice.OriginalPrice; ;
 
                 _applicationDbContext.Update(shoppingCartItem);
             }
