@@ -12,6 +12,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
 
             CreateMap<CreateShoppingCartItem, ShoppingCartItem>();
 
+            CreateMap<AnonymousShoppingCartItemResponse, CreateShoppingCartItemRequest>();
+
             CreateMap<UpdateShoppingCartItemRequest, UpdateShoppingCartItem>();
 
             CreateMap<UpdateShoppingCartItem, ShoppingCartItem>();

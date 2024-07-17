@@ -7,6 +7,10 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<AnonymousShoppingCartItem, AnonymousShoppingCartItemResponse>();
 
             CreateMap<AnonymousShoppingCartItemResponse, AnonymousShoppingCartItem>();
+
+            CreateMap<CreateAnonymousShoppingCartItemRequest, CreateAnonymousShoppingCartItem>();
+
+            CreateMap<CreateAnonymousShoppingCartItem, AnonymousShoppingCartItem>();
         }
     }
 }
