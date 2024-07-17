@@ -9,7 +9,7 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
            [Parent] ShoppingCartItemResponse shoppingCartItemResponse,
            [Service] IMediator mediator)
         {
-            var shoppingCart = await mediator.Send(new GetShoppingCart(shoppingCartItemResponse.ShoppingCartId));
+            var shoppingCart = await mediator.Send(new GetShoppingCart(shoppingCartItemResponse.ShoppingCartId, true));
 
             return shoppingCart;
         }
