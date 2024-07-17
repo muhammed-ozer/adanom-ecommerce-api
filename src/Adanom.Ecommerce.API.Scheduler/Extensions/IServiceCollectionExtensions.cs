@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Adanom.Ecommerce.API.Scheduler.Jobs;
+using Microsoft.Extensions.Configuration;
 using Quartz;
-
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -13,6 +13,14 @@ namespace Microsoft.Extensions.DependencyInjection
                 //options.UseMicrosoftDependencyInjectionJobFactory();
                 options.UseSimpleTypeLoader();
                 options.UseInMemoryStore();
+
+                options.AddJob<DeleteExpiredAnonymousShoppingCartsJob>(e => 
+                    e.WithIdentity("DeleteExpiredAnonymousShoppingCartsJob", "AnonymousShoppingCartsGroup"));
+
+                options.AddTrigger(e =>
+                    e.WithIdentity("DeleteExpiredAnonymousShoppingCartsTrigger", "AnonymousShoppingCartsGroup")
+                       .WithCronSchedule("0 30 1 ? * WED *")
+                       .ForJob("DeleteExpiredAnonymousShoppingCartsJob", "AnonymousShoppingCartsGroup"));
             });
 
             // Register the Quartz.NET service and configure it to block shutdown until jobs are complete.

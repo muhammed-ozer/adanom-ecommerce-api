@@ -37,7 +37,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<BillingAddressQueries>()
                 .AddType<SliderItemQueries>()
                 .AddType<ShoppingCartQueries>()
-                .AddType<ShoppingCartItemQueries>();
+                .AddType<ShoppingCartItemQueries>()
+                .AddType<AnonymousShoppingCartItemQueries>();
 
             graphqlServices
                 .AddMutationType(e => e.Name(OperationTypeNames.Mutation))
@@ -46,7 +47,9 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<StockNotificationItemMutations>()
                 .AddType<ShippingAddressMutations>()
                 .AddType<BillingAddressMutations>()
-                .AddType<ShoppingCartItemMutations>();
+                .AddType<ShoppingCartItemMutations>()
+                .AddType<ShoppingCartMutations>()
+                .AddType<AnonymousShoppingCartItemMutations>();
 
             graphqlServices
                 .AddType<BrandResolvers>()
