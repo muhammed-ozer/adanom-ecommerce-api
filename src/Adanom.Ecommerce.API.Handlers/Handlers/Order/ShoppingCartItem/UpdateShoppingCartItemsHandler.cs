@@ -59,6 +59,8 @@ namespace Adanom.Ecommerce.API.Handlers
 
             if (!shoppingCartItems.Any())
             {
+                response.HasNoItem = true;
+
                 return response;
             }
 
@@ -110,6 +112,13 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 await _mediator.Send(new UpdateShoppingCart_LastModifiedDate(shoppingCartId));
                 await _applicationDbContext.SaveChangesAsync();
+
+                var shoppingCartItemsCount = await _mediator.Send(new GetShoppingCartItemsCount(command.Identity!));
+
+                if (shoppingCartItemsCount == 0) 
+                {
+                    response.HasNoItem = true;
+                }
             }
 
             return response;

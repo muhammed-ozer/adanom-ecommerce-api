@@ -73,6 +73,12 @@ namespace Adanom.Ecommerce.API.Handlers
             }
 
             var shoppingCartResponse = _mapper.Map<ShoppingCartResponse>(shoppingCart);
+
+            if (shoppingCartResponse == null)
+            {
+                return null;
+            }
+
             shoppingCartResponse = _mapper.Map(updateShoppingCartItemsResponse, shoppingCartResponse);
 
             return shoppingCartResponse;

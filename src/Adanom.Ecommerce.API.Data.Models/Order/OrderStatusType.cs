@@ -4,6 +4,9 @@ namespace Adanom.Ecommerce.API.Data.Models
 {
     public enum OrderStatusType : byte
     {
+        [EnumDisplayName("Ödeme Bekleniyor")]
+        PAYMENT_PENDING,
+
         [EnumDisplayName("Yeni Sipariş")]
         NEW,
 
