@@ -49,7 +49,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<BillingAddressMutations>()
                 .AddType<ShoppingCartItemMutations>()
                 .AddType<ShoppingCartMutations>()
-                .AddType<AnonymousShoppingCartItemMutations>();
+                .AddType<AnonymousShoppingCartItemMutations>()
+                .AddType<UserMutations>();
 
             graphqlServices
                 .AddType<BrandResolvers>()

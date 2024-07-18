@@ -12,6 +12,16 @@
 
         public string PhoneNumber { get; set; } = null!;
 
+        public byte DefaultDiscountRate { get; set; }
+
+        public bool AllowCommercialEmails { get; set; }
+
+        public DateTime? AllowCommercialEmailsUpdatedAtUtc { get; set; }
+
+        public bool AllowCommercialSMS { get; set; }
+
+        public DateTime? AllowCommercialSMSUpdatedAtUtc { get; set; }
+
         public List<string> Roles { get; set; } = null!;
     }
 }
