@@ -1,3 +1,5 @@
+using System.Security.Claims;
+
 namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class GetOrderHandler : IRequestHandler<GetOrder, OrderResponse?>
@@ -27,6 +29,13 @@ namespace Adanom.Ecommerce.API.Handlers
         public async Task<OrderResponse?> Handle(GetOrder command, CancellationToken cancellationToken)
         {
             var ordersQuery = _applicationDbContext.Orders.AsNoTracking();
+
+            if (command.Identity != null)
+            {
+                var userId = command.Identity.GetUserId();
+
+                ordersQuery = ordersQuery.Where(e => e.UserId == userId);
+            }
 
             Order? order;
 
