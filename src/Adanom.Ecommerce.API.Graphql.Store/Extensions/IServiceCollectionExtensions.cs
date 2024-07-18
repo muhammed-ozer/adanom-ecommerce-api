@@ -39,7 +39,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ShoppingCartQueries>()
                 .AddType<ShoppingCartItemQueries>()
                 .AddType<AnonymousShoppingCartItemQueries>()
-                .AddType<OrderQueries>();
+                .AddType<OrderQueries>()
+                .AddType<CheckoutQueries>();
 
             graphqlServices
                 .AddMutationType(e => e.Name(OperationTypeNames.Mutation))
@@ -52,6 +53,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<ShoppingCartMutations>()
                 .AddType<AnonymousShoppingCartItemMutations>()
                 .AddType<CheckoutMutations>()
+                .AddType<OrderMutations>()
                 .AddType<UserMutations>();
 
             graphqlServices

@@ -108,7 +108,14 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
-                #region Order
+                #region Checkout
+
+                options.AddBehavior<IPipelineBehavior<GetCheckout, CheckoutResponse?>, GetCheckout_CalculateShippingBehavior>();
+                options.AddBehavior<IPipelineBehavior<GetCheckout, CheckoutResponse?>, GetCheckout_CalculateItemsTotalBehavior>();
+
+                #endregion
+
+                #region ReturnRequest
 
                 options.AddBehavior<IPipelineBehavior<UpdateReturnRequest_ReturnRequestStatusType, bool>, UpdateReturnRequest_ReturnRequestStatusTypeSendMailsBehavior>();
 
