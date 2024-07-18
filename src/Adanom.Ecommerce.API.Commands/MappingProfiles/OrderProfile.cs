@@ -21,6 +21,10 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<UpdateOrder_OrderStatusType, Order>()
                 .ForMember(member => member.OrderStatusType, options =>
                     options.MapFrom(e => e.NewOrderStatusType));
+
+            CreateMap<CreateOrderRequest, CreateOrder>();
+
+            CreateMap<CreateOrder, Order>();
         }
     }
 }
