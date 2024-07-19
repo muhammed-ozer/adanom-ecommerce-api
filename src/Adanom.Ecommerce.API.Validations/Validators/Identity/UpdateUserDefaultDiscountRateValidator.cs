@@ -22,7 +22,7 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                 .CustomAsync(ValidateDoesUserExistsAsync);
             
-            RuleFor(e => (int)e.DefaultDiscountRate)
+            RuleFor(e => e.DefaultDiscountRate)
                 .GreaterThanOrEqualTo(0)
                     .WithMessage(e => "Varsayılan iskonto oranı 0 veya daha büyük olmalıdır.")
                     .WithErrorCode(ValidationErrorCodesEnum.NOT_ALLOWED)

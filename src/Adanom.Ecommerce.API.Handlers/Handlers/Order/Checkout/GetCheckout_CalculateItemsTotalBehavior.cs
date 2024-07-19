@@ -1,4 +1,6 @@
-﻿namespace Adanom.Ecommerce.API.Handlers
+﻿using System.Security.Claims;
+
+namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class GetCheckout_CalculateItemsTotalBehavior : IPipelineBehavior<GetCheckout, CheckoutResponse?>
     {
@@ -24,6 +26,15 @@
             var checkoutViewItemsResponse = await next();
 
             if (checkoutViewItemsResponse == null)
+            {
+                return null;
+            }
+
+            var userId = command.Identity.GetUserId();
+
+            var user = await _mediator.Send(new GetUser(userId));
+
+            if (user == null)
             {
                 return null;
             }
@@ -69,6 +80,13 @@
                 if (shoppingCartItem.DiscountedPrice != null && shoppingCartItem.DiscountedPrice.Value != 0)
                 {
                     subDiscountedTotal = shoppingCartItem.DiscountedPrice.Value * shoppingCartItem.Amount;
+                }
+                else if (user.DefaultDiscountRate > 0)
+                {
+                    var discountAmount = Calculations.CalculateDiscountedPriceByDiscountRate(shoppingCartItem.OriginalPrice, user.DefaultDiscountRate);
+                    var discountedPrice = shoppingCartItem.OriginalPrice - discountAmount;
+
+                    subDiscountedTotal = discountedPrice * shoppingCartItem.Amount;
                 }
 
                 decimal taxTotal;

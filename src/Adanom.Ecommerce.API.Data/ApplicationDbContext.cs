@@ -180,6 +180,11 @@ namespace Adanom.Ecommerce.API.Data
                 e.Property(e => e.DiscountedPrice).HasPrecision(10, 2);
             });
 
+            modelBuilder.Entity<User>(e =>
+            {
+                e.Property(e => e.DefaultDiscountRate).HasPrecision(10, 2);
+            });
+
             #endregion
 
             base.OnModelCreating(modelBuilder);
