@@ -50,7 +50,8 @@ namespace Adanom.Ecommerce.API.Handlers
                     options.AfterMap((source, target) =>
                     {
                         target.LastModifiedAtUtc = DateTime.UtcNow;
-                        target.Price = productPrice.DiscountedPrice ?? productPrice.OriginalPrice;
+                        target.OriginalPrice = productPrice.OriginalPrice;
+                        target.DiscountedPrice = productPrice.DiscountedPrice;
                     });
                 });
 

@@ -176,7 +176,8 @@ namespace Adanom.Ecommerce.API.Data
 
             modelBuilder.Entity<ShoppingCartItem>(e =>
             {
-                e.Property(e => e.Price).HasPrecision(10, 2);
+                e.Property(e => e.OriginalPrice).HasPrecision(10, 2);
+                e.Property(e => e.DiscountedPrice).HasPrecision(10, 2);
             });
 
             #endregion

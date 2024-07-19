@@ -78,11 +78,16 @@ namespace Adanom.Ecommerce.API.Handlers
                     continue;
                 }
 
-                var price = productPrice!.DiscountedPrice ?? productPrice.OriginalPrice;
-
-                if (price != item.Price)
+                if (productPrice!.OriginalPrice != item.OriginalPrice)
                 {
-                    item.Price = price;
+                    item.OriginalPrice = productPrice.OriginalPrice;
+
+                    response.HasPriceChanges = true;
+                }
+
+                if (productPrice!.DiscountedPrice != item.DiscountedPrice)
+                {
+                    item.DiscountedPrice = productPrice.DiscountedPrice;
 
                     response.HasPriceChanges = true;
                 }

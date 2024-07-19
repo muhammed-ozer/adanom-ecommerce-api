@@ -29,13 +29,13 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 total = await shoppingCartItemsQuery
                     .Where(e => e.ShoppingCart.UserId == command.UserId)
-                    .SumAsync(e => e.Amount * e.Price);
+                    .SumAsync(e => e.Amount * (e.DiscountedPrice != null ? e.DiscountedPrice.Value : e.OriginalPrice));
             }
             else 
             {
                 total = await shoppingCartItemsQuery
                     .Where(e => e.ShoppingCart.Id == command.Id)
-                    .SumAsync(e => e.Amount * e.Price);
+                    .SumAsync(e => e.Amount * (e.DiscountedPrice != null ? e.DiscountedPrice.Value : e.OriginalPrice));
             }
 
             return total;
