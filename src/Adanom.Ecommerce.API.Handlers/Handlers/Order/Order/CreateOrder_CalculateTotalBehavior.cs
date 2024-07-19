@@ -25,8 +25,10 @@
                 return null;
             }
 
-            orderResponse.GrandTotal = orderResponse.Items.Sum(e => e.Total) + orderResponse.ShippingFeeSubTotal + orderResponse.ShippingFeeTax;
-            orderResponse.SubTotal = orderResponse.Items.Sum(e => e.SubTotal) + orderResponse.ShippingFeeSubTotal;
+            var shippingTotal = orderResponse.ShippingFeeSubTotal + orderResponse.ShippingFeeTax;
+           
+            orderResponse.GrandTotal = orderResponse.Items.Sum(e => e.Total) + shippingTotal;
+            orderResponse.SubTotal = orderResponse.Items.Sum(e => e.SubTotal) + shippingTotal;
             orderResponse.SubTotalDiscount = orderResponse.Items.Sum(e => e.DiscountTotal);
             orderResponse.TaxTotal = orderResponse.Items.Sum(e => e.TaxTotal) + orderResponse.ShippingFeeTax;
 

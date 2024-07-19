@@ -63,17 +63,36 @@
                     return null;
                 }
 
-                var totalPrice = shoppingCartItem.Price * shoppingCartItem.Amount;
-                var taxRate = taxCategory.Rate / 100m;
+                var subTotal =  shoppingCartItem.OriginalPrice * shoppingCartItem.Amount;
+                decimal? subDiscountedTotal = null;
 
-                var subTotal = decimal.Round(totalPrice / (1 + taxRate), 2, MidpointRounding.AwayFromZero);
-                var taxTotal = decimal.Round(totalPrice - subTotal, 2, MidpointRounding.AwayFromZero);
+                if (shoppingCartItem.DiscountedPrice != null && shoppingCartItem.DiscountedPrice.Value != 0)
+                {
+                    subDiscountedTotal = shoppingCartItem.DiscountedPrice.Value * shoppingCartItem.Amount;
+                }
+
+                decimal taxTotal;
+
+                if (subDiscountedTotal != null && subDiscountedTotal > 0)
+                {
+                    taxTotal = Calculations.CalculateTaxFromIncludedTaxTotal(subDiscountedTotal.Value, taxCategory.Rate / 100m);
+                }
+                else
+                {
+                    taxTotal = Calculations.CalculateTaxFromIncludedTaxTotal(subTotal, taxCategory.Rate / 100m);
+                }
 
                 checkoutViewItemsResponse.SubTotal += subTotal;
+
+                if (subDiscountedTotal != null && subDiscountedTotal > 0)
+                {
+                    checkoutViewItemsResponse.SubTotalDiscount += subTotal - subDiscountedTotal.Value;
+                }
+
                 checkoutViewItemsResponse.TaxTotal += taxTotal;
             }
 
-            checkoutViewItemsResponse.GrandTotal = checkoutViewItemsResponse.SubTotal + checkoutViewItemsResponse.TaxTotal;
+            checkoutViewItemsResponse.GrandTotal = checkoutViewItemsResponse.SubTotal - checkoutViewItemsResponse.SubTotalDiscount;
 
             checkoutViewItemsResponse.ShoppingCart = shoppingCart;
 

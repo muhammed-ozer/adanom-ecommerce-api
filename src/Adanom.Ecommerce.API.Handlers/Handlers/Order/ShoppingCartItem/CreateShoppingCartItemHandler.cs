@@ -60,7 +60,8 @@ namespace Adanom.Ecommerce.API.Handlers
                     {
                         target.ShoppingCartId = shoppingCart.Id;
                         target.LastModifiedAtUtc = DateTime.UtcNow;
-                        target.Price = productPrice.DiscountedPrice ?? productPrice.OriginalPrice;
+                        target.OriginalPrice = productPrice.OriginalPrice;
+                        target.DiscountedPrice = productPrice.DiscountedPrice;
                     });
                 });
 
@@ -72,7 +73,8 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 shoppingCartItem.Amount += command.Amount;
                 shoppingCartItem.LastModifiedAtUtc = DateTime.UtcNow;
-                shoppingCartItem.Price = productPrice.DiscountedPrice ?? productPrice.OriginalPrice; ;
+                shoppingCartItem.OriginalPrice = productPrice.OriginalPrice;
+                shoppingCartItem.DiscountedPrice = productPrice.DiscountedPrice;
 
                 _applicationDbContext.Update(shoppingCartItem);
             }

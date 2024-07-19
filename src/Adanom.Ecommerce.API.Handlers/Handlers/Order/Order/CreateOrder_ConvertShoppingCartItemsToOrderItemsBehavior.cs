@@ -79,24 +79,37 @@
 
                 var stockUnitType = await _mediator.Send(new GetStockUnitType(productSKU.StockUnitType.Key));
 
-                var totalPrice = shoppingCartItem.Price * shoppingCartItem.Amount;
-                var taxRate = taxCategory.Rate / 100m;
-                var subTotal = decimal.Round(totalPrice / (1 + taxRate), 2, MidpointRounding.AwayFromZero);
-                var taxTotal = decimal.Round(totalPrice - subTotal, 2, MidpointRounding.AwayFromZero);
+                var subTotal = shoppingCartItem.OriginalPrice * shoppingCartItem.Amount;
+                decimal? subDiscountedTotal = null;
+
+                if (shoppingCartItem.DiscountedPrice != null && shoppingCartItem.DiscountedPrice.Value != 0)
+                {
+                    subDiscountedTotal = shoppingCartItem.DiscountedPrice.Value * shoppingCartItem.Amount;
+                }
+
+                decimal taxTotal;
+
+                if (subDiscountedTotal != null && subDiscountedTotal.Value > 0)
+                {
+                    taxTotal = Calculations.CalculateTaxFromIncludedTaxTotal(subDiscountedTotal.Value, taxCategory.Rate / 100m);
+                }
+                else
+                {
+                    taxTotal = Calculations.CalculateTaxFromIncludedTaxTotal(subTotal, taxCategory.Rate / 100m);
+                }
 
                 var orderItem = new OrderItem()
                 {
                     OrderId = orderResponse.Id,
                     ProductId = shoppingCartItem.ProductId,
-                    Price = shoppingCartItem.Price,
+                    Price = shoppingCartItem.DiscountedPrice ?? shoppingCartItem.OriginalPrice,
                     Amount = shoppingCartItem.Amount,
                     AmountUnit = stockUnitType.Name,
                     TaxRate = taxCategory.Rate,
                     TaxTotal = taxTotal,
-                    SubTotal = subTotal,
-                    Total = totalPrice,
-                    DiscountRate = 0,
-                    DiscountTotal = 0,
+                    SubTotal = shoppingCartItem.OriginalPrice * shoppingCartItem.Amount,
+                    Total = (shoppingCartItem.DiscountedPrice ?? shoppingCartItem.OriginalPrice) * shoppingCartItem.Amount,
+                    DiscountTotal = (subTotal - subDiscountedTotal) ?? 0,
                 };
 
                 orderItems.Add(orderItem);

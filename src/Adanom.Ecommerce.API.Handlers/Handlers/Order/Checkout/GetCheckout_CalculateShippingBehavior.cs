@@ -46,7 +46,7 @@
                 checkoutViewItemsResponse.ShippingFeeTax = shippingProvider.FeeTax;
             }
 
-            checkoutViewItemsResponse.SubTotal += checkoutViewItemsResponse.ShippingFeeSubTotal;
+            checkoutViewItemsResponse.SubTotal += checkoutViewItemsResponse.ShippingFeeSubTotal + checkoutViewItemsResponse.ShippingFeeTax;
             checkoutViewItemsResponse.TaxTotal += checkoutViewItemsResponse.ShippingFeeTax;
 
             checkoutViewItemsResponse.GrandTotal += checkoutViewItemsResponse.ShippingFeeSubTotal + checkoutViewItemsResponse.ShippingFeeTax;
