@@ -32,7 +32,7 @@ namespace Adanom.Ecommerce.API.Data.Models
         [ProtectedPersonalData]
         public new string PhoneNumber { get; set; } = null!;
 
-        public byte DefaultDiscountRate { get; set; }
+        public decimal DefaultDiscountRate { get; set; }
 
         public bool AllowCommercialEmails { get; set; }
 

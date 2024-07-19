@@ -1,4 +1,6 @@
-﻿namespace Adanom.Ecommerce.API.Handlers
+﻿using System.Security.Claims;
+
+namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class CreateOrder_ConvertShoppingCartItemsToOrderItems : IPipelineBehavior<CreateOrder, OrderResponse?>
     {
@@ -31,6 +33,15 @@
             var orderResponse = await next();
 
             if (orderResponse == null)
+            {
+                return null;
+            }
+
+            var userId = command.Identity.GetUserId();
+
+            var user = await _mediator.Send(new GetUser(userId));
+
+            if (user == null)
             {
                 return null;
             }
@@ -85,6 +96,13 @@
                 if (shoppingCartItem.DiscountedPrice != null && shoppingCartItem.DiscountedPrice.Value != 0)
                 {
                     subDiscountedTotal = shoppingCartItem.DiscountedPrice.Value * shoppingCartItem.Amount;
+                }
+                else if (user.DefaultDiscountRate > 0)
+                {
+                    var discountAmount = Calculations.CalculateDiscountedPriceByDiscountRate(shoppingCartItem.OriginalPrice, user.DefaultDiscountRate);
+                    shoppingCartItem.DiscountedPrice = shoppingCartItem.OriginalPrice - discountAmount;
+
+                    subDiscountedTotal = shoppingCartItem.DiscountedPrice * shoppingCartItem.Amount;
                 }
 
                 decimal taxTotal;

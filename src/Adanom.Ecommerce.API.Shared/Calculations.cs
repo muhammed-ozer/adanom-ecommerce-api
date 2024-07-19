@@ -10,5 +10,14 @@
         }
 
         #endregion
+
+        #region CalculateTaxFromIncludedTaxTotal
+
+        public static decimal CalculateDiscountedPriceByDiscountRate(decimal originalPrice, decimal discountRate)
+        {
+            return decimal.Round((originalPrice * discountRate) / 100, 2, MidpointRounding.AwayFromZero);
+        }
+
+        #endregion
     }
 }

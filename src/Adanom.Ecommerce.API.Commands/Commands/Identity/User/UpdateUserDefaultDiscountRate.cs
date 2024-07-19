@@ -19,7 +19,7 @@ namespace Adanom.Ecommerce.API.Commands
 
         public Guid Id { get; set; }
 
-        public byte DefaultDiscountRate { get; set; }
+        public decimal DefaultDiscountRate { get; set; }
 
         #endregion
     }
