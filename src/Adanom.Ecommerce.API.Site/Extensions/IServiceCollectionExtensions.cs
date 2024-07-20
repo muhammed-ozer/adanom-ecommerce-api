@@ -7,9 +7,13 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
             var uiClientConstantsSection = configuration.GetSection("UIClientConstants");
+            var mailNotificationConstantsSection = configuration.GetSection("MailNotificationConstants");
+
             UIClientConstants.Store.BaseURL = uiClientConstantsSection.GetValue<string>("Store:BaseURL")!;
             UIClientConstants.Auth.BaseURL = uiClientConstantsSection.GetValue<string>("Auth:BaseURL")!;
             UIClientConstants.Admin.BaseURL = uiClientConstantsSection.GetValue<string>("Admin:BaseURL")!;
+
+            MailNotificationConstants.Receivers.NewReturnRequest = mailNotificationConstantsSection.GetValue<string>("Receivers:NewReturnRequest")!;
 
             services.AddApplicationData(configuration);
 

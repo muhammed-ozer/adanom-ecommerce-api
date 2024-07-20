@@ -6,6 +6,10 @@ namespace Adanom.Ecommerce.API.Data.Models
     {
         [EnumDisplayName("Yeni Kullanıcı")]
         [EnumLabelProperties("#ffee93", "#ffffff")]
-        NEW_USER
+        NEW_USER,
+
+        [EnumDisplayName("Yeni İade Talebi")]
+        [EnumLabelProperties("#ffee93", "#ffffff")]
+        NEW_RETURN_REQUEST
     }
 }

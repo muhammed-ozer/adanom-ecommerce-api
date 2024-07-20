@@ -16,6 +16,10 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
                 .ForMember(member => member.DeliveryType, options =>
                     options.MapFrom(e => e.DeliveryType.Key));
 
+            CreateMap<CreateReturnRequestRequest, CreateReturnRequest>();
+
+            CreateMap<CreateReturnRequest, ReturnRequest>();
+
             CreateMap<UpdateReturnRequest_ReturnRequestStatusTypeRequest, UpdateReturnRequest_ReturnRequestStatusType>();
 
             CreateMap<UpdateReturnRequest_ReturnRequestStatusType, ReturnRequest>()
