@@ -54,6 +54,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<AnonymousShoppingCartItemMutations>()
                 .AddType<CheckoutMutations>()
                 .AddType<OrderMutations>()
+                .AddType<ReturnRequestMutations>()
                 .AddType<UserMutations>();
 
             graphqlServices

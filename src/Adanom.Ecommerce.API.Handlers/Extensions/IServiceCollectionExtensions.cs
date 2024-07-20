@@ -123,6 +123,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #region ReturnRequest
 
+                options.AddBehavior<IPipelineBehavior<CreateReturnRequest, ReturnRequestResponse?>, CreateReturnRequest_CreateNotificationBehavior>();
+                options.AddBehavior<IPipelineBehavior<CreateReturnRequest, ReturnRequestResponse?>, CreateReturnRequest_SendMailsBehavior>();
+                options.AddBehavior<IPipelineBehavior<CreateReturnRequest, ReturnRequestResponse?>, CreateReturnRequest_CommitTransactionBehavior>();
+                options.AddBehavior<IPipelineBehavior<CreateReturnRequest, ReturnRequestResponse?>, CreateReturnRequest_CalculateTotalBehavior>();
+                options.AddBehavior<IPipelineBehavior<CreateReturnRequest, ReturnRequestResponse?>, CreateReturnRequest_CreateReturnRequestItemsBehavior>();
+
                 options.AddBehavior<IPipelineBehavior<UpdateReturnRequest_ReturnRequestStatusType, bool>, UpdateReturnRequest_ReturnRequestStatusTypeSendMailsBehavior>();
 
                 #endregion

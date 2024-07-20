@@ -154,6 +154,13 @@ namespace Adanom.Ecommerce.API.Data
                     Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
                                 <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebinizin geri ödemesi yapıldı.</p>
                                 <p>Bu geri ödemenin kartınıza/hesabınıza yansıması bankanıza göre değişiklik gösterebilir. Lütfen bankanızla iletişime geçiniz.</p>"
+                },
+                new()
+                {
+                    Key = MailTemplateKey.ADMIN_RETURN_REQUEST_RECEIVED,
+                    Description = "İade talebi oluştuktan sonra yöneticiye gönderilir",
+                    Subject = "Yeni iade talebi",
+                    Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebini oluşturuldu.</p>"
                 }
             };
         }
