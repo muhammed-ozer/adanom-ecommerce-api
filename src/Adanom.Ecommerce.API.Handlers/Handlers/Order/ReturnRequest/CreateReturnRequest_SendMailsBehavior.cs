@@ -55,7 +55,7 @@ namespace Adanom.Ecommerce.API.Handlers
             var sendToManagerMailCommand = new SendMail()
             {
                 To = MailNotificationConstants.Receivers.NewReturnRequest,
-                Key = MailTemplateKey.RETURN_REQUEST_RECEIVED,
+                Key = MailTemplateKey.ADMIN_RETURN_REQUEST_RECEIVED,
                 Replacements = new Dictionary<string, string>()
                 {
                     { MailConstants.Replacements.User.FullName, $"{user.FirstName} {user.LastName}" },

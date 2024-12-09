@@ -12,5 +12,10 @@
         /// {0}: New return request number replacement
         /// </summary>
         public static string NewReturnRequest = "İade numarası: #{0}";
+
+        /// <summary>
+        /// {0}: New order number replacement
+        /// </summary>
+        public static string NewOrder = "Sipariş numarası: #{0}";
     }
 }

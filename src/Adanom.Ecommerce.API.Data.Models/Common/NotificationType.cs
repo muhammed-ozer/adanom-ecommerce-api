@@ -10,6 +10,10 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         [EnumDisplayName("Yeni İade Talebi")]
         [EnumLabelProperties("#ffee93", "#ffffff")]
-        NEW_RETURN_REQUEST
+        NEW_RETURN_REQUEST,
+
+        [EnumDisplayName("Yeni Sipariş")]
+        [EnumLabelProperties("#ffee93", "#ffffff")]
+        NEW_ORDER
     }
 }

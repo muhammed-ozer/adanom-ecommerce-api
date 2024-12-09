@@ -4,6 +4,8 @@
     {
         public static class Receivers
         {
+            public static string NewOrder = "";
+
             public static string NewReturnRequest = "";
         }
     }
