@@ -38,7 +38,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
                     if (!string.IsNullOrEmpty(command.Filter.Query))
                     {
-                        returnRequestsQuery = returnRequestsQuery.Where(e => e.ReturnRequestNumber.Contains(command.Filter.Query, StringComparison.InvariantCultureIgnoreCase));
+                        returnRequestsQuery = returnRequestsQuery.Where(e => e.ReturnRequestNumber.Contains(command.Filter.Query));
                     }
 
                     if (command.Filter.UserId != null && command.Filter.UserId != Guid.Empty)
