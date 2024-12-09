@@ -1,4 +1,5 @@
 ﻿using Adanom.Ecommerce.API.Logging.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Adanom.Ecommerce.API.Logging
 {
@@ -21,6 +22,8 @@ namespace Adanom.Ecommerce.API.Logging
 
         #region ILogService Members
 
+        #region CreateAsync
+
         public async Task CreateAsync(BaseLogRequest request)
         {
             switch (request)
@@ -38,6 +41,46 @@ namespace Adanom.Ecommerce.API.Logging
                     break;
             }
         }
+
+        #endregion
+
+        #region DeleteExpiredAdminLogsAsync
+
+        public async Task DeleteExpiredAdminLogsAsync()
+        {
+            var currentExpirationTimeUtc = DateTime.UtcNow.AddMonths(3 * -1);
+
+            try
+            {
+                await _logDbContext.AdminTransactionLogs
+                    .Where(e => e.CreatedAtUtc <= currentExpirationTimeUtc)
+                    .ExecuteDeleteAsync();
+            }
+            catch
+            {
+            }
+        }
+
+        #endregion
+
+        #region DeleteExpiredCustomerLogsAsync
+
+        public async Task DeleteExpiredCustomerLogsAsync()
+        {
+            var currentExpirationTimeUtc = DateTime.UtcNow.AddYears(1 * -1);
+
+            try
+            {
+                await _logDbContext.CustomerTransactionLogs
+                    .Where(e => e.CreatedAtUtc <= currentExpirationTimeUtc)
+                    .ExecuteDeleteAsync();
+            }
+            catch
+            {
+            }
+        }
+
+        #endregion
 
         #endregion
 
