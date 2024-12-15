@@ -117,6 +117,18 @@
                     productsQuery = productsQuery.Where(e => e.IsInHighlights);
                 }
 
+                if (command.Filter.IsInProductsOfTheWeek != null)
+                {
+                    if (command.Filter.IsInProductsOfTheWeek.Value)
+                    {
+                        productsQuery = productsQuery.Where(e => e.IsInProductsOfTheWeek);
+                    }
+                    else
+                    {
+                        productsQuery = productsQuery.Where(e => !e.IsInProductsOfTheWeek);
+                    }
+                }
+
                 if (command.Filter.MinimumPrice != null)
                 {
                     productsQuery = productsQuery.Where(e => 
