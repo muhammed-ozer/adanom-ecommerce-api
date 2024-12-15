@@ -36,6 +36,10 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
 
             CreateMap<UpdateProductIsInHighlights, Product>();
 
+            CreateMap<UpdateProductIsInProductsOfTheWeekRequest, UpdateProductIsInProductsOfTheWeek>();
+
+            CreateMap<UpdateProductIsInProductsOfTheWeek, Product>();
+
             CreateMap<UpdateProductDisplayOrderRequest, UpdateProductDisplayOrder>();
 
             CreateMap<UpdateProductDisplayOrder, Product>();

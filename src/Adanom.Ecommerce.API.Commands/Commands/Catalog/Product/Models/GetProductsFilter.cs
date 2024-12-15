@@ -18,6 +18,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public bool? IsInHighlights { get; set; }
 
+        public bool? IsInProductsOfTheWeek { get; set; }
+
         public long? BrandId { get; set; }
 
         public ICollection<long>? ProductSpecificationAttributeIds { get; set; }

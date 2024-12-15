@@ -119,6 +119,22 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Mutations
 
         #endregion
 
+        #region UpdateProductIsInProductsOfTheWeekAsync
+
+        [GraphQLDescription("Updates a product is in products of the week")]
+        public async Task<bool> UpdateProductIsInProductsOfTheWeekAsync(
+            UpdateProductIsInProductsOfTheWeekRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new UpdateProductIsInProductsOfTheWeek(identity));
+
+            return await mediator.Send(command); ;
+        }
+
+        #endregion
+
         #region UpdateProductDisplayOrderAsync
 
         [GraphQLDescription("Updates a product display order")]
