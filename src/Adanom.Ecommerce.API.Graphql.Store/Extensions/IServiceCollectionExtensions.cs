@@ -61,6 +61,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<BrandResolvers>()
                 .AddType<ProductCategoryResolvers>()
                 .AddType<ProductPriceResolvers>()
+                .AddType<ProductSKUResolvers>()
                 .AddType<ProductResolvers>()
                 .AddType<ProductReviewResolvers>()
                 .AddType<ProductSpecificationAttributeGroupResolvers>()
