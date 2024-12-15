@@ -30,8 +30,8 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
            [Service] IMediator mediator)
         {
             var children = await mediator.Send(new GetProductCategories(new GetProductCategoriesFilter()
-            { 
-                ParentId = productCategoryResponse.ParentId
+            {
+                ParentId = productCategoryResponse.Id
             }));
 
             return children.Rows;
