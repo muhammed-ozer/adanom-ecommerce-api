@@ -35,9 +35,9 @@
             {
                 #region Apply filtering
 
-                if (command.Filter.ProductCategoryId != null)
+                if (command.Filter.ProductCategoryUrlSlugs != null && command.Filter.ProductCategoryUrlSlugs.Count > 0)
                 {
-                    var childProductCategoriesIds = await GetChildProductCategoriesIdsAsync(command.Filter.ProductCategoryId.Value);
+                    var childProductCategoriesIds = await GetChildProductCategoriesIdsAsync(command.Filter.ProductCategoryUrlSlugs);
 
                     productsQuery = _applicationDbContext.Product_ProductCategory_Mappings
                                                 .Where(e => childProductCategoriesIds.Contains(e.ProductCategoryId))
@@ -53,10 +53,14 @@
                                                 .Distinct();
                 }
 
-                if (command.Filter.BrandId != null)
+                if (command.Filter.BrandUrlSlugs != null && command.Filter.BrandUrlSlugs.Count > 0)
                 {
                     productsQuery = _applicationDbContext.Products
-                                            .Where(e => e.BrandId == command.Filter.BrandId);
+                      .Where(p => p.BrandId.HasValue && _applicationDbContext.Brands
+                          .Where(b => command.Filter.BrandUrlSlugs.Contains(b.UrlSlug))
+                          .Select(b => b.Id)
+                          .ToList()
+                          .Contains(p.BrandId.Value));
                 }
 
                 if (!string.IsNullOrEmpty(command.Filter.Query))
@@ -208,16 +212,28 @@
 
         #region GetChildProductCategoriesIdsAsync
 
-        private async Task<List<long>> GetChildProductCategoriesIdsAsync(long categoryId)
+        private async Task<List<long>> GetChildProductCategoriesIdsAsync(ICollection<string> urlSlugs)
         {
-            var allProductCategories = await _applicationDbContext.ProductCategories.ToListAsync();
+            // Get the parent categories based on the provided URL slugs
+            var parentCategories = await _applicationDbContext.ProductCategories
+                .Where(e => e.DeletedAtUtc == null && urlSlugs.Contains(e.UrlSlug))
+                .ToListAsync();
+
+            if (!parentCategories.Any())
+            {
+                return [];
+            }
+
+            var allProductCategories = await _applicationDbContext.ProductCategories
+                .Where(e => e.DeletedAtUtc == null)
+                .ToListAsync();
 
             List<long> childProductCategoriesIds = new List<long>();
 
             // Helper method that finds children recursively
             void FindChildren(long parentId)
             {
-                var children = allProductCategories.Where(c => c.ParentId == parentId).ToList();
+                var children = allProductCategories.Where(c => c.DeletedAtUtc == null && c.ParentId == parentId).ToList();
 
                 foreach (var child in children)
                 {
@@ -226,10 +242,12 @@
                 }
             }
 
-            // Find the first category and all its children
-            childProductCategoriesIds.Add(categoryId); // Add yourself
-
-            FindChildren(categoryId);
+            // Find all categories and their children for each parent category
+            foreach (var parentCategory in parentCategories)
+            {
+                childProductCategoriesIds.Add(parentCategory.Id); // Add the parent category itself
+                FindChildren(parentCategory.Id);
+            }
 
             return childProductCategoriesIds;
         }  
@@ -258,6 +276,7 @@
             var productCategoriesQuery = productsQuery
                 .SelectMany(e => e.Product_ProductCategory_Mappings)
                 .Select(e => e.ProductCategory)
+                .Where(e => e.DeletedAtUtc == null)
                 .Distinct();
 
             productFilterResponse.ProductCategories = _mapper
@@ -266,6 +285,7 @@
             var productSpecificationAttributesQuery = productsQuery
                 .SelectMany(e => e.Product_ProductSpecificationAttribute_Mappings
                 .Select(e => e.ProductSpecificationAttribute))
+                .Where(e => e.DeletedAtUtc == null)
                 .Distinct();
 
             productFilterResponse.ProductSpecificationAttributes = _mapper
@@ -274,6 +294,7 @@
             var brandsQuery = productsQuery
                 .Where(e => e.BrandId != null)
                 .Select(e => e.Brand)
+                .Where(e => e.DeletedAtUtc == null)
                 .Distinct();
 
             productFilterResponse.Brands = _mapper
