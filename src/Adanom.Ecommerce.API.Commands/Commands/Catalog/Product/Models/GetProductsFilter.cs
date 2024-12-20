@@ -8,8 +8,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public string? Query { get; set; }
 
-        public long? ProductCategoryId { get; set; }
-
         public bool? OutOfStock { get; set; }
 
         public bool? IsActive { get; set; }
@@ -20,8 +18,13 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public bool? IsInProductsOfTheWeek { get; set; }
 
-        public long? BrandId { get; set; }
+        [GraphQLName("productCategories")]
+        public ICollection<string>? ProductCategoryUrlSlugs { get; set; }
 
+        [GraphQLName("brands")]
+        public ICollection<string>? BrandUrlSlugs { get; set; }
+
+        [GraphQLName("productSpecificationAttributes")]
         public ICollection<long>? ProductSpecificationAttributeIds { get; set; }
 
         public decimal? MinimumPrice { get; set; }
