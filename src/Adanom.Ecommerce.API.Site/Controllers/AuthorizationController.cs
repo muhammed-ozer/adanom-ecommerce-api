@@ -95,6 +95,9 @@ namespace Adanom.Ecommerce.API.Site.Controllers
                 identity.AddClaim(Claims.FamilyName, userResponse.LastName, Destinations.AccessToken);
                 identity.AddClaim(Claims.EmailVerified, userResponse.EmailConfirmed.ToString(), Destinations.AccessToken);
                 identity.AddClaim(Claims.PhoneNumber, userResponse.PhoneNumber, Destinations.AccessToken);
+                identity.AddClaim("AllowCommercialEmails", userResponse.AllowCommercialEmails, Destinations.AccessToken);
+                identity.AddClaim("AllowCommercialSMS", userResponse.AllowCommercialSMS, Destinations.AccessToken);
+                identity.AddClaim("DefaultDiscountRate", userResponse.DefaultDiscountRate.ToString(), Destinations.AccessToken);
 
                 if (userResponse.Roles.Any())
                 {
@@ -164,7 +167,10 @@ namespace Adanom.Ecommerce.API.Site.Controllers
                 LastName = claimsPrincipal.GetClaim(Claims.FamilyName),
                 EmailConfirmed = claimsPrincipal.GetClaim(Claims.EmailVerified),
                 PhoneNumber = claimsPrincipal.GetClaim(Claims.PhoneNumber),
-                Roles = claimsPrincipal.GetClaims(Claims.Role)
+                Roles = claimsPrincipal.GetClaims(Claims.Role),
+                AllowCommercialSMS = claimsPrincipal.GetClaim("AllowCommercialSMS"),
+                AllowCommercialEmails = claimsPrincipal.GetClaim("AllowCommercialEmails"),
+                DefaultDiscountRate = claimsPrincipal.GetClaim("DefaultDiscountRate")
             });
         }
 
