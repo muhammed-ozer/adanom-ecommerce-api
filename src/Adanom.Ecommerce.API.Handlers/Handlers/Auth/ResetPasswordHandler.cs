@@ -1,4 +1,4 @@
-﻿using System.Web;
+﻿using System.Text;
 using Adanom.Ecommerce.API.Services.Mail;
 using Microsoft.AspNetCore.Identity;
 
@@ -34,7 +34,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 return false;
             }
 
-            var token = HttpUtility.UrlDecode(command.Token);
+            var token = Encoding.UTF8.GetString(Convert.FromBase64String(command.Token));
 
             var resetPasswordResult = await _userManager.ResetPasswordAsync(user!, token, command.Password);
 
