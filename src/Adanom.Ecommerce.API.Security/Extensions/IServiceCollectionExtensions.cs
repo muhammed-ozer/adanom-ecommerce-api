@@ -21,7 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = true;
                 options.Password.RequiredLength = 8;
-                options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
 
                 options.ClaimsIdentity.UserNameClaimType = Claims.Email;
                 options.ClaimsIdentity.UserIdClaimType = Claims.Subject;
