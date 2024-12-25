@@ -16,9 +16,9 @@
             {
                 _pageSize = value;
 
-                if (_pageSize <= 10)
+                if (_pageSize <= 5)
                 {
-                    _pageSize = 10;
+                    _pageSize = 5;
                 }
                 else if (_pageSize > 50)
                 {
