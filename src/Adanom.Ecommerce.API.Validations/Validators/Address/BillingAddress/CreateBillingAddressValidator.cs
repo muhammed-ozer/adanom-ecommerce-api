@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Text.RegularExpressions;
+using HotChocolate;
+using HotChocolate.Execution;
 
 namespace Adanom.Ecommerce.API.Validation.Validators
 {
@@ -15,6 +17,9 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                 .NotNull()
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                     .WithMessage("Kullanıcı bilgilerine erişilemiyor.");
+
+            RuleFor(e => e)
+               .CustomAsync(ValidateDoesUserBillingAddressesCountLessThanLimitAsync);
 
             RuleFor(e => e.AddressCityId)
                 .GreaterThan(0)
@@ -105,6 +110,25 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                     ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
                     ErrorMessage = "Bu fatura adresi başlığı kullanımda."
                 });
+            }
+        }
+
+        #endregion
+
+        #region ValidateDoesUserBillingAddressesCountLessThanLimitAsync
+
+        private async Task ValidateDoesUserBillingAddressesCountLessThanLimitAsync(
+            CreateBillingAddress value,
+            ValidationContext<CreateBillingAddress> context,
+            CancellationToken cancellationToken)
+        {
+            var totalCount = await _mediator.Send(new GetBillingAddressesCount(value.Identity));
+
+            if (totalCount >= 10)
+            {
+                var error = new Error("En fazla 10 fatura adresi oluşturabilirsiniz.", ValidationErrorCodesEnum.NOT_ALLOWED.ToString());
+
+                throw new QueryException(error);
             }
         }
 

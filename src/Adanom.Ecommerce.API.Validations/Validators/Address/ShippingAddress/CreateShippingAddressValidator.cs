@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Text.RegularExpressions;
+using HotChocolate;
+using HotChocolate.Execution;
 
 namespace Adanom.Ecommerce.API.Validation.Validators
 {
@@ -15,6 +17,9 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                 .NotNull()
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                     .WithMessage("Kullanıcı bilgilerine erişilemiyor.");
+
+            RuleFor(e => e)
+               .CustomAsync(ValidateDoesUserShippingAddressesCountLessThanLimitAsync);
 
             RuleFor(e => e.AddressCityId)
                 .GreaterThan(0)
@@ -97,6 +102,25 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                     ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
                     ErrorMessage = "Bu adres başlığı kullanımda."
                 });
+            }
+        }
+
+        #endregion
+
+        #region ValidateDoesUserShippingAddressesCountLessThanLimitAsync
+
+        private async Task ValidateDoesUserShippingAddressesCountLessThanLimitAsync(
+            CreateShippingAddress value,
+            ValidationContext<CreateShippingAddress> context,
+            CancellationToken cancellationToken)
+        {
+            var totalCount = await _mediator.Send(new GetShippingAddressesCount(value.Identity));
+
+            if (totalCount >= 10)
+            {
+                var error = new Error("En fazla 10 teslimat adresi oluşturabilirsiniz.", ValidationErrorCodesEnum.NOT_ALLOWED.ToString());
+
+                throw new QueryException(error);
             }
         }
 
