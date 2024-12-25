@@ -1,4 +1,4 @@
-﻿using System.Web;
+﻿using System.Text;
 using Adanom.Ecommerce.API.Services.Mail;
 using Microsoft.AspNetCore.Identity;
 
@@ -35,8 +35,9 @@ namespace Adanom.Ecommerce.API.Handlers
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var base64Token = Convert.ToBase64String(Encoding.UTF8.GetBytes(token));
 
-            var url = $"{UIClientConstants.Auth.BaseURL}/reset-password?email={user!.Email}&token={HttpUtility.UrlEncode(token)}";
+            var url = $"{UIClientConstants.Auth.BaseURL}/reset-password?email={user!.Email}&token={base64Token}";
 
             await _mediator.Publish(new SendMail()
             {
