@@ -38,20 +38,24 @@ namespace Adanom.Ecommerce.API.Handlers
 
             if (command.IsDefault && !billingAddress.IsDefault)
             {
-                var cuurentDefaultBillingAddress = await _applicationDbContext.BillingAddresses
+                var curentDefaultBillingAddress = await _applicationDbContext.BillingAddresses
                     .Where(e => e.DeletedAtUtc == null &&
                                 e.UserId == userId &&
                                 e.IsDefault)
                     .SingleOrDefaultAsync();
 
-                if (cuurentDefaultBillingAddress != null)
+                if (curentDefaultBillingAddress != null)
                 {
-                    cuurentDefaultBillingAddress.IsDefault = false;
+                    curentDefaultBillingAddress.IsDefault = false;
                 }
+            }
+            else if (!command.IsDefault && billingAddress.IsDefault)
+            {
+                billingAddress.IsDefault = false;
             }
             else
             {
-                command.IsDefault = true;
+                command.IsDefault = false;
             }
 
             billingAddress = _mapper.Map(command, billingAddress, options =>
