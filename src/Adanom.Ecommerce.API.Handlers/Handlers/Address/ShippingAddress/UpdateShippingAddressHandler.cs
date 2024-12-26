@@ -38,20 +38,24 @@ namespace Adanom.Ecommerce.API.Handlers
 
             if (command.IsDefault && !shippingAddress.IsDefault)
             {
-                var cuurentDefaultShippingAddress = await _applicationDbContext.ShippingAddresses
+                var curentDefaultShippingAddress = await _applicationDbContext.ShippingAddresses
                     .Where(e => e.DeletedAtUtc == null &&
                                 e.UserId == userId &&
                                 e.IsDefault)
                     .SingleOrDefaultAsync();
 
-                if (cuurentDefaultShippingAddress != null)
+                if (curentDefaultShippingAddress != null)
                 {
-                    cuurentDefaultShippingAddress.IsDefault = false;
+                    curentDefaultShippingAddress.IsDefault = false;
                 }
+            }
+            else if (!command.IsDefault && shippingAddress.IsDefault)
+            {
+                shippingAddress.IsDefault = false; 
             }
             else
             {
-                command.IsDefault = true;
+                command.IsDefault = false;
             }
 
             shippingAddress = _mapper.Map(command, shippingAddress, options =>

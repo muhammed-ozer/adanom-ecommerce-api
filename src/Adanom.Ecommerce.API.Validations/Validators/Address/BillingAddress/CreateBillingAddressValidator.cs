@@ -73,6 +73,14 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                     .WithMessage(e => "Telefon numarası 10 karakterden oluşmalıdır Örnek: 5300000000.")
                     .WithErrorCode(ValidationErrorCodesEnum.GREATER_THAN);
 
+            RuleFor(e => e.Email)
+                .NotEmpty()
+                    .WithMessage("E-posta adresi gereklidir.")
+                    .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
+                .MaximumLength(250)
+                    .WithMessage("E-posta adresi 250 karakterden fazla olmamalıdır.")
+                    .WithErrorCode(ValidationErrorCodesEnum.GREATER_THAN);
+
             RuleFor(e => e.TaxAdministration)
                 .NotEmpty()
                     .WithMessage("Vergi dairesi adı gereklidir.")
@@ -85,8 +93,8 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                 .NotEmpty()
                     .WithMessage(e => "Vergi numarası gereklidir.")
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
-                .Matches(new Regex(@"^\d{11}"))
-                    .WithMessage(e => "Vergi numarası 11 karakterden oluşmalıdır.")
+                .Matches(new Regex(@"^\d{10,11}"))
+                    .WithMessage(e => "Vergi numarası 10 veya 11 karakterden oluşmalıdır.")
                     .WithErrorCode(ValidationErrorCodesEnum.GREATER_THAN);
         }
 
