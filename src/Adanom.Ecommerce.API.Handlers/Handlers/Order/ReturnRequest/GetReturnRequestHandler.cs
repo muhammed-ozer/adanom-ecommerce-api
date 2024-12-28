@@ -1,3 +1,5 @@
+using System.Security.Claims;
+
 namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class GetReturnRequestHandler : IRequestHandler<GetReturnRequest, ReturnRequestResponse?>
@@ -28,19 +30,24 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var returnRequestsQuery = _applicationDbContext.ReturnRequests.AsNoTracking();
 
+            if (command.Identity != null)
+            {
+                var userId = command.Identity.GetUserId();
+
+                returnRequestsQuery = returnRequestsQuery.Where(e => e.Order.UserId == userId);
+            }
+
             ReturnRequest? returnRequest;
 
             if (command.ReturnRequestNumber.IsNotNullOrEmpty())
             {
-                returnRequest = await returnRequestsQuery
-                    .Where(e => e.ReturnRequestNumber == command.ReturnRequestNumber)
-                    .SingleOrDefaultAsync();
+                returnRequest = await returnRequestsQuery.Where(e => e.ReturnRequestNumber == command.ReturnRequestNumber)
+                                         .SingleOrDefaultAsync();
             }
             else
             {
-                returnRequest = await returnRequestsQuery
-                    .Where(e => e.Id == command.Id)
-                    .SingleOrDefaultAsync();
+                returnRequest = await returnRequestsQuery.Where(e => e.Id == command.Id)
+                                         .SingleOrDefaultAsync();
             }
 
             var returnRequestResponse = _mapper.Map<ReturnRequestResponse>(returnRequest);

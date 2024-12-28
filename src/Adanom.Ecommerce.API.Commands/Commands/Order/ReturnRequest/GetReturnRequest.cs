@@ -1,3 +1,5 @@
+using System.Security.Claims;
+
 namespace Adanom.Ecommerce.API.Commands
 {
     public class GetReturnRequest : IRequest<ReturnRequestResponse?>
@@ -14,6 +16,18 @@ namespace Adanom.Ecommerce.API.Commands
             ReturnRequestNumber = returnRequest;
         }
 
+        public GetReturnRequest(ClaimsPrincipal identity, long id)
+        {
+            Identity = identity ?? throw new ArgumentNullException(nameof(identity));
+            Id = id;
+        }
+
+        public GetReturnRequest(ClaimsPrincipal identity, string returnRequest)
+        {
+            Identity = identity ?? throw new ArgumentNullException(nameof(identity));
+            ReturnRequestNumber = returnRequest;
+        }
+
         #endregion
 
         #region Properties
@@ -21,6 +35,8 @@ namespace Adanom.Ecommerce.API.Commands
         public long Id { get; set; }
 
         public string? ReturnRequestNumber { get; set; }
+
+        public ClaimsPrincipal? Identity { get; }
 
         #endregion
     }

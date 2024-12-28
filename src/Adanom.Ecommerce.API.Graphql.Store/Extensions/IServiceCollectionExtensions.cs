@@ -38,8 +38,10 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<SliderItemQueries>()
                 .AddType<ShoppingCartQueries>()
                 .AddType<ShoppingCartItemQueries>()
+                .AddType<AnonymousShoppingCartQueries>()
                 .AddType<AnonymousShoppingCartItemQueries>()
                 .AddType<OrderQueries>()
+                .AddType<ReturnRequestQueries>()
                 .AddType<CheckoutQueries>();
 
             graphqlServices
@@ -72,8 +74,12 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<BillingAddressResolvers>()
                 .AddType<SliderItemResolvers>()
                 .AddType<ShoppingCartResolvers>()
+                .AddType<AnonymousShoppingCartResolvers>()
+                .AddType<AnonymousShoppingCartItemResolvers>()
                 .AddType<OrderResolvers>()
-                .AddType<OrderItemResolvers>();
+                .AddType<OrderItemResolvers>()
+                .AddType<ReturnRequestResolvers>()
+                .AddType<ReturnRequestItemResolvers>();
 
             return services;
         }
