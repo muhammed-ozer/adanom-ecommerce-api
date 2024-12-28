@@ -1,4 +1,4 @@
-using Adanom.Ecommerce.API.Data.Models;
+using Adanom.Ecommerce.API.Graphql.DataLoaders;
 
 namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 {
@@ -9,11 +9,13 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         public async Task<ProductResponse?> GetProductAsync(
            [Parent] FavoriteItemResponse favoriteItemResponse,
-           [Service] IMediator mediator)
+           [Service] ProductByIdDataLoader dataLoader,
+           [Service] IMediator mediator,
+           [Service] IMapper mapper)
         {
-            var product = await mediator.Send(new GetProduct(favoriteItemResponse.ProductId));
+            var product = await dataLoader.LoadAsync(favoriteItemResponse.ProductId);
 
-            return product;
+            return mapper.Map<ProductResponse>(product);
         }
 
         #endregion

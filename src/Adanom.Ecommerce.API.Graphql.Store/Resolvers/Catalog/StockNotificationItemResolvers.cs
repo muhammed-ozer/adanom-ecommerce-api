@@ -1,3 +1,5 @@
+using Adanom.Ecommerce.API.Graphql.DataLoaders;
+
 namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
 {
     [ExtendObjectType(typeof(StockNotificationItemResponse))]
@@ -7,11 +9,13 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
 
         public async Task<ProductResponse?> GetProductAsync(
            [Parent] StockNotificationItemResponse stockNotificationItemResponse,
-           [Service] IMediator mediator)
+           [Service] ProductByIdDataLoader dataLoader,
+           [Service] IMediator mediator,
+           [Service] IMapper mapper)
         {
-            var product = await mediator.Send(new GetProduct(stockNotificationItemResponse.ProductId));
+            var product = await dataLoader.LoadAsync(stockNotificationItemResponse.ProductId);
 
-            return product;
+            return mapper.Map<ProductResponse>(product);
         }
 
         #endregion
