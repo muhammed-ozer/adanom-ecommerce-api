@@ -1,3 +1,5 @@
+using Adanom.Ecommerce.API.Graphql.DataLoaders;
+
 namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
 {
     [ExtendObjectType(typeof(ProductSKUResponse))]
@@ -20,16 +22,18 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
 
         public async Task<ProductPriceResponse?> GetProductPriceAsync(
            [Parent] ProductSKUResponse productSKUResponse,
-           [Service] IMediator mediator)
+           [Service] ProductPriceByIdDataLoader dataLoader,
+           [Service] IMediator mediator,
+           [Service] IMapper mapper)
         {
             if (productSKUResponse == null)
             {
                 return null;
             }
 
-            var productPrice = await mediator.Send(new GetProductPrice(productSKUResponse.ProductPriceId));
+            var productPrice = await dataLoader.LoadAsync(productSKUResponse.ProductPriceId);
 
-            return productPrice;
+            return mapper.Map<ProductPriceResponse>(productPrice);
         }
 
         #endregion

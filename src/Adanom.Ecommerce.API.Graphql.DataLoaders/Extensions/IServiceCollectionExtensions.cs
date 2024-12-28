@@ -11,8 +11,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             graphqlServices
                 .AddDataLoader<ProductSKUByIdDataLoader>()
-                .AddDataLoader<ProductSKUByCodeDataLoader>();
-                
+                .AddDataLoader<ProductSKUByCodeDataLoader>()
+                .AddDataLoader<ProductPriceByIdDataLoader>();
 
             return services;
         }
