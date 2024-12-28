@@ -5,8 +5,8 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Queries
     {
         #region GetAnonymousShoppingCartItemsCountAsync
 
-        [GraphQLDescription("Gets anonymous shopping cart items count")]
         [AllowAnonymous]
+        [GraphQLDescription("Gets anonymous shopping cart items count")]
         public async Task<int> GetAnonymousShoppingCartItemsCountAsync(
             Guid anonymousSHoppingCartId,
             [Service] IMediator mediator)
