@@ -1,8 +1,6 @@
-using System.Security.Claims;
-
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class CreateAnonymousShoppingCartItem : IRequest<bool>
+    public class CreateAnonymousShoppingCartItem : IRequest<CreateAnonymousShoppingCartItemResponse>
     {
         #region Ctor
 

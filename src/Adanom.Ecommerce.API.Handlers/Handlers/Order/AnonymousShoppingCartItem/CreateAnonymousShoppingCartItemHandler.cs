@@ -1,6 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class CreateAnonymousShoppingCartItemHandler : IRequestHandler<CreateAnonymousShoppingCartItem, bool>
+    public sealed class CreateAnonymousShoppingCartItemHandler : IRequestHandler<CreateAnonymousShoppingCartItem, CreateAnonymousShoppingCartItemResponse>
     {
         #region Fields
 
@@ -26,9 +26,10 @@
 
         #region IRequestHandler Members
 
-        public async Task<bool> Handle(CreateAnonymousShoppingCartItem command, CancellationToken cancellationToken)
+        public async Task<CreateAnonymousShoppingCartItemResponse> Handle(CreateAnonymousShoppingCartItem command, CancellationToken cancellationToken)
         {
             var anonymousShoppingCartResponse = new AnonymousShoppingCartResponse();
+            var createAnonymousShoppingCartItemResponse = new CreateAnonymousShoppingCartItemResponse();
 
             if (command.AnonymousShoppingCartId != null)
             {
@@ -36,7 +37,7 @@
 
                 if (anonymousShoppingCartResponse == null)
                 {
-                    return false;
+                    return createAnonymousShoppingCartItemResponse;
                 }
             }
             else
@@ -45,7 +46,7 @@
 
                 if (anonymousShoppingCartResponse == null)
                 {
-                    return false;
+                    return createAnonymousShoppingCartItemResponse;
                 }
             }
 
@@ -92,10 +93,13 @@
                     Exception = exception.ToString()
                 }));
 
-                return false;
+                return createAnonymousShoppingCartItemResponse;
             }
 
-            return true;
+            createAnonymousShoppingCartItemResponse.IsSuccess = true;
+            createAnonymousShoppingCartItemResponse.AnonymousShoppingCart = anonymousShoppingCartResponse;
+
+            return createAnonymousShoppingCartItemResponse;
         }
 
         #endregion
