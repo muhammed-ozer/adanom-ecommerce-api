@@ -97,11 +97,13 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         public async Task<ImageResponse?> GetDefaultImageAsync(
            [Parent] ProductResponse productResponse,
-           [Service] IMediator mediator)
+           [Service] DefaultEntityImageDataLoader dataLoader,
+           [Service] IMediator mediator,
+           [Service] IMapper mapper)
         {
-            var image = await mediator.Send(new GetEntityImage(productResponse.Id, EntityType.PRODUCT, true));
+            var defaultImage = await dataLoader.LoadAsync((productResponse.Id, EntityType.PRODUCT));
 
-            return image;
+            return mapper.Map<ImageResponse>(defaultImage);
         }
 
         #endregion
