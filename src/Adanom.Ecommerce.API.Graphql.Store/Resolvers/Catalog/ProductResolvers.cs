@@ -82,11 +82,13 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
 
         public async Task<IEnumerable<ImageResponse>> GetImagesAsync(
            [Parent] ProductResponse productResponse,
-           [Service] IMediator mediator)
+           [Service] ImagesByEntityDataLoader dataLoader,
+           [Service] IMediator mediator,
+           [Service] IMapper mapper)
         {
-            var images = await mediator.Send(new GetEntityImages(productResponse.Id, EntityType.PRODUCT));
+            var images = await dataLoader.LoadAsync((productResponse.Id, EntityType.PRODUCT));
 
-            return images;
+            return mapper.Map<List<ImageResponse>>(images);
         }
 
         #endregion
