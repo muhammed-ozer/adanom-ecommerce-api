@@ -33,6 +33,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddApplicationScheduler(configuration);
 
             services.AddApplicationGraphql(configuration);
+            services.AddApplicationGraphqlDataLoader(configuration);
             services.AddApplicationGraphqlAdmin(configuration);
             services.AddApplicationGraphqlAuth(configuration);
             services.AddApplicationGraphqlStore(configuration);
