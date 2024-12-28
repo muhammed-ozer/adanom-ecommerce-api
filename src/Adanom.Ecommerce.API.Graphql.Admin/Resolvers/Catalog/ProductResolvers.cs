@@ -1,4 +1,5 @@
 using Adanom.Ecommerce.API.Data.Models;
+using Adanom.Ecommerce.API.Graphql.DataLoaders;
 
 namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 {
@@ -40,11 +41,13 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         public async Task<ProductSKUResponse?> GetProductSKUAsync(
            [Parent] ProductResponse productResponse,
-           [Service] IMediator mediator)
+           [Service] ProductSKUByIdDataLoader dataLoader,
+           [Service] IMediator mediator,
+           [Service] IMapper mapper)
         {
-            var productSKU = await mediator.Send(new GetProductSKU(productResponse.ProductSKUId));
+            var productSKU = await dataLoader.LoadAsync(productResponse.ProductSKUId);
 
-            return productSKU;
+            return mapper.Map<ProductSKUResponse>(productSKU);
         }
 
         #endregion
