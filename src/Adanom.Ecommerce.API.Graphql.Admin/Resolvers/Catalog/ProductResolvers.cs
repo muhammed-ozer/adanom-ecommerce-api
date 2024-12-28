@@ -10,16 +10,18 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         public async Task<BrandResponse?> GetBrandAsync(
            [Parent] ProductResponse productResponse,
-           [Service] IMediator mediator)
+           [Service] BrandByIdDataLoader dataLoader,
+           [Service] IMediator mediator,
+           [Service] IMapper mapper)
         {
             if (productResponse.BrandId == null)
             {
                 return null;
             }
 
-            var brand = await mediator.Send(new GetBrand(productResponse.BrandId.Value));
+            var brand = await dataLoader.LoadAsync(productResponse.BrandId.Value);
 
-            return brand;
+            return mapper.Map<BrandResponse>(brand);
         }
 
         #endregion

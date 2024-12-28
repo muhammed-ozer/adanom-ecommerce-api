@@ -14,6 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddDataLoader<ProductSKUByIdDataLoader>()
                 .AddDataLoader<ProductSKUByCodeDataLoader>()
                 .AddDataLoader<ProductPriceByIdDataLoader>()
+                .AddDataLoader<BrandByIdDataLoader>()
                 .AddDataLoader<ImagesByEntityDataLoader>()
                 .AddDataLoader<EntityImageDataLoader>()
                 .AddDataLoader<DefaultEntityImageDataLoader>();
