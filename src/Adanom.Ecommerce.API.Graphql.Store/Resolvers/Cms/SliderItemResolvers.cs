@@ -1,4 +1,6 @@
+using Adanom.Ecommerce.API.Commands.Models;
 using Adanom.Ecommerce.API.Data.Models;
+using Adanom.Ecommerce.API.Graphql.DataLoaders;
 
 namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
 {
@@ -9,11 +11,13 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
 
         public async Task<ImageResponse?> GetImageAsync(
            [Parent] SliderItemResponse sliderItemResponse,
-           [Service] IMediator mediator)
+           [Service] EntityImageDataLoader dataLoader,
+           [Service] IMediator mediator,
+           [Service] IMapper mapper)
         {
-            var images = await mediator.Send(new GetEntityImages(sliderItemResponse.Id, EntityType.SLIDERITEM));
+            var image = await dataLoader.LoadAsync((sliderItemResponse.Id, EntityType.SLIDERITEM));
 
-            return images.FirstOrDefault();
+            return mapper.Map<ImageResponse>(image);
         }
 
         #endregion

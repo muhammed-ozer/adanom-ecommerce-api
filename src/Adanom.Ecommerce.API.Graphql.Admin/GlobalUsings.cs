@@ -8,3 +8,4 @@ global using HotChocolate.Authorization;
 global using HotChocolate;
 global using HotChocolate.Types;
 global using MediatR;
+global using AutoMapper;

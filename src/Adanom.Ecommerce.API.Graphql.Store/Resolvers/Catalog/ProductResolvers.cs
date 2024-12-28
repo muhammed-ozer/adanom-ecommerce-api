@@ -1,4 +1,5 @@
 using Adanom.Ecommerce.API.Data.Models;
+using Adanom.Ecommerce.API.Graphql.DataLoaders;
 
 namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
 {
@@ -40,11 +41,13 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
 
         public async Task<ProductSKUResponse?> GetProductSKUAsync(
            [Parent] ProductResponse productResponse,
-           [Service] IMediator mediator)
+           [Service] ProductSKUByIdDataLoader dataLoader,
+           [Service] IMediator mediator,
+           [Service] IMapper mapper)
         {
-            var productSKU = await mediator.Send(new GetProductSKU(productResponse.ProductSKUId));
+            var productSKU = await dataLoader.LoadAsync(productResponse.ProductSKUId);
 
-            return productSKU;
+            return mapper.Map<ProductSKUResponse>(productSKU);
         }
 
         #endregion
@@ -79,11 +82,13 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
 
         public async Task<IEnumerable<ImageResponse>> GetImagesAsync(
            [Parent] ProductResponse productResponse,
-           [Service] IMediator mediator)
+           [Service] ImagesByEntityDataLoader dataLoader,
+           [Service] IMediator mediator,
+           [Service] IMapper mapper)
         {
-            var images = await mediator.Send(new GetEntityImages(productResponse.Id, EntityType.PRODUCT));
+            var images = await dataLoader.LoadAsync((productResponse.Id, EntityType.PRODUCT));
 
-            return images;
+            return mapper.Map<List<ImageResponse>>(images);
         }
 
         #endregion
@@ -92,11 +97,13 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Resolvers
 
         public async Task<ImageResponse?> GetDefaultImageAsync(
            [Parent] ProductResponse productResponse,
-           [Service] IMediator mediator)
+           [Service] DefaultEntityImageDataLoader dataLoader,
+           [Service] IMediator mediator,
+           [Service] IMapper mapper)
         {
-            var image = await mediator.Send(new GetEntityImage(productResponse.Id, EntityType.PRODUCT, true));
+            var defaultImage = await dataLoader.LoadAsync((productResponse.Id, EntityType.PRODUCT));
 
-            return image;
+            return mapper.Map<ImageResponse>(defaultImage);
         }
 
         #endregion

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Adanom.Ecommerce.API.Graphql.DataLoaders\Adanom.Ecommerce.API.Graphql.DataLoaders.csproj" />
+    <ProjectReference Include="..\Adanom.Ecommerce.API.Graphql\Adanom.Ecommerce.API.Graphql.csproj" />
   </ItemGroup>
 
 </Project>

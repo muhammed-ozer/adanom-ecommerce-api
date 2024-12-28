@@ -1,3 +1,5 @@
+using Adanom.Ecommerce.API.Graphql.DataLoaders;
+
 namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 {
     [ExtendObjectType(typeof(AnonymousShoppingCartItemResponse))]
@@ -20,11 +22,13 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         public async Task<ProductResponse?> GetProductAsync(
            [Parent] AnonymousShoppingCartItemResponse anonymousShoppingCartItemResponse,
-           [Service] IMediator mediator)
+           [Service] ProductByIdDataLoader dataLoader,
+           [Service] IMediator mediator,
+           [Service] IMapper mapper)
         {
-            var product = await mediator.Send(new GetProduct(anonymousShoppingCartItemResponse.ProductId));
+            var product = await dataLoader.LoadAsync(anonymousShoppingCartItemResponse.ProductId);
 
-            return product;
+            return mapper.Map<ProductResponse>(product);
         }
 
         #endregion
