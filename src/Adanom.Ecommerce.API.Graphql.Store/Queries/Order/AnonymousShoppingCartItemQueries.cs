@@ -3,15 +3,15 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Queries
     [ExtendObjectType(OperationTypeNames.Query)]
     public class AnonymousShoppingCartItemQueries
     {
-        #region GetAnonymousShoppingCartItemsCountAsync
+        #region GetAnonymousShoppingCartItemsAsync
 
         [AllowAnonymous]
-        [GraphQLDescription("Gets anonymous shopping cart items count")]
-        public async Task<int> GetAnonymousShoppingCartItemsCountAsync(
-            Guid anonymousSHoppingCartId,
+        [GraphQLDescription("Gets anonymous shopping cart items")]
+        public async Task<IEnumerable<AnonymousShoppingCartItemResponse>> GetAnonymousShoppingCartItemsAsync(
+            GetAnonymousShoppingCartItemsFilter filter,
             [Service] IMediator mediator)
         {
-            var command = new GetAnonymousShoppingCartItemsCount(anonymousSHoppingCartId);
+            var command = new GetAnonymousShoppingCartItems(filter);
 
             return await mediator.Send(command);
         }

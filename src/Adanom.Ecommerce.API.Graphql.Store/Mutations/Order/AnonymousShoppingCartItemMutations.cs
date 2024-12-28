@@ -7,7 +7,7 @@
 
         [GraphQLDescription("Creates an anonymous shopping cart item")]
         [AllowAnonymous]
-        public async Task<bool> CreateAnonymousShoppingCartItemAsync(
+        public async Task<CreateAnonymousShoppingCartItemResponse> CreateAnonymousShoppingCartItemAsync(
             CreateAnonymousShoppingCartItemRequest request,
             [Service] IMediator mediator,
             [Service] IMapper mapper)

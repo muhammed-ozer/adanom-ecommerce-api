@@ -57,12 +57,13 @@ namespace Adanom.Ecommerce.API.Handlers
             foreach (var item in anonymousShoppingCartItems)
             {
                 var createShoppingCartItemRequest = _mapper.Map<CreateShoppingCartItemRequest>(item);
-
                 var createShoppingCartItemCommand = _mapper.Map(createShoppingCartItemRequest, new CreateShoppingCartItem(command.Identity));
-                var createShoppingCartItemResponse = await _mediator.Send(createShoppingCartItemCommand);
 
-                if (!createShoppingCartItemResponse)
+                try
                 {
+                    await _mediator.Send(createShoppingCartItemCommand);
+                }
+                catch {
                     continue;
                 }
             }
