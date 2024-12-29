@@ -60,54 +60,21 @@ namespace Adanom.Ecommerce.API.Handlers
 
             foreach (var shoppingCartItem in shoppingCartItems)
             {
-                var productPrice = await _mediator.Send(new GetProductPriceByProductId(shoppingCartItem.ProductId));
+                var calculatedItemResponse = await _mediator.Send(new CalculateShoppingCartItemTotalsForCheckoutAndOrder(shoppingCartItem, user));
 
-                if (productPrice == null)
+                if (calculatedItemResponse == null)
                 {
                     return null;
                 }
 
-                var taxCategory = await _mediator.Send(new GetTaxCategory(productPrice.TaxCategoryId));
+                checkoutViewItemsResponse.SubTotal += calculatedItemResponse.SubTotal;
 
-                if (taxCategory == null)
+                if (calculatedItemResponse.SubDiscountedTotal != null && calculatedItemResponse.SubDiscountedTotal > 0)
                 {
-                    return null;
+                    checkoutViewItemsResponse.SubTotalDiscount += calculatedItemResponse.SubTotal - calculatedItemResponse.SubDiscountedTotal.Value;
                 }
 
-                var subTotal =  shoppingCartItem.OriginalPrice * shoppingCartItem.Amount;
-                decimal? subDiscountedTotal = null;
-
-                if (shoppingCartItem.DiscountedPrice != null && shoppingCartItem.DiscountedPrice.Value != 0)
-                {
-                    subDiscountedTotal = shoppingCartItem.DiscountedPrice.Value * shoppingCartItem.Amount;
-                }
-                else if (user.DefaultDiscountRate > 0)
-                {
-                    var discountAmount = Calculations.CalculateDiscountedPriceByDiscountRate(shoppingCartItem.OriginalPrice, user.DefaultDiscountRate);
-                    var discountedPrice = shoppingCartItem.OriginalPrice - discountAmount;
-
-                    subDiscountedTotal = discountedPrice * shoppingCartItem.Amount;
-                }
-
-                decimal taxTotal;
-
-                if (subDiscountedTotal != null && subDiscountedTotal > 0)
-                {
-                    taxTotal = Calculations.CalculateTaxFromIncludedTaxTotal(subDiscountedTotal.Value, taxCategory.Rate / 100m);
-                }
-                else
-                {
-                    taxTotal = Calculations.CalculateTaxFromIncludedTaxTotal(subTotal, taxCategory.Rate / 100m);
-                }
-
-                checkoutViewItemsResponse.SubTotal += subTotal;
-
-                if (subDiscountedTotal != null && subDiscountedTotal > 0)
-                {
-                    checkoutViewItemsResponse.SubTotalDiscount += subTotal - subDiscountedTotal.Value;
-                }
-
-                checkoutViewItemsResponse.TaxTotal += taxTotal;
+                checkoutViewItemsResponse.TaxTotal += calculatedItemResponse.TaxTotal;
             }
 
             checkoutViewItemsResponse.GrandTotal = checkoutViewItemsResponse.SubTotal - checkoutViewItemsResponse.SubTotalDiscount;
