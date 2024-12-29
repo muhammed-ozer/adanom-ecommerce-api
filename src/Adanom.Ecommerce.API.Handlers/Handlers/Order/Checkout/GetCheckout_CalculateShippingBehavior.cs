@@ -28,23 +28,14 @@
                 return null;
             }
 
-            if (command.DeliveryType == DeliveryType.PICK_UP_FROM_STORE)
-            {
-                checkoutViewItemsResponse.IsFreeShipping = true;
-            }
+            var calculatedShippingResponse = await _mediator.Send(new CalculateShippingForCheckoutAndOrder(
+                command.DeliveryType,
+                checkoutViewItemsResponse.GrandTotal,
+                command.ShippingProviderId));
 
-            var shippingProvider = await _mediator.Send(new GetShippingProvider(command.ShippingProviderId!.Value));
-
-            if (shippingProvider!.MinimumFreeShippingTotalPrice <= checkoutViewItemsResponse.GrandTotal)
-            {
-                checkoutViewItemsResponse.IsFreeShipping = true;
-            }
-            else
-            {
-                checkoutViewItemsResponse.IsFreeShipping = false;
-                checkoutViewItemsResponse.ShippingFeeSubTotal = shippingProvider.FeeWithoutTax;
-                checkoutViewItemsResponse.ShippingFeeTax = shippingProvider.FeeTax;
-            }
+            checkoutViewItemsResponse.IsFreeShipping = calculatedShippingResponse!.IsFreeShipping;
+            checkoutViewItemsResponse.ShippingFeeSubTotal = calculatedShippingResponse.ShippingFeeSubTotal;
+            checkoutViewItemsResponse.ShippingFeeTax = calculatedShippingResponse.ShippingFeeTax;
 
             checkoutViewItemsResponse.SubTotal += checkoutViewItemsResponse.ShippingFeeSubTotal + checkoutViewItemsResponse.ShippingFeeTax;
             checkoutViewItemsResponse.TaxTotal += checkoutViewItemsResponse.ShippingFeeTax;
