@@ -65,6 +65,14 @@ namespace Adanom.Ecommerce.API.Data
                 },
                 new()
                 {
+                    Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_NEW,
+                    Description = "Yeni sipariş için kullanıcıya gönderilir.",
+                    Subject = "Siparişiniz oluşturuldu",
+                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
+                                <p><strong>{ORDER_NUMBER}</strong> numaralari siparişiniz oluşturulmuştur.</p>"
+                },
+                new()
+                {
                     Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_IN_PROGRESS,
                     Description = "İşleme alınan sipariş için kullanıcıya gönderilir.",
                     Subject = "Siparişiniz işleme alındı",
