@@ -104,14 +104,13 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #region Order
 
-                options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CreateNotificationBehavior>();
-                options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_SendMailsBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CalculateTotalBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CalculateShippingBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_ConvertShoppingCartItemsToOrderItems>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CreateAddressesBehavior>();
 
+                options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeCreateNotification>();
                 options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeSendMailsBehavior>();
 
                 #endregion

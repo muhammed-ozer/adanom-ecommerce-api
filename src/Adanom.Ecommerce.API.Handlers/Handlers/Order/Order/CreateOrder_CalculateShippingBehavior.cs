@@ -35,25 +35,21 @@
                 return null;
             }
 
-            if (orderResponse.DeliveryType.Key == DeliveryType.PICK_UP_FROM_STORE)
-            {
-                orderResponse.IsFreeShipping = true;
-            }
-
             var grandTotal = orderResponse.Items.Sum(e => e.Total);
 
-            var shippingProvider = await _mediator.Send(new GetShippingProvider(orderResponse.ShippingProviderId!.Value));
+            var calculatedShippingResponse = await _mediator.Send(new CalculateShippingForCheckoutAndOrder(
+                orderResponse.DeliveryType.Key,
+                grandTotal,
+                orderResponse.ShippingProviderId));
 
-            if (shippingProvider!.MinimumFreeShippingTotalPrice <= grandTotal)
+            if (calculatedShippingResponse == null)
             {
-                orderResponse.IsFreeShipping = true;
+                return null;
             }
-            else
-            {
-                orderResponse.IsFreeShipping = false;
-                orderResponse.ShippingFeeSubTotal = shippingProvider.FeeWithoutTax;
-                orderResponse.ShippingFeeTax = shippingProvider.FeeTax;
-            }
+
+            orderResponse.IsFreeShipping = calculatedShippingResponse.IsFreeShipping;
+            orderResponse.ShippingFeeSubTotal = calculatedShippingResponse.ShippingFeeSubTotal;
+            orderResponse.ShippingFeeTax = calculatedShippingResponse.ShippingFeeTax;
 
             return orderResponse;
         }

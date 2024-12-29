@@ -8,7 +8,6 @@ namespace Adanom.Ecommerce.API.Handlers
 
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
-        private readonly IMailService _mailServide;
 
         #endregion
 
@@ -16,12 +15,10 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public UpdateOrder_OrderStatusTypeSendMailsBehavior(
             IMapper mapper,
-            IMediator mediator,
-            IMailService mailService)
+            IMediator mediator)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _mailServide = mailService ?? throw new ArgumentNullException(nameof(mailService));
         }
 
         #endregion
@@ -68,6 +65,24 @@ namespace Adanom.Ecommerce.API.Handlers
                     { MailConstants.Replacements.Order.Number, order.OrderNumber }
                 }
             };
+
+            if (command.OldOrderStatusType == OrderStatusType.PAYMENT_PENDING && orderStatusType == OrderStatusType.NEW)
+            {
+                sendMailCommand.Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_NEW;
+
+                var sendToManagerMailCommand = new SendMail()
+                {
+                    To = MailNotificationConstants.Receivers.NewOrder,
+                    Key = MailTemplateKey.ADMIN_ORDER_RECEIVED,
+                    Replacements = new Dictionary<string, string>()
+                    {
+                        { MailConstants.Replacements.User.FullName, $"{user.FirstName} {user.LastName}" },
+                        { MailConstants.Replacements.Order.Number, order.OrderNumber }
+                    }
+                };
+
+                await _mediator.Publish(sendToManagerMailCommand);
+            }
 
             if (orderStatusType == OrderStatusType.IN_PROGRESS)
             {
