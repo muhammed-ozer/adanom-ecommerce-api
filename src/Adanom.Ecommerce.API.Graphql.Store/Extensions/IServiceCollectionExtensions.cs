@@ -74,6 +74,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<BillingAddressResolvers>()
                 .AddType<SliderItemResolvers>()
                 .AddType<ShoppingCartResolvers>()
+                .AddType<ShoppingCartItemResolvers>()
                 .AddType<AnonymousShoppingCartResolvers>()
                 .AddType<AnonymousShoppingCartItemResolvers>()
                 .AddType<OrderResolvers>()
