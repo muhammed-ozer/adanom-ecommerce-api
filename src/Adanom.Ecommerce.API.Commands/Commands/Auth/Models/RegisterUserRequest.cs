@@ -18,6 +18,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public bool AllowCommercialSMS { get; set; }
 
+        public bool AgreesMembershipAgreement { get; set; }
+
         public bool AgreesDataProtectionPolicy { get; set; }
     }
 }
