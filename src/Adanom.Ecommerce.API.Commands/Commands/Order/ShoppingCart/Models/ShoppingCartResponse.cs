@@ -19,6 +19,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public bool HasNoItem { get; set; }
 
+        public bool HasStocksChanges { get; set; }
+
         public UserResponse? User { get; set; }
 
         public ICollection<ShoppingCartItemResponse> Items { get; set; }
