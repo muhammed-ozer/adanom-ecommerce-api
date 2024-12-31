@@ -11,6 +11,10 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public int Amount { get; set; }
 
+        public decimal OriginalPrice { get; set; }
+
+        public decimal? DiscountedPrice { get; set; }
+
         public Product Product { get; set; } = null!;
 
         public AnonymousShoppingCart AnonymousShoppingCart { get; set; } = null!;
