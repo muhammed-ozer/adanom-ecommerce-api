@@ -56,9 +56,14 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                     .WithMessage(e => "Telefon numaranız 10 karakterden oluşmalıdır Örnek: 5300000000.")
                     .WithErrorCode(ValidationErrorCodesEnum.GREATER_THAN);
 
+            RuleFor(e => e.AgreesMembershipAgreement)
+                .Equal(true)
+                    .WithMessage(e => "Lütfen 'Üyelik Sözleşmesi' ni onaylayınız.")
+                    .WithErrorCode(ValidationErrorCodesEnum.REQUIRED);
+
             RuleFor(e => e.AgreesDataProtectionPolicy)
                 .Equal(true)
-                    .WithMessage(e => "Lütfen 'Aydınlatma Metni' ve 'Üyelik Sözleşmesi' ni onaylayınız.")
+                    .WithMessage(e => "Lütfen KVKK Metni' ni onaylayınız.")
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED);
         }
 
