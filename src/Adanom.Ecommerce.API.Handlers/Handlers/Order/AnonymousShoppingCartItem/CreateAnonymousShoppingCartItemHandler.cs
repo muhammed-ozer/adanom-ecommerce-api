@@ -51,6 +51,12 @@
             }
 
             var anonymousShoppingCartItemResponse = await _mediator.Send(new GetAnonymousShoppingCartItem(anonymousShoppingCartResponse.Id, command.ProductId));
+            var productPrice = await _mediator.Send(new GetProductPriceByProductId(command.ProductId));
+
+            if (productPrice == null)
+            {
+                return createAnonymousShoppingCartItemResponse;
+            }
 
             if (anonymousShoppingCartItemResponse == null)
             {
@@ -59,6 +65,8 @@
                     options.AfterMap((source, target) =>
                     {
                         target.AnonymousShoppingCartId = anonymousShoppingCartResponse.Id;
+                        target.OriginalPrice = productPrice.OriginalPrice;
+                        target.DiscountedPrice = productPrice.DiscountedPrice;
                     });
                 });
 
@@ -69,6 +77,8 @@
                 var anonymousShoppingCartItem = _mapper.Map<AnonymousShoppingCartItem>(anonymousShoppingCartItemResponse);
 
                 anonymousShoppingCartItem.Amount += command.Amount;
+                anonymousShoppingCartItem.OriginalPrice = productPrice.OriginalPrice;
+                anonymousShoppingCartItem.DiscountedPrice = productPrice.DiscountedPrice;
 
                 _applicationDbContext.Update(anonymousShoppingCartItem);
             }

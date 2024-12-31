@@ -33,7 +33,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 config.CreateProjection<AnonymousShoppingCart, AnonymousShoppingCartResponse>()
                         .ForMember(member => member.Total, options =>
                             options.MapFrom(e => e.Items
-                            .Sum(e => e.Amount * e.Product.ProductSKU.ProductPrice.DiscountedPrice ?? e.Amount * e.Product.ProductSKU.ProductPrice.OriginalPrice)))
+                            .Sum(e => e.Amount * e.DiscountedPrice ?? e.Amount * e.OriginalPrice)))
                         .ForMember(e => e.Items, options => options.Ignore());
             });
 
