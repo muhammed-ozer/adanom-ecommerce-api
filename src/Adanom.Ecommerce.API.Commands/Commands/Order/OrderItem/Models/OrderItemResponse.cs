@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public long ProductId { get; set; }
 
-        public decimal Price { get; set; }
+        public decimal TaxExcludedPrice { get; set; }
 
         public int Amount { get; set; }
 

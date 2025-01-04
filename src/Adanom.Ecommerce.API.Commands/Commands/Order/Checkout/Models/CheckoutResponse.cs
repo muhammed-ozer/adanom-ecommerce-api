@@ -12,6 +12,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public decimal ShippingFeeTax { get; set; }
 
+        public decimal? UserDefaultDiscountRateBasedDiscount { get; set; }
+
         public decimal GrandTotal { get; set; }
 
         public bool IsFreeShipping { get; set; }

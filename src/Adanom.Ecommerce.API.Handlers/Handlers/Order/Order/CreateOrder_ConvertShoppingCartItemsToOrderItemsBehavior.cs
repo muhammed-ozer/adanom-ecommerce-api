@@ -9,6 +9,7 @@ namespace Adanom.Ecommerce.API.Handlers
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly ICalculationService _calculationService;
 
         #endregion
 
@@ -17,11 +18,13 @@ namespace Adanom.Ecommerce.API.Handlers
         public CreateOrder_ConvertShoppingCartItemsToOrderItems(
             ApplicationDbContext applicationDbContext,
             IMediator mediator,
-            IMapper mapper)
+            IMapper mapper,
+            ICalculationService calculationService)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _calculationService = calculationService ?? throw new ArgumentNullException(nameof(calculationService));
         }
 
         #endregion
@@ -78,15 +81,27 @@ namespace Adanom.Ecommerce.API.Handlers
                 {
                     OrderId = orderResponse.Id,
                     ProductId = shoppingCartItem.ProductId,
-                    Price = shoppingCartItem.DiscountedPrice ?? shoppingCartItem.OriginalPrice,
+                    TaxExcludedPrice = _calculationService.CalculateTaxExcludedPrice(shoppingCartItem.DiscountedPrice ?? shoppingCartItem.OriginalPrice, calculatedItemResponse.TaxRate),
                     Amount = shoppingCartItem.Amount,
                     AmountUnit = calculatedItemResponse.StockUnitType.Name,
                     TaxRate = calculatedItemResponse.TaxRate,
                     TaxTotal = calculatedItemResponse.TaxTotal,
-                    SubTotal = shoppingCartItem.OriginalPrice * shoppingCartItem.Amount,
-                    Total = (shoppingCartItem.DiscountedPrice ?? shoppingCartItem.OriginalPrice) * shoppingCartItem.Amount,
+                    SubTotal = calculatedItemResponse.SubTotal,
+                    Total = (calculatedItemResponse.SubDiscountedTotal ?? calculatedItemResponse.SubTotal) + calculatedItemResponse.TaxTotal,
                     DiscountTotal = (calculatedItemResponse.SubTotal - calculatedItemResponse.SubDiscountedTotal) ?? 0,
                 };
+
+                if (calculatedItemResponse.UserDefaultDiscountRateBasedDiscount != null && calculatedItemResponse.UserDefaultDiscountRateBasedDiscount > 0)
+                {
+                    if (orderResponse.UserDefaultDiscountRateBasedDiscount == null)
+                    {
+                        orderResponse.UserDefaultDiscountRateBasedDiscount = calculatedItemResponse.UserDefaultDiscountRateBasedDiscount;
+                    }
+                    else
+                    {
+                        orderResponse.UserDefaultDiscountRateBasedDiscount += calculatedItemResponse.UserDefaultDiscountRateBasedDiscount;
+                    }
+                }
 
                 orderItems.Add(orderItem);
 

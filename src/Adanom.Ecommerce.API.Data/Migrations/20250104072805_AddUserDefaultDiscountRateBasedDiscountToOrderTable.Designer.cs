@@ -4,6 +4,7 @@ using Adanom.Ecommerce.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Adanom.Ecommerce.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250104072805_AddUserDefaultDiscountRateBasedDiscountToOrderTable")]
+    partial class AddUserDefaultDiscountRateBasedDiscountToOrderTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -632,14 +635,14 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<long>("OrderId")
                         .HasColumnType("bigint");
 
+                    b.Property<decimal>("Price")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
                     b.Property<long>("ProductId")
                         .HasColumnType("bigint");
 
                     b.Property<decimal>("SubTotal")
-                        .HasPrecision(10, 2)
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<decimal>("TaxExcludedPrice")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
@@ -1333,12 +1336,12 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<long>("OrderItemId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("ReturnRequestId")
-                        .HasColumnType("bigint");
-
-                    b.Property<decimal>("TaxExcludedPrice")
+                    b.Property<decimal>("Price")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
+
+                    b.Property<long>("ReturnRequestId")
+                        .HasColumnType("bigint");
 
                     b.Property<byte>("TaxRate")
                         .HasColumnType("tinyint");

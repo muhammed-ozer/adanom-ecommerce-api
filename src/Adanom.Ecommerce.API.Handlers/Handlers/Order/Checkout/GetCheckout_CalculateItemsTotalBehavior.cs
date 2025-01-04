@@ -23,9 +23,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<CheckoutResponse?> Handle(GetCheckout command, RequestHandlerDelegate<CheckoutResponse?> next, CancellationToken cancellationToken)
         {
-            var checkoutViewItemsResponse = await next();
+            var checkoutResponse = await next();
 
-            if (checkoutViewItemsResponse == null)
+            if (checkoutResponse == null)
             {
                 return null;
             }
@@ -67,21 +67,33 @@ namespace Adanom.Ecommerce.API.Handlers
                     return null;
                 }
 
-                checkoutViewItemsResponse.SubTotal += calculatedItemResponse.SubTotal;
+                checkoutResponse.SubTotal += calculatedItemResponse.SubTotal;
 
                 if (calculatedItemResponse.SubDiscountedTotal != null && calculatedItemResponse.SubDiscountedTotal > 0)
                 {
-                    checkoutViewItemsResponse.SubTotalDiscount += calculatedItemResponse.SubTotal - calculatedItemResponse.SubDiscountedTotal.Value;
+                    checkoutResponse.SubTotalDiscount += calculatedItemResponse.SubTotal - calculatedItemResponse.SubDiscountedTotal.Value;
                 }
 
-                checkoutViewItemsResponse.TaxTotal += calculatedItemResponse.TaxTotal;
+                if (calculatedItemResponse.UserDefaultDiscountRateBasedDiscount != null && calculatedItemResponse.UserDefaultDiscountRateBasedDiscount > 0)
+                {
+                    if (checkoutResponse.UserDefaultDiscountRateBasedDiscount == null)
+                    {
+                        checkoutResponse.UserDefaultDiscountRateBasedDiscount = calculatedItemResponse.UserDefaultDiscountRateBasedDiscount;
+                    }
+                    else
+                    {
+                        checkoutResponse.UserDefaultDiscountRateBasedDiscount += calculatedItemResponse.UserDefaultDiscountRateBasedDiscount;
+                    }
+                }
+
+                checkoutResponse.TaxTotal += calculatedItemResponse.TaxTotal;
             }
 
-            checkoutViewItemsResponse.GrandTotal = checkoutViewItemsResponse.SubTotal - checkoutViewItemsResponse.SubTotalDiscount;
+            checkoutResponse.GrandTotal = checkoutResponse.SubTotal - checkoutResponse.SubTotalDiscount + checkoutResponse.TaxTotal;
 
-            checkoutViewItemsResponse.ShoppingCart = shoppingCart;
+            checkoutResponse.ShoppingCart = shoppingCart;
 
-            return checkoutViewItemsResponse;
+            return checkoutResponse;
         }
 
         #endregion
