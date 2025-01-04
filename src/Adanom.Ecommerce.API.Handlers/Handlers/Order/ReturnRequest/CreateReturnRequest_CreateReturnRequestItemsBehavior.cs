@@ -6,6 +6,7 @@
 
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
+        private readonly ICalculationService _calculationService;
 
         #endregion
 
@@ -13,10 +14,12 @@
 
         public CreateReturnRequest_CreateReturnRequestItemsBehavior(
             IMediator mediator,
-            IMapper mapper)
+            IMapper mapper,
+            ICalculationService calculationService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _calculationService = calculationService ?? throw new ArgumentNullException(nameof(calculationService));
         }
 
         #endregion
@@ -46,11 +49,11 @@
                 var returnRequestItem = new ReturnRequestItem()
                 {
                     OrderItemId = orderItem.Id,
-                    Price = orderItem.Price,
+                    TaxExcludedPrice = orderItem.TaxExcludedPrice,
                     Amount = createReturnRequestItemRequest.Amount,
                     AmountUnit = orderItem.AmountUnit,
                     TaxRate = orderItem.TaxRate,
-                    Total = orderItem.Price * createReturnRequestItemRequest.Amount,
+                    Total = _calculationService.CalculateTaxIncludedPrice(orderItem.TaxExcludedPrice, orderItem.TaxRate) * createReturnRequestItemRequest.Amount,
                     Description = createReturnRequestItemRequest.Description
                 };
 

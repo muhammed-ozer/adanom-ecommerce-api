@@ -8,6 +8,7 @@
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
+        private readonly ICalculationService _calculationService;
 
         #endregion
 
@@ -16,11 +17,13 @@
         public CalculateShoppingCartItemTotalsForCheckoutAndOrderHandler(
             ApplicationDbContext applicationDbContext,
             IMapper mapper,
-            IMediator mediator)
+            IMediator mediator,
+            ICalculationService calculationService)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _calculationService = calculationService ?? throw new ArgumentNullException(nameof(calculationService));
         }
 
         #endregion
@@ -57,29 +60,41 @@
 
             var stockUnitType = await _mediator.Send(new GetStockUnitType(productSKU.StockUnitType.Key));
 
-            var subTotal = shoppingCartItem.OriginalPrice * shoppingCartItem.Amount;
+            var taxExludedOriginalPrice = _calculationService.CalculateTaxExcludedPrice(shoppingCartItem.OriginalPrice, taxCategory.Rate);
+            var subTotal = taxExludedOriginalPrice * shoppingCartItem.Amount;
+
             decimal? subDiscountedTotal = null;
+            decimal? userDefaultDiscountRateBasedDiscountTotal = null;
 
             if (shoppingCartItem.DiscountedPrice != null && shoppingCartItem.DiscountedPrice.Value != 0)
             {
-                subDiscountedTotal = shoppingCartItem.DiscountedPrice.Value * shoppingCartItem.Amount;
+                var taxExludedDiscountedPrice = _calculationService.CalculateTaxExcludedPrice(shoppingCartItem.DiscountedPrice.Value, taxCategory.Rate);
+
+                subDiscountedTotal = taxExludedDiscountedPrice * shoppingCartItem.Amount;
             }
             else if (user.DefaultDiscountRate > 0)
             {
-                var discountAmount = Calculations.CalculateDiscountedPriceByDiscountRate(shoppingCartItem.OriginalPrice, user.DefaultDiscountRate);
-                shoppingCartItem.DiscountedPrice = shoppingCartItem.OriginalPrice - discountAmount;
-                subDiscountedTotal = shoppingCartItem.DiscountedPrice * shoppingCartItem.Amount;
+                shoppingCartItem.DiscountedPrice = _calculationService.CalculateDiscountedPriceByDiscountRate(shoppingCartItem.OriginalPrice, user.DefaultDiscountRate);
+                var taxExludedDiscountedPrice = _calculationService.CalculateTaxExcludedPrice(shoppingCartItem.DiscountedPrice.Value, taxCategory.Rate);
+
+                subDiscountedTotal = taxExludedDiscountedPrice * shoppingCartItem.Amount;
+
+                userDefaultDiscountRateBasedDiscountTotal = shoppingCartItem.Amount * (taxExludedOriginalPrice - taxExludedDiscountedPrice);
             }
 
             decimal taxTotal;
 
             if (subDiscountedTotal != null && subDiscountedTotal.Value > 0)
             {
-                taxTotal = Calculations.CalculateTaxFromIncludedTaxTotal(subDiscountedTotal.Value, taxCategory.Rate / 100m);
+                var tax = _calculationService.CalculateTaxTotal(shoppingCartItem.DiscountedPrice!.Value, taxCategory.Rate);
+
+                taxTotal = shoppingCartItem.Amount * tax;
             }
             else
             {
-                taxTotal = Calculations.CalculateTaxFromIncludedTaxTotal(subTotal, taxCategory.Rate / 100m);
+                var tax = _calculationService.CalculateTaxTotal(shoppingCartItem.OriginalPrice, taxCategory.Rate);
+
+                taxTotal = shoppingCartItem.Amount * tax;
             }
 
             return new CalculateShoppingCartItemTotalsForCheckoutAndOrderResponse()
@@ -88,6 +103,7 @@
                 ProductSKU = productSKU,
                 TaxRate = taxCategory.Rate,
                 TaxTotal = taxTotal,
+                UserDefaultDiscountRateBasedDiscount = userDefaultDiscountRateBasedDiscountTotal,
                 SubTotal = subTotal,
                 SubDiscountedTotal = subDiscountedTotal
             };

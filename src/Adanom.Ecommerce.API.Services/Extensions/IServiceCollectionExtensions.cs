@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Adanom.Ecommerce.API.Services;
+using Adanom.Ecommerce.API.Services.Implementations;
+using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -8,6 +10,8 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddApplicationMailServices(configuration);
             services.AddApplicationAzureServices(configuration);
+
+            services.AddScoped<ICalculationService, CalculationService>();
 
             return services;
         }

@@ -21,28 +21,25 @@
 
         public async Task<CheckoutResponse?> Handle(GetCheckout command, RequestHandlerDelegate<CheckoutResponse?> next, CancellationToken cancellationToken)
         {
-            var checkoutViewItemsResponse = await next();
+            var checkoutResponse = await next();
 
-            if (checkoutViewItemsResponse == null)
+            if (checkoutResponse == null)
             {
                 return null;
             }
 
             var calculatedShippingResponse = await _mediator.Send(new CalculateShippingForCheckoutAndOrder(
                 command.DeliveryType,
-                checkoutViewItemsResponse.GrandTotal,
+                checkoutResponse.GrandTotal,
                 command.ShippingProviderId));
 
-            checkoutViewItemsResponse.IsFreeShipping = calculatedShippingResponse!.IsFreeShipping;
-            checkoutViewItemsResponse.ShippingFeeSubTotal = calculatedShippingResponse.ShippingFeeSubTotal;
-            checkoutViewItemsResponse.ShippingFeeTax = calculatedShippingResponse.ShippingFeeTax;
+            checkoutResponse.IsFreeShipping = calculatedShippingResponse!.IsFreeShipping;
+            checkoutResponse.ShippingFeeSubTotal = calculatedShippingResponse.ShippingFeeSubTotal;
+            checkoutResponse.ShippingFeeTax = calculatedShippingResponse.ShippingFeeTax;
 
-            checkoutViewItemsResponse.SubTotal += checkoutViewItemsResponse.ShippingFeeSubTotal + checkoutViewItemsResponse.ShippingFeeTax;
-            checkoutViewItemsResponse.TaxTotal += checkoutViewItemsResponse.ShippingFeeTax;
+            checkoutResponse.GrandTotal += checkoutResponse.ShippingFeeSubTotal + checkoutResponse.ShippingFeeTax;
 
-            checkoutViewItemsResponse.GrandTotal += checkoutViewItemsResponse.ShippingFeeSubTotal + checkoutViewItemsResponse.ShippingFeeTax;
-
-            return checkoutViewItemsResponse;
+            return checkoutResponse;
         }
 
         #endregion
