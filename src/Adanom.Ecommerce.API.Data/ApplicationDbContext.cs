@@ -136,7 +136,7 @@ namespace Adanom.Ecommerce.API.Data
                 e.Property(e => e.ShippingFeeSubTotal).HasPrecision(10, 2);
                 e.Property(e => e.ShippingFeeTax).HasPrecision(10, 2);
                 e.Property(e => e.SubTotal).HasPrecision(10, 2);
-                e.Property(e => e.SubTotalDiscount).HasPrecision(10, 2);
+                e.Property(e => e.TotalDiscount).HasPrecision(10, 2);
                 e.Property(e => e.UserDefaultDiscountRateBasedDiscount).HasPrecision(10, 2);
                 e.Property(e => e.TaxTotal).HasPrecision(10, 2);
             });
@@ -144,7 +144,7 @@ namespace Adanom.Ecommerce.API.Data
             modelBuilder.Entity<OrderItem>(e =>
             {
                 e.Property(e => e.DiscountTotal).HasPrecision(10, 2);
-                e.Property(e => e.TaxExcludedPrice).HasPrecision(10, 2);
+                e.Property(e => e.Price).HasPrecision(10, 2);
                 e.Property(e => e.SubTotal).HasPrecision(10, 2);
                 e.Property(e => e.TaxTotal).HasPrecision(10, 2);
                 e.Property(e => e.Total).HasPrecision(10, 2);
@@ -163,7 +163,7 @@ namespace Adanom.Ecommerce.API.Data
 
             modelBuilder.Entity<ReturnRequestItem>(e =>
             {
-                e.Property(e => e.TaxExcludedPrice).HasPrecision(10, 2);
+                e.Property(e => e.Price).HasPrecision(10, 2);
                 e.Property(e => e.Total).HasPrecision(10, 2);
             });
 

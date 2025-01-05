@@ -24,5 +24,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public UserResponse? User { get; set; }
 
         public ICollection<ShoppingCartItemResponse> Items { get; set; }
+
+        public ShoppingCartSummaryResponse? Summary { get; set; }
     }
 }

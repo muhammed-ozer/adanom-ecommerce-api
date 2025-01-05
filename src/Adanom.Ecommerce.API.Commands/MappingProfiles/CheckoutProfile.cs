@@ -5,6 +5,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
         public CheckoutProfile()
         {
             CreateMap<CheckoutRequest, GetCheckout>();
+
+            CreateMap<ShoppingCartResponse, CheckoutResponse>();
         }
     }
 }
