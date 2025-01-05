@@ -1,7 +1,7 @@
 ﻿namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class CalculateShoppingCartItemTotalsForCheckoutAndOrderHandler
-        : IRequestHandler<CalculateShoppingCartItemTotalsForCheckoutAndOrder, CalculateShoppingCartItemTotalsForCheckoutAndOrderResponse?>
+    public sealed class CalculateShoppingCartItemSummaryHandler
+        : IRequestHandler<CalculateShoppingCartItemSummary, CalculateShoppingCartItemSummaryResponse?>
     {
         #region Fields
 
@@ -14,7 +14,7 @@
 
         #region Ctor
 
-        public CalculateShoppingCartItemTotalsForCheckoutAndOrderHandler(
+        public CalculateShoppingCartItemSummaryHandler(
             ApplicationDbContext applicationDbContext,
             IMapper mapper,
             IMediator mediator,
@@ -30,7 +30,7 @@
 
         #region IRequestHandler Members
 
-        public async Task<CalculateShoppingCartItemTotalsForCheckoutAndOrderResponse?> Handle(CalculateShoppingCartItemTotalsForCheckoutAndOrder command, CancellationToken cancellationToken)
+        public async Task<CalculateShoppingCartItemSummaryResponse?> Handle(CalculateShoppingCartItemSummary command, CancellationToken cancellationToken)
         {
             var shoppingCartItem = command.ShoppingCartItem;
             var user = command.User;
@@ -49,37 +49,22 @@
                 return null;
             }
 
-            var productSKU = await _mediator.Send(new GetProductSKUByProductId(shoppingCartItem.ProductId));
-
-            if (productSKU == null)
-            {
-                return null;
-            }
-
-            var response = new CalculateShoppingCartItemTotalsForCheckoutAndOrderResponse();
-
-            var stockUnitType = await _mediator.Send(new GetStockUnitType(productSKU.StockUnitType.Key));
-
-            var taxExludedOriginalPrice = _calculationService.CalculateTaxExcludedPrice(shoppingCartItem.OriginalPrice, taxCategory.Rate);
-            var subTotal = taxExludedOriginalPrice * shoppingCartItem.Amount;
+            var subTotal = shoppingCartItem.OriginalPrice * shoppingCartItem.Amount;
 
             decimal? subDiscountedTotal = null;
             decimal? userDefaultDiscountRateBasedDiscountTotal = null;
 
             if (shoppingCartItem.DiscountedPrice != null && shoppingCartItem.DiscountedPrice.Value != 0)
             {
-                var taxExludedDiscountedPrice = _calculationService.CalculateTaxExcludedPrice(shoppingCartItem.DiscountedPrice.Value, taxCategory.Rate);
-
-                subDiscountedTotal = taxExludedDiscountedPrice * shoppingCartItem.Amount;
+                subDiscountedTotal = shoppingCartItem.DiscountedPrice.Value * shoppingCartItem.Amount;
             }
             else if (user.DefaultDiscountRate > 0)
             {
                 shoppingCartItem.DiscountedPrice = _calculationService.CalculateDiscountedPriceByDiscountRate(shoppingCartItem.OriginalPrice, user.DefaultDiscountRate);
-                var taxExludedDiscountedPrice = _calculationService.CalculateTaxExcludedPrice(shoppingCartItem.DiscountedPrice.Value, taxCategory.Rate);
 
-                subDiscountedTotal = taxExludedDiscountedPrice * shoppingCartItem.Amount;
+                subDiscountedTotal = shoppingCartItem.DiscountedPrice.Value * shoppingCartItem.Amount;
 
-                userDefaultDiscountRateBasedDiscountTotal = shoppingCartItem.Amount * (taxExludedOriginalPrice - taxExludedDiscountedPrice);
+                userDefaultDiscountRateBasedDiscountTotal = subTotal - subDiscountedTotal;
             }
 
             decimal taxTotal;
@@ -97,15 +82,13 @@
                 taxTotal = shoppingCartItem.Amount * tax;
             }
 
-            return new CalculateShoppingCartItemTotalsForCheckoutAndOrderResponse()
+            return new CalculateShoppingCartItemSummaryResponse()
             {
-                StockUnitType = stockUnitType,
-                ProductSKU = productSKU,
                 TaxRate = taxCategory.Rate,
                 TaxTotal = taxTotal,
                 UserDefaultDiscountRateBasedDiscount = userDefaultDiscountRateBasedDiscountTotal,
-                SubTotal = subTotal,
-                SubDiscountedTotal = subDiscountedTotal
+                SubTotal = subDiscountedTotal ?? subTotal,
+                DiscountTotal = (subTotal - subDiscountedTotal) ?? 0
             };
         }
 

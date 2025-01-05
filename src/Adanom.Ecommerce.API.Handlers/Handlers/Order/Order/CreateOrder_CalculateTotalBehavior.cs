@@ -28,7 +28,7 @@
             var shippingTotal = orderResponse.ShippingFeeSubTotal + orderResponse.ShippingFeeTax;
            
             orderResponse.SubTotal = orderResponse.Items.Sum(e => e.SubTotal);
-            orderResponse.SubTotalDiscount = orderResponse.Items.Sum(e => e.DiscountTotal);
+            orderResponse.TotalDiscount = orderResponse.Items.Sum(e => e.DiscountTotal);
 
             orderResponse.TaxTotal = orderResponse.Items.Sum(e => e.TaxTotal);
 

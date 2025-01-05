@@ -4,7 +4,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
     {
         public decimal SubTotal { get; set; }
 
-        public decimal SubTotalDiscount { get; set; }
+        public decimal TotalDiscount { get; set; }
 
         public decimal TaxTotal { get; set; }
 
@@ -18,6 +18,14 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public bool IsFreeShipping { get; set; }
 
-        public ShoppingCartResponse? ShoppingCart { get; set; }
+        public bool HasPriceChanges { get; set; }
+
+        public bool HasProductDeleted { get; set; }
+
+        public bool HasNoItem { get; set; }
+
+        public bool HasStocksChanges { get; set; }
+
+        public ICollection<ShoppingCartItemResponse> Items { get; set; } = [];
     }
 }

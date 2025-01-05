@@ -9,7 +9,6 @@ namespace Adanom.Ecommerce.API.Handlers
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        private readonly ICalculationService _calculationService;
 
         #endregion
 
@@ -18,13 +17,11 @@ namespace Adanom.Ecommerce.API.Handlers
         public CreateOrder_ConvertShoppingCartItemsToOrderItems(
             ApplicationDbContext applicationDbContext,
             IMediator mediator,
-            IMapper mapper,
-            ICalculationService calculationService)
+            IMapper mapper)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _calculationService = calculationService ?? throw new ArgumentNullException(nameof(calculationService));
         }
 
         #endregion
@@ -49,63 +46,63 @@ namespace Adanom.Ecommerce.API.Handlers
                 return null;
             }
 
-            var shoppingCart = await _mediator.Send(new GetShoppingCart(command.Identity, false));
+            var shoppingCart = await _mediator.Send(new GetShoppingCart(command.Identity,true, false, false));
 
             if (shoppingCart == null)
             {
                 return null;
             }
 
-            var shoppingCartItems = await _mediator.Send(new GetShoppingCartItems(new GetShoppingCartItemsFilter()
-            {
-                ShoppingCartId = shoppingCart.Id
-            }));
-
-            if (!shoppingCartItems.Any())
+            if (!shoppingCart.Items.Any())
             {
                 return null;
             }
 
             var orderItems = new List<OrderItem>();
 
-            foreach (var shoppingCartItem in shoppingCartItems)
+            foreach (var shoppingCartItem in shoppingCart.Items)
             {
-                var calculatedItemResponse = await _mediator.Send(new CalculateShoppingCartItemTotalsForCheckoutAndOrder(shoppingCartItem, user));
+                var shoppingCartItemSummary = await _mediator.Send(new CalculateShoppingCartItemSummary(shoppingCartItem, user));
 
-                if (calculatedItemResponse == null)
+                if (shoppingCartItemSummary == null)
                 {
                     return null;
                 }
+
+                var productSKU = await _mediator.Send(new GetProductSKUByProductId(shoppingCartItem.ProductId));
+
+                if (productSKU == null)
+                {
+                    return null;
+                }
+
+                var stockUnitType = await _mediator.Send(new GetStockUnitType(productSKU.StockUnitType.Key));
 
                 var orderItem = new OrderItem()
                 {
                     OrderId = orderResponse.Id,
                     ProductId = shoppingCartItem.ProductId,
-                    TaxExcludedPrice = _calculationService.CalculateTaxExcludedPrice(shoppingCartItem.DiscountedPrice ?? shoppingCartItem.OriginalPrice, calculatedItemResponse.TaxRate),
+                    Price = shoppingCartItem.DiscountedPrice ?? shoppingCartItem.OriginalPrice,
                     Amount = shoppingCartItem.Amount,
-                    AmountUnit = calculatedItemResponse.StockUnitType.Name,
-                    TaxRate = calculatedItemResponse.TaxRate,
-                    TaxTotal = calculatedItemResponse.TaxTotal,
-                    SubTotal = calculatedItemResponse.SubTotal,
-                    Total = (calculatedItemResponse.SubDiscountedTotal ?? calculatedItemResponse.SubTotal) + calculatedItemResponse.TaxTotal,
-                    DiscountTotal = (calculatedItemResponse.SubTotal - calculatedItemResponse.SubDiscountedTotal) ?? 0,
+                    AmountUnit = stockUnitType.Name,
+                    TaxRate = shoppingCartItemSummary.TaxRate,
+                    TaxTotal = shoppingCartItemSummary.TaxTotal,
+                    SubTotal = shoppingCartItemSummary.SubTotal,
+                    Total = shoppingCartItemSummary.SubTotal,
+                    DiscountTotal = shoppingCartItemSummary.DiscountTotal ?? 0,
                 };
 
-                if (calculatedItemResponse.UserDefaultDiscountRateBasedDiscount != null && calculatedItemResponse.UserDefaultDiscountRateBasedDiscount > 0)
+                if (shoppingCartItemSummary.UserDefaultDiscountRateBasedDiscount != null && shoppingCartItemSummary.UserDefaultDiscountRateBasedDiscount > 0)
                 {
                     if (orderResponse.UserDefaultDiscountRateBasedDiscount == null)
                     {
-                        orderResponse.UserDefaultDiscountRateBasedDiscount = calculatedItemResponse.UserDefaultDiscountRateBasedDiscount;
+                        orderResponse.UserDefaultDiscountRateBasedDiscount = 0;
                     }
-                    else
-                    {
-                        orderResponse.UserDefaultDiscountRateBasedDiscount += calculatedItemResponse.UserDefaultDiscountRateBasedDiscount;
-                    }
+
+                    orderResponse.UserDefaultDiscountRateBasedDiscount += shoppingCartItemSummary.UserDefaultDiscountRateBasedDiscount;
                 }
 
                 orderItems.Add(orderItem);
-
-                var productSKU = calculatedItemResponse.ProductSKU;
 
                 productSKU.StockQuantity -= orderItem.Amount;
 

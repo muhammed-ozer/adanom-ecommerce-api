@@ -118,7 +118,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 #region Checkout
 
                 options.AddBehavior<IPipelineBehavior<GetCheckout, CheckoutResponse?>, GetCheckout_CalculateShippingBehavior>();
-                options.AddBehavior<IPipelineBehavior<GetCheckout, CheckoutResponse?>, GetCheckout_CalculateItemsTotalBehavior>();
+                options.AddBehavior<IPipelineBehavior<GetCheckout, CheckoutResponse?>, GetCheckout_CalculateShoppingCartSummaryBehavior>();
 
                 #endregion
 
@@ -131,6 +131,13 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.AddBehavior<IPipelineBehavior<CreateReturnRequest, ReturnRequestResponse?>, CreateReturnRequest_CreateReturnRequestItemsBehavior>();
 
                 options.AddBehavior<IPipelineBehavior<UpdateReturnRequest_ReturnRequestStatusType, bool>, UpdateReturnRequest_ReturnRequestStatusTypeSendMailsBehavior>();
+
+                #endregion
+
+                #region ShoppingCart
+
+                options.AddBehavior<IPipelineBehavior<GetShoppingCart, ShoppingCartResponse?>, GetShoppingCart_GetSummaryBehavior>();
+                options.AddBehavior<IPipelineBehavior<GetShoppingCart, ShoppingCartResponse?>, GetShoppingCart_GetItemsBehavior>();
 
                 #endregion
 

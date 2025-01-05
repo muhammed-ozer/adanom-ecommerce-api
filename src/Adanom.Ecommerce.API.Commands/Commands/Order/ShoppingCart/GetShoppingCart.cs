@@ -18,9 +18,11 @@ namespace Adanom.Ecommerce.API.Commands
             UpdateItems = updateItems;
         }
 
-        public GetShoppingCart(ClaimsPrincipal identity, bool updateItems)
+        public GetShoppingCart(ClaimsPrincipal identity, bool includeItems, bool includeSummary, bool updateItems)
         {
             Identity = identity ?? throw new ArgumentNullException(nameof(identity));
+            IncludeItems = includeItems;
+            IncludeSummary = includeSummary;
             UpdateItems = updateItems;
         }
 
@@ -33,6 +35,10 @@ namespace Adanom.Ecommerce.API.Commands
         public Guid? UserId { get; set; }
 
         public ClaimsPrincipal? Identity { get; }
+
+        public bool IncludeItems { get; }
+
+        public bool IncludeSummary { get; }
 
         public bool UpdateItems { get; }
 

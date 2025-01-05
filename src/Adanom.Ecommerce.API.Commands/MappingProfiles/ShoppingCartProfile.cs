@@ -11,6 +11,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<UpdateShoppingCartItemsResponse, ShoppingCartResponse>();
 
             CreateMap<MigrateAnonymousShoppingCartToShoppingCartRequest, MigrateAnonymousShoppingCartToShoppingCart>();
+
+            CreateMap<ShoppingCartSummaryResponse, CheckoutResponse>();
         }
     }
 }

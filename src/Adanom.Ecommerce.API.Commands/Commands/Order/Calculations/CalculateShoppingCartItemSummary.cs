@@ -1,10 +1,10 @@
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class CalculateShoppingCartItemTotalsForCheckoutAndOrder : IRequest<CalculateShoppingCartItemTotalsForCheckoutAndOrderResponse?>
+    public class CalculateShoppingCartItemSummary : IRequest<CalculateShoppingCartItemSummaryResponse?>
     {
         #region Ctor
 
-        public CalculateShoppingCartItemTotalsForCheckoutAndOrder(ShoppingCartItemResponse shoppingCartItem, UserResponse user)
+        public CalculateShoppingCartItemSummary(ShoppingCartItemResponse shoppingCartItem, UserResponse user)
         {
             ShoppingCartItem = shoppingCartItem;
             User = user;
