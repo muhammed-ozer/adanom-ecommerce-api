@@ -20,21 +20,21 @@
 
         #endregion
 
-        //#region UpdateProductPrice_DiscountedPriceAsync
+        #region UpdateProductPrice_DiscountedPriceAsync
 
-        //[GraphQLDescription("Updates a product price discounted price")]
-        //public async Task<bool> UpdateProductPrice_DiscountedPriceAsync(
-        //    UpdateProductPrice_DiscountedPriceRequest request,
-        //    [Service] IMediator mediator,
-        //    [Service] IMapper mapper,
-        //    [Identity] ClaimsPrincipal identity)
-        //{
-        //    var command = mapper.Map(request, new UpdateProductPrice_DiscountedPrice(identity));
+        [GraphQLDescription("Updates a product price discounted price")]
+        public async Task<bool> UpdateProductPrice_DiscountedPriceAsync(
+            UpdateProductPrice_DiscountedPriceRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new UpdateProductPrice_DiscountedPrice(identity));
 
-        //    return await mediator.Send(command); ;
-        //}
+            return await mediator.Send(command); ;
+        }
 
-        //#endregion
+        #endregion
 
         #region BatchUpdateProductPricesAsync
 
