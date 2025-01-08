@@ -16,9 +16,9 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
 
             CreateMap<UpdateProductPrice_Price, ProductPrice>();
 
-            //CreateMap<UpdateProductPrice_DiscountedPriceRequest, UpdateProductPrice_DiscountedPrice>();
+            CreateMap<UpdateProductPrice_DiscountedPriceRequest, UpdateProductPrice_DiscountedPrice>();
 
-            //CreateMap<UpdateProductPrice_DiscountedPrice, ProductPrice>();
+            CreateMap<UpdateProductPrice_DiscountedPrice, ProductPrice>();
 
             CreateMap<UpdateProductPriceTaxCategoryRequest, UpdateProductPriceTaxCategory>();
 
