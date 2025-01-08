@@ -88,7 +88,7 @@ namespace Adanom.Ecommerce.API.Handlers
                     TaxRate = shoppingCartItemSummary.TaxRate,
                     TaxTotal = shoppingCartItemSummary.TaxTotal,
                     SubTotal = shoppingCartItemSummary.SubTotal,
-                    Total = shoppingCartItemSummary.SubTotal,
+                    Total = shoppingCartItemSummary.SubTotal - shoppingCartItemSummary.DiscountTotal ?? 0,
                     DiscountTotal = shoppingCartItemSummary.DiscountTotal ?? 0,
                 };
 

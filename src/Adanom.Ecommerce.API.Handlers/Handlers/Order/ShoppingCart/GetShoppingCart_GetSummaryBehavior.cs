@@ -90,7 +90,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 shoppingCartSummaryResponse.TaxTotal += shoppingCartItemSummary.TaxTotal;
             }
 
-            shoppingCartSummaryResponse.GrandTotal = shoppingCartSummaryResponse.SubTotal;
+            shoppingCartSummaryResponse.GrandTotal = shoppingCartSummaryResponse.SubTotal - shoppingCartSummaryResponse.TotalDiscount ?? 0;
 
             shoppingCartResponse.Summary = shoppingCartSummaryResponse;
 

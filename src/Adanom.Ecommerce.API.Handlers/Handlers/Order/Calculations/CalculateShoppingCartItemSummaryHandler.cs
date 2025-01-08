@@ -87,7 +87,7 @@
                 TaxRate = taxCategory.Rate,
                 TaxTotal = taxTotal,
                 UserDefaultDiscountRateBasedDiscount = userDefaultDiscountRateBasedDiscountTotal,
-                SubTotal = subDiscountedTotal ?? subTotal,
+                SubTotal = subTotal,
                 DiscountTotal = (subTotal - subDiscountedTotal) ?? 0
             };
         }
