@@ -175,6 +175,13 @@ namespace Adanom.Ecommerce.API.Data
                 e.Property(e => e.MinimumFreeShippingTotalPrice).HasPrecision(10, 2);
             });
 
+            modelBuilder.Entity<LocalDeliveryProvider>(e =>
+            {
+                e.Property(e => e.FeeTotal).HasPrecision(10, 2);
+                e.Property(e => e.MinimumFreeDeliveryOrderGrandTotal).HasPrecision(10, 2);
+                e.Property(e => e.MinimumOrderGrandTotal).HasPrecision(10, 2);
+            });
+
             modelBuilder.Entity<AnonymousShoppingCartItem>(e =>
             {
                 e.Property(e => e.OriginalPrice).HasPrecision(10, 2);
@@ -260,6 +267,8 @@ namespace Adanom.Ecommerce.API.Data
         public DbSet<Notification> Notifications { get; set; } = null!;
 
         public DbSet<ShippingProvider> ShippingProviders { get; set; } = null!;
+
+        public DbSet<LocalDeliveryProvider> LocalDeliveryProviders { get; set; } = null!;
 
         public DbSet<PickUpStore> PickUpStores { get; set; } = null!;
 
