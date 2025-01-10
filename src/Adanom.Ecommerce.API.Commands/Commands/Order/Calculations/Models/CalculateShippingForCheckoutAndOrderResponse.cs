@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public bool IsFreeShipping { get; set; }
 
-        public decimal ShippingFeeSubTotal { get; set; }
+        public decimal ShippingFeeTotal { get; set; }
 
         public decimal ShippingFeeTax { get; set; }
     }

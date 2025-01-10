@@ -33,7 +33,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public decimal TaxTotal { get; set; }
 
-        public decimal ShippingFeeSubTotal { get; set; }
+        public decimal ShippingFeeTotal { get; set; }
 
         public decimal ShippingFeeTax { get; set; }
 

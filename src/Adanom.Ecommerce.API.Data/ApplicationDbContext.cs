@@ -152,7 +152,7 @@ namespace Adanom.Ecommerce.API.Data
             modelBuilder.Entity<Order>(e =>
             {
                 e.Property(e => e.GrandTotal).HasPrecision(10, 2);
-                e.Property(e => e.ShippingFeeSubTotal).HasPrecision(10, 2);
+                e.Property(e => e.ShippingFeeTotal).HasPrecision(10, 2);
                 e.Property(e => e.ShippingFeeTax).HasPrecision(10, 2);
                 e.Property(e => e.SubTotal).HasPrecision(10, 2);
                 e.Property(e => e.TotalDiscount).HasPrecision(10, 2);
