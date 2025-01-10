@@ -84,6 +84,13 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
+                #region ShippingProvider
+
+                options.AddBehavior<IPipelineBehavior<DeleteLocalDeliveryProvider, bool>, DeleteLocalDeliveryProvider_CommitTransactionBehavior>();
+                options.AddBehavior<IPipelineBehavior<DeleteLocalDeliveryProvider, bool>, DeleteLocalDeliveryProvider_DeleteRelationsBehavior>();
+
+                #endregion
+
                 #endregion
 
                 #region Cms

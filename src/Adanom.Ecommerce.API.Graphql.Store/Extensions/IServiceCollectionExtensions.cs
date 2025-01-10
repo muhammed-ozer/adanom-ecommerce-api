@@ -33,6 +33,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<CompanyQueries>()
                 .AddType<PickUpStoreQueries>()
                 .AddType<ShippingProviderQueries>()
+                .AddType<LocalDeliveryProviderQueries>()
                 .AddType<ShippingAddressQueries>()
                 .AddType<BillingAddressQueries>()
                 .AddType<SliderItemQueries>()
