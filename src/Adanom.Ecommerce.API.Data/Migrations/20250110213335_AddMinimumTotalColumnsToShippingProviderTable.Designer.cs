@@ -4,6 +4,7 @@ using Adanom.Ecommerce.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Adanom.Ecommerce.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250110213335_AddMinimumTotalColumnsToShippingProviderTable")]
+    partial class AddMinimumTotalColumnsToShippingProviderTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -576,11 +579,11 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<long?>("PickUpStoreId")
                         .HasColumnType("bigint");
 
-                    b.Property<decimal>("ShippingFeeTax")
+                    b.Property<decimal>("ShippingFeeSubTotal")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<decimal>("ShippingFeeTotal")
+                    b.Property<decimal>("ShippingFeeTax")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 

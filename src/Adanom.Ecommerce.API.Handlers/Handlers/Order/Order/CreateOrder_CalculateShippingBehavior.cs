@@ -49,7 +49,7 @@
             }
 
             orderResponse.IsFreeShipping = calculatedShippingResponse.IsFreeShipping;
-            orderResponse.ShippingFeeSubTotal = calculatedShippingResponse.ShippingFeeSubTotal;
+            orderResponse.ShippingFeeTotal = calculatedShippingResponse.ShippingFeeTotal;
             orderResponse.ShippingFeeTax = calculatedShippingResponse.ShippingFeeTax;
 
             return orderResponse;

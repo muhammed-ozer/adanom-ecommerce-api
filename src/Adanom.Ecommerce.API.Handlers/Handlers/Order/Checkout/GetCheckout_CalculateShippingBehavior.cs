@@ -35,10 +35,12 @@
                 command.LocalDeliveryProviderId));
 
             checkoutResponse.IsFreeShipping = calculatedShippingResponse!.IsFreeShipping;
-            checkoutResponse.ShippingFeeSubTotal = calculatedShippingResponse.ShippingFeeSubTotal;
+            checkoutResponse.ShippingFeeTotal = calculatedShippingResponse.ShippingFeeTotal;
             checkoutResponse.ShippingFeeTax = calculatedShippingResponse.ShippingFeeTax;
 
-            checkoutResponse.GrandTotal += checkoutResponse.ShippingFeeSubTotal + checkoutResponse.ShippingFeeTax;
+            checkoutResponse.TaxTotal += checkoutResponse.ShippingFeeTax;
+
+            checkoutResponse.GrandTotal += checkoutResponse.ShippingFeeTotal;
 
             return checkoutResponse;
         }

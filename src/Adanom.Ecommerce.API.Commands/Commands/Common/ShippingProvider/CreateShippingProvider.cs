@@ -19,11 +19,9 @@ namespace Adanom.Ecommerce.API.Commands
 
         public string DisplayName { get; set; } = null!;
 
-        public decimal MinimumFreeShippingTotalPrice { get; set; }
+        public decimal MinimumOrderGrandTotal { get; set; }
 
-        public decimal FeeWithoutTax { get; set; }
-
-        public decimal FeeTax { get; set; }
+        public decimal MinimumFreeShippingOrderGrandTotal { get; set; }
 
         public decimal FeeTotal { get; set; }
 

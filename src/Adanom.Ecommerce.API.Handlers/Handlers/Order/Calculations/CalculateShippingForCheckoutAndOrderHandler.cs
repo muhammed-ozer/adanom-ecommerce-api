@@ -43,7 +43,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 if (localDeliveryProvider!.MinimumOrderGrandTotal > command.GrandTotal)
                 {
-                    var error = new Error($"Minimum sipariş tutarı {localDeliveryProvider!.MinimumOrderGrandTotal}₺ olması gerekmektedir.", ValidationErrorCodesEnum.NOT_ALLOWED.ToString());
+                    var error = new Error($"Minimum sepet tutarı {localDeliveryProvider!.MinimumOrderGrandTotal}₺ olması gerekmektedir.", ValidationErrorCodesEnum.NOT_ALLOWED.ToString());
 
                     throw new QueryException(error);
                 }
@@ -55,7 +55,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 else
                 {
                     response.IsFreeShipping = false;
-                    response.ShippingFeeSubTotal = localDeliveryProvider.FeeTotal;
+                    response.ShippingFeeTotal = localDeliveryProvider.FeeTotal;
                     response.ShippingFeeTax = _calculationService.CalculateTaxTotal(localDeliveryProvider.FeeTotal, localDeliveryProvider.TaxRate);
                 }
             }
@@ -63,15 +63,22 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 var shippingProvider = await _mediator.Send(new GetShippingProvider(command.ShippingProviderId!.Value));
 
-                if (shippingProvider!.MinimumFreeShippingTotalPrice <= command.GrandTotal)
+                if (shippingProvider!.MinimumOrderGrandTotal > command.GrandTotal)
+                {
+                    var error = new Error($"Minimum sepet tutarı {shippingProvider!.MinimumOrderGrandTotal}₺ olması gerekmektedir.", ValidationErrorCodesEnum.NOT_ALLOWED.ToString());
+
+                    throw new QueryException(error);
+                }
+
+                if (shippingProvider!.MinimumFreeShippingOrderGrandTotal <= command.GrandTotal)
                 {
                     response.IsFreeShipping = true;
                 }
                 else
                 {
                     response.IsFreeShipping = false;
-                    response.ShippingFeeSubTotal = shippingProvider.FeeWithoutTax;
-                    response.ShippingFeeTax = shippingProvider.FeeTax;
+                    response.ShippingFeeTotal = shippingProvider.FeeTotal;
+                    response.ShippingFeeTax = _calculationService.CalculateTaxTotal(shippingProvider.FeeTotal, shippingProvider.TaxRate);
                 }
             }
 
