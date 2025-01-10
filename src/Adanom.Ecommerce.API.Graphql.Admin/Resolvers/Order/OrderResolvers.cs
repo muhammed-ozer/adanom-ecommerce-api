@@ -101,5 +101,59 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
         }
 
         #endregion
+
+        #region GetPickUpStoreAsync
+
+        public async Task<PickUpStoreResponse?> GetPickUpStoreAsync(
+           [Parent] OrderResponse orderResponse,
+           [Service] IMediator mediator)
+        {
+            if (orderResponse.PickUpStoreId == null)
+            {
+                return null;
+            }
+
+            var pickUpStore = await mediator.Send(new GetPickUpStore(orderResponse.PickUpStoreId.Value));
+
+            return pickUpStore;
+        }
+
+        #endregion
+
+        #region GetShippingProviderAsync
+
+        public async Task<ShippingProviderResponse?> GetShippingProviderAsync(
+           [Parent] OrderResponse orderResponse,
+           [Service] IMediator mediator)
+        {
+            if (orderResponse.ShippingProviderId == null)
+            {
+                return null;
+            }
+
+            var shippingProvider = await mediator.Send(new GetShippingProvider(orderResponse.ShippingProviderId.Value));
+
+            return shippingProvider;
+        }
+
+        #endregion
+
+        #region GetLocalDeliveryProviderAsync
+
+        public async Task<LocalDeliveryProviderResponse?> GetLocalDeliveryProviderAsync(
+           [Parent] OrderResponse orderResponse,
+           [Service] IMediator mediator)
+        {
+            if (orderResponse.LocalDeliveryProviderId == null)
+            {
+                return null;
+            }
+
+            var localDeliveryProvider = await mediator.Send(new GetLocalDeliveryProvider(orderResponse.LocalDeliveryProviderId.Value));
+
+            return localDeliveryProvider;
+        }
+
+        #endregion
     }
 }
