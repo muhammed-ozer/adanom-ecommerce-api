@@ -188,10 +188,9 @@ namespace Adanom.Ecommerce.API.Data
 
             modelBuilder.Entity<ShippingProvider>(e =>
             {
-                e.Property(e => e.FeeTax).HasPrecision(10, 2);
                 e.Property(e => e.FeeTotal).HasPrecision(10, 2);
-                e.Property(e => e.FeeWithoutTax).HasPrecision(10, 2);
-                e.Property(e => e.MinimumFreeShippingTotalPrice).HasPrecision(10, 2);
+                e.Property(e => e.MinimumOrderGrandTotal).HasPrecision(10, 2);
+                e.Property(e => e.MinimumFreeShippingOrderGrandTotal).HasPrecision(10, 2);
             });
 
             modelBuilder.Entity<LocalDeliveryProvider>(e =>
