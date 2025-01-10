@@ -66,20 +66,24 @@ namespace Adanom.Ecommerce.API.Handlers
                 });
             });
 
-            foreach (var addressDistrictId in command.SupportedAddressDistrictIds) 
-            {
-                var addressDistrict = await _applicationDbContext.AddressDistricts
-                    .Where(e => e.Id == addressDistrictId)
-                    .SingleAsync();
-
-                localDeliveryProvider.SupportedAddressDistricts.Add(addressDistrict);
-            }
-
             await _applicationDbContext.AddAsync(localDeliveryProvider);
 
             try
             {
                 await _applicationDbContext.SaveChangesAsync();
+
+                foreach (var addressDistrictId in command.SupportedAddressDistrictIds)
+                {
+                    var request = new CreateLocalDeliveryProvider_AddressDistrictRequest()
+                    {
+                        LocalDeliveryProviderId = localDeliveryProvider.Id,
+                        AddressDistrictId = addressDistrictId
+                    };
+
+                    var createLocalDeliveryProvider_AddressDistrictCommand = _mapper.Map(request, new CreateLocalDeliveryProvider_AddressDistrict(command.Identity));
+
+                    await _mediator.Send(createLocalDeliveryProvider_AddressDistrictCommand);
+                }
             }
             catch (Exception exception)
             {

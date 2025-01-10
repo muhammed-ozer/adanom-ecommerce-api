@@ -35,7 +35,7 @@ namespace Adanom.Ecommerce.API.Handlers
                             e.Id == command.Id)
                 .SingleAsync();
 
-            var currentLogoImage = await _mediator.Send(new GetEntityImage(localDeliveryProvider.Id, EntityType.SHIPPINGPROVIDER, ImageType.LOGO));
+            var currentLogoImage = await _mediator.Send(new GetEntityImage(localDeliveryProvider.Id, EntityType.LOCALDELIVERYPROVIDER, ImageType.LOGO));
             
             if (currentLogoImage != null) 
             {
@@ -58,7 +58,7 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 File = command.File,
                 EntityId = localDeliveryProvider.Id,
-                EntityType = EntityType.SHIPPINGPROVIDER,
+                EntityType = EntityType.LOCALDELIVERYPROVIDER,
                 ImageType = ImageType.LOGO,
                 EntityNameAsUrlSlug = localDeliveryProvider.DisplayName.ConvertToUrlSlug()
             };
@@ -78,7 +78,7 @@ namespace Adanom.Ecommerce.API.Handlers
             await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
             {
                 UserId = userId,
-                EntityType = EntityType.SHIPPINGPROVIDER,
+                EntityType = EntityType.LOCALDELIVERYPROVIDER,
                 TransactionType = TransactionType.UPDATE,
                 Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, localDeliveryProvider.Id),
             }));

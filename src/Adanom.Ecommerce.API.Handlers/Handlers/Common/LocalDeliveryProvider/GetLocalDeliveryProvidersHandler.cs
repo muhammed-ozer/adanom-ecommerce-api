@@ -45,7 +45,6 @@ namespace Adanom.Ecommerce.API.Handlers
                 var localDeliveryProvidersOnDb = await _applicationDbContext.LocalDeliveryProviders
                    .AsNoTracking()
                    .Where(e => e.DeletedAtUtc == null)
-                   .Include(e => e.SupportedAddressDistricts)
                    .ToListAsync();
 
                 var localDeliveryProviderResponsesFromDb = _mapper

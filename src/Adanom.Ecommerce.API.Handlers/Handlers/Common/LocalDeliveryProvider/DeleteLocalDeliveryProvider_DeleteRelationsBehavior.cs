@@ -29,12 +29,25 @@
 
             if (deleteLocalDeliveryProviderResponse)
             {
+                #region Mappings
+
+                var deleteMappingRequest = new DeleteLocalDeliveryProvider_AddressDistrictRequest()
+                {
+                    LocalDeliveryProviderId = command.Id,
+                };
+
+                var deleteMappingCommand = _mapper.Map(deleteMappingRequest, new DeleteLocalDeliveryProvider_AddressDistrict(command.Identity));
+
+                await _mediator.Send(deleteMappingCommand);
+
+                #endregion
+
                 #region Images
 
                 var deleteImagesRequest = new DeleteImagesRequest()
                 {
                     EntityId = command.Id,
-                    EntityType = EntityType.SHIPPINGPROVIDER
+                    EntityType = EntityType.LOCALDELIVERYPROVIDER
                 };
 
                 var deleteImagesCommand = _mapper

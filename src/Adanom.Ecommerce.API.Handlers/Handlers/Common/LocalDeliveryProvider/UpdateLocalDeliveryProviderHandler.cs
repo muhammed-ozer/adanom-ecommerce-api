@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using Adanom.Ecommerce.API.Data.Models;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
@@ -34,7 +33,7 @@ namespace Adanom.Ecommerce.API.Handlers
             var localDeliveryProvider = await _applicationDbContext.LocalDeliveryProviders
                 .Where(e => e.DeletedAtUtc == null &&
                             e.Id == command.Id)
-                .Include(e => e.SupportedAddressDistricts)
+                .Include(e => e.LocalDeliveryProvider_AddressDistrict_Mappings)
                 .SingleAsync();
 
             if (command.IsDefault && !localDeliveryProvider.IsDefault)
@@ -63,37 +62,44 @@ namespace Adanom.Ecommerce.API.Handlers
                 });
             });
 
-            // Address distirct ids incoming from command
-            var incomingIds = command.SupportedAddressDistrictIds;
+            // Address distirct ids reqquesting from command
+            var requestingAddressDistrictIds = command.SupportedAddressDistrictIds;
 
             // Existing ids
-            var existingIds = localDeliveryProvider.SupportedAddressDistricts.Select(e => e.Id).ToList();
+            var currentSupportedAddressDistrictIds = localDeliveryProvider.LocalDeliveryProvider_AddressDistrict_Mappings.Select(e => e.AddressDistrictId).ToList();
 
-            // Needs to be add address distirct ids
-            var idsToAdd = incomingIds.Except(existingIds).ToList();
+            // Needs to be create address distirct ids
+            var addressDistrictIdsToCreate = requestingAddressDistrictIds.Except(currentSupportedAddressDistrictIds).ToList();
 
             // Needs to be removed address distirct ids
-            var idsToRemove = existingIds.Except(incomingIds).ToList();
+            var addressDistrictIdsToRemove = currentSupportedAddressDistrictIds.Except(requestingAddressDistrictIds).ToList();
 
-            // Add new address districts
-            foreach (var idToAdd in idsToAdd)
+            // Create new mappings
+            foreach (var addressDistrictId in addressDistrictIdsToCreate)
             {
-                var addressDistrict = await _applicationDbContext.AddressDistricts
-                    .Where(e => e.Id == idToAdd)
-                    .SingleAsync();
+                var createMappingRequest = new CreateLocalDeliveryProvider_AddressDistrictRequest()
+                {
+                    LocalDeliveryProviderId = localDeliveryProvider.Id,
+                    AddressDistrictId = addressDistrictId
+                };
 
-                localDeliveryProvider.SupportedAddressDistricts.Add(addressDistrict);
+                var createLocalDeliveryProvider_AddressDistrictCommand = _mapper.Map(createMappingRequest, new CreateLocalDeliveryProvider_AddressDistrict(command.Identity));
+
+                await _mediator.Send(createLocalDeliveryProvider_AddressDistrictCommand);
             }
 
-            // Remove address districts
-            foreach (var idToRemove in idsToRemove)
+            // Remove mappings
+            foreach (var addressDistrictId in addressDistrictIdsToRemove)
             {
-                var addressDistrictToRemove = localDeliveryProvider.SupportedAddressDistricts.FirstOrDefault(e => e.Id == idToRemove);
-
-                if (addressDistrictToRemove != null)
+                var deleteMappingRequest = new DeleteLocalDeliveryProvider_AddressDistrictRequest()
                 {
-                    localDeliveryProvider.SupportedAddressDistricts.Remove(addressDistrictToRemove);
-                }
+                    LocalDeliveryProviderId = command.Id,
+                    AddressDistrictId = addressDistrictId
+                };
+
+                var deleteMappingCommand = _mapper.Map(deleteMappingRequest, new DeleteLocalDeliveryProvider_AddressDistrict(command.Identity));
+
+                await _mediator.Send(deleteMappingCommand);
             }
 
             _applicationDbContext.Update(localDeliveryProvider);
