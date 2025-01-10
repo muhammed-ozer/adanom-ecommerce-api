@@ -8,6 +8,9 @@ namespace Adanom.Ecommerce.API.Data.Models
         CARGO_SHIPMENT,
 
         [EnumDisplayName("Mağazadan teslim")]
-        PICK_UP_FROM_STORE
+        PICK_UP_FROM_STORE,
+
+        [EnumDisplayName("Yerel teslimat")]
+        LOCAL_DELIVERY,
     }
 }

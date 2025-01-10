@@ -78,6 +78,32 @@
                     return;
                 }
             }
+            else if (value.DeliveryType == DeliveryType.LOCAL_DELIVERY)
+            {
+                if (value.LocalDeliveryProviderId == null)
+                {
+                    context.AddFailure(new ValidationFailure(nameof(CreateOrder.LocalDeliveryProviderId), null)
+                    {
+                        ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
+                        ErrorMessage = "Yerel teslimat bulunamadı."
+                    });
+
+                    return;
+                }
+
+                var localDeliveryProviderExists = await _mediator.Send(new DoesEntityExists<LocalDeliveryProviderResponse>(value.LocalDeliveryProviderId.Value));
+
+                if (!localDeliveryProviderExists)
+                {
+                    context.AddFailure(new ValidationFailure(nameof(CreateOrder.LocalDeliveryProviderId), null)
+                    {
+                        ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
+                        ErrorMessage = "Yerel teslimat bulunamadı."
+                    });
+
+                    return;
+                }
+            }
             else
             {
                 context.AddFailure(new ValidationFailure(null, null)

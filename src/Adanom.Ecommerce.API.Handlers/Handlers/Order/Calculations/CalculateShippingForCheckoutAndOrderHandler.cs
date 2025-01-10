@@ -1,4 +1,6 @@
-﻿namespace Adanom.Ecommerce.API.Handlers
+﻿using HotChocolate.Execution;
+
+namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class CalculateShippingForCheckoutAndOrderHandler
         : IRequestHandler<CalculateShippingForCheckoutAndOrder, CalculateShippingForCheckoutAndOrderResponse?>
@@ -7,6 +9,7 @@
 
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMediator _mediator;
+        private readonly ICalculationService _calculationService;
 
         #endregion
 
@@ -14,10 +17,12 @@
 
         public CalculateShippingForCheckoutAndOrderHandler(
             ApplicationDbContext applicationDbContext,
-            IMediator mediator)
+            IMediator mediator,
+            ICalculationService calculationService)
         {
             _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _calculationService = calculationService ?? throw new ArgumentNullException(nameof(calculationService));
         }
 
         #endregion
@@ -31,6 +36,28 @@
             if (command.DeliveryType == DeliveryType.PICK_UP_FROM_STORE)
             {
                 response.IsFreeShipping = true;
+            } 
+            else if(command.DeliveryType == DeliveryType.LOCAL_DELIVERY)
+            {
+                var localDeliveryProvider = await _mediator.Send(new GetLocalDeliveryProvider(command.LocalDeliveryProviderId!.Value));
+
+                if (localDeliveryProvider!.MinimumOrderGrandTotal > command.GrandTotal)
+                {
+                    var error = new Error($"Minimum sipariş tutarı {localDeliveryProvider!.MinimumOrderGrandTotal}₺ olması gerekmektedir.", ValidationErrorCodesEnum.NOT_ALLOWED.ToString());
+
+                    throw new QueryException(error);
+                }
+
+                if (localDeliveryProvider!.MinimumFreeDeliveryOrderGrandTotal <= command.GrandTotal)
+                {
+                    response.IsFreeShipping = true;
+                } 
+                else
+                {
+                    response.IsFreeShipping = false;
+                    response.ShippingFeeSubTotal = localDeliveryProvider.FeeTotal;
+                    response.ShippingFeeTax = _calculationService.CalculateTaxTotal(localDeliveryProvider.FeeTotal, localDeliveryProvider.TaxRate);
+                }
             }
             else
             {

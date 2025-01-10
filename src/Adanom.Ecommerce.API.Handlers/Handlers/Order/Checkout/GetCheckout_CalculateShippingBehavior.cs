@@ -31,7 +31,8 @@
             var calculatedShippingResponse = await _mediator.Send(new CalculateShippingForCheckoutAndOrder(
                 command.DeliveryType,
                 checkoutResponse.GrandTotal,
-                command.ShippingProviderId));
+                command.ShippingProviderId,
+                command.LocalDeliveryProviderId));
 
             checkoutResponse.IsFreeShipping = calculatedShippingResponse!.IsFreeShipping;
             checkoutResponse.ShippingFeeSubTotal = calculatedShippingResponse.ShippingFeeSubTotal;

@@ -385,6 +385,88 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.ToTable("Images");
                 });
 
+            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.LocalDeliveryProvider", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("DeliveryInHours")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<decimal>("FeeTotal")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("MinimumFreeDeliveryOrderGrandTotal")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("MinimumOrderGrandTotal")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<byte>("TaxRate")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LocalDeliveryProviders");
+                });
+
+            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.LocalDeliveryProvider_AddressDistrict_Mapping", b =>
+                {
+                    b.Property<long>("LocalDeliveryProviderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("AddressDistrictId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("LocalDeliveryProviderId", "AddressDistrictId");
+
+                    b.HasIndex("AddressDistrictId");
+
+                    b.HasIndex("LocalDeliveryProviderId", "AddressDistrictId")
+                        .IsUnique();
+
+                    b.ToTable("LocalDeliveryProvider_AddressDistrict_Mappings");
+                });
+
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.MailTemplate", b =>
                 {
                     b.Property<long>("Id")
@@ -470,6 +552,9 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Property<bool>("IsFreeShipping")
                         .HasColumnType("bit");
 
+                    b.Property<long?>("LocalDeliveryProviderId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Note")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -532,6 +617,8 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LocalDeliveryProviderId");
 
                     b.HasIndex("OrderBillingAddressId");
 
@@ -2195,8 +2282,32 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.LocalDeliveryProvider_AddressDistrict_Mapping", b =>
+                {
+                    b.HasOne("Adanom.Ecommerce.API.Data.Models.AddressDistrict", "AddressDistrict")
+                        .WithMany("LocalDeliveryProvider_AddressDistrict_Mappings")
+                        .HasForeignKey("AddressDistrictId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Adanom.Ecommerce.API.Data.Models.LocalDeliveryProvider", "LocalDeliveryProvider")
+                        .WithMany("LocalDeliveryProvider_AddressDistrict_Mappings")
+                        .HasForeignKey("LocalDeliveryProviderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AddressDistrict");
+
+                    b.Navigation("LocalDeliveryProvider");
+                });
+
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Order", b =>
                 {
+                    b.HasOne("Adanom.Ecommerce.API.Data.Models.LocalDeliveryProvider", "LocalDeliveryProvider")
+                        .WithMany()
+                        .HasForeignKey("LocalDeliveryProviderId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.OrderBillingAddress", "OrderBillingAddress")
                         .WithMany()
                         .HasForeignKey("OrderBillingAddressId")
@@ -2223,6 +2334,8 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("LocalDeliveryProvider");
 
                     b.Navigation("OrderBillingAddress");
 
@@ -2576,9 +2689,19 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                     b.Navigation("Authorization");
                 });
 
+            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.AddressDistrict", b =>
+                {
+                    b.Navigation("LocalDeliveryProvider_AddressDistrict_Mappings");
+                });
+
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.AnonymousShoppingCart", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.LocalDeliveryProvider", b =>
+                {
+                    b.Navigation("LocalDeliveryProvider_AddressDistrict_Mappings");
                 });
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.Order", b =>

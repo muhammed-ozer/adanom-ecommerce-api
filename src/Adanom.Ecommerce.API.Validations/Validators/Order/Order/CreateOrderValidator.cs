@@ -101,7 +101,7 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                     context.AddFailure(new ValidationFailure(nameof(CreateOrder.PickUpStoreId), null)
                     {
                         ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
-                        ErrorMessage = "Teslimat noktası bulunamadı."
+                        ErrorMessage = "Teslimat mağazası bulunamadı."
                     });
 
                     return;
@@ -141,6 +141,32 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                     {
                         ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
                         ErrorMessage = "Kargo firması bulunamadı."
+                    });
+
+                    return;
+                }
+            }
+            else if (value.DeliveryType == DeliveryType.LOCAL_DELIVERY)
+            {
+                if (value.LocalDeliveryProviderId == null)
+                {
+                    context.AddFailure(new ValidationFailure(nameof(CreateOrder.LocalDeliveryProviderId), null)
+                    {
+                        ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
+                        ErrorMessage = "Yerel teslimat bulunamadı."
+                    });
+
+                    return;
+                }
+
+                var localDeliveryProviderExists = await _mediator.Send(new DoesEntityExists<LocalDeliveryProviderResponse>(value.LocalDeliveryProviderId.Value));
+
+                if (!localDeliveryProviderExists)
+                {
+                    context.AddFailure(new ValidationFailure(nameof(CreateOrder.LocalDeliveryProviderId), null)
+                    {
+                        ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
+                        ErrorMessage = "Yerel teslimat bulunamadı."
                     });
 
                     return;

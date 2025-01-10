@@ -23,6 +23,8 @@ namespace Adanom.Ecommerce.API.Commands
 
         public long? PickUpStoreId { get; set; }
 
+        public long? LocalDeliveryProviderId { get; set; }
+
         #endregion
     }
 }
