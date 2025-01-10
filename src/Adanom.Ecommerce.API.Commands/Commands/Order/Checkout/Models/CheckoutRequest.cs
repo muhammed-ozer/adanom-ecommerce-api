@@ -7,5 +7,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public long? ShippingProviderId { get; set; }
 
         public long? PickUpStoreId { get; set; }
+
+        public long? LocalDeliveryProviderId { get; set; }
     }
 }

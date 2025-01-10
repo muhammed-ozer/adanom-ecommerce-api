@@ -4,11 +4,13 @@ namespace Adanom.Ecommerce.API.Commands
     {
         #region Ctor
 
-        public CalculateShippingForCheckoutAndOrder(DeliveryType deliveryType, decimal grandTotal, long? shippingProviderId)
+        public CalculateShippingForCheckoutAndOrder(DeliveryType deliveryType, decimal grandTotal, long? shippingProviderId, long? localDeliveryProviderId)
         {
             DeliveryType = deliveryType;
             GrandTotal = grandTotal;
             ShippingProviderId = shippingProviderId;
+            LocalDeliveryProviderId = localDeliveryProviderId;
+
         }
 
         #endregion
@@ -20,6 +22,8 @@ namespace Adanom.Ecommerce.API.Commands
         public decimal GrandTotal { get; }
 
         public long? ShippingProviderId { get; }
+
+        public long? LocalDeliveryProviderId { get; }
 
         #endregion
     }

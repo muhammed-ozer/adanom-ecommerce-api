@@ -17,6 +17,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public long? PickUpStoreId { get; set; }
 
+        public long? LocalDeliveryProviderId { get; set; }
+
         public OrderStatusTypeResponse OrderStatusType { get; set; } = null!;
 
         public DeliveryTypeResponse DeliveryType { get; set; } = null!;
@@ -56,6 +58,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public ShippingProviderResponse? ShippingProvider { get; set; }
 
         public PickUpStoreResponse? PickUpStore { get; set; }
+
+        public LocalDeliveryProviderResponse? LocalDeliveryProvider { get; set; }
 
         public ICollection<OrderItemResponse> Items { get; set; }
 

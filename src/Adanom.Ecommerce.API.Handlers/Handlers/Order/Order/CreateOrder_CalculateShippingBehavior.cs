@@ -40,7 +40,8 @@
             var calculatedShippingResponse = await _mediator.Send(new CalculateShippingForCheckoutAndOrder(
                 orderResponse.DeliveryType.Key,
                 grandTotal,
-                orderResponse.ShippingProviderId));
+                command.ShippingProviderId,
+                command.LocalDeliveryProviderId));
 
             if (calculatedShippingResponse == null)
             {
