@@ -64,6 +64,13 @@ namespace Adanom.Ecommerce.API.Data
 
             #endregion
 
+            #region LocalDeliveryProvider_AddressDistrict_Mapping
+
+            modelBuilder.Entity<LocalDeliveryProvider_AddressDistrict_Mapping>()
+                    .HasKey(e => new { e.LocalDeliveryProviderId, e.AddressDistrictId });
+
+            #endregion
+
             #region Order
 
             modelBuilder.Entity<Order>()
@@ -105,6 +112,18 @@ namespace Adanom.Ecommerce.API.Data
             modelBuilder.Entity<ProductCategory>()
                 .HasMany(e => e.Product_ProductCategory_Mappings)
                 .WithOne(e => e.ProductCategory);
+
+            #endregion
+
+            #region LocalDeliveryProvider - AddressDistrict
+
+            modelBuilder.Entity<LocalDeliveryProvider>()
+                .HasMany(e => e.LocalDeliveryProvider_AddressDistrict_Mappings)
+                .WithOne(e => e.LocalDeliveryProvider);
+
+            modelBuilder.Entity<AddressDistrict>()
+                .HasMany(e => e.LocalDeliveryProvider_AddressDistrict_Mappings)
+                .WithOne(e => e.AddressDistrict);
 
             #endregion
 
@@ -271,6 +290,8 @@ namespace Adanom.Ecommerce.API.Data
         public DbSet<LocalDeliveryProvider> LocalDeliveryProviders { get; set; } = null!;
 
         public DbSet<PickUpStore> PickUpStores { get; set; } = null!;
+
+        public DbSet<LocalDeliveryProvider_AddressDistrict_Mapping> LocalDeliveryProvider_AddressDistrict_Mappings { get; set; } = null!;
 
         #endregion
 

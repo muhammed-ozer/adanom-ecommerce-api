@@ -36,6 +36,6 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public Guid? DeletedByUserId { get; set; }
 
-        public ICollection<AddressDistrict> SupportedAddressDistricts { get; set; } = new List<AddressDistrict>();
+        public ICollection<LocalDeliveryProvider_AddressDistrict_Mapping> LocalDeliveryProvider_AddressDistrict_Mappings { get; set; } = [];
     }
 }

@@ -22,5 +22,7 @@ namespace Adanom.Ecommerce.API.Data.Models
         public User? CreatedByUser { get; set; }
 
         public User? UpdatedByUser { get; set; }
+
+        public ICollection<LocalDeliveryProvider_AddressDistrict_Mapping> LocalDeliveryProvider_AddressDistrict_Mappings { get; set; } = [];
     }
 }
