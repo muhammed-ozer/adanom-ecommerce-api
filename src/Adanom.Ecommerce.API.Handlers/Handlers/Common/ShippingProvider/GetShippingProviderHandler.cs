@@ -22,6 +22,11 @@
         public async Task<ShippingProviderResponse?> Handle(GetShippingProvider command, CancellationToken cancellationToken)
         {
             var shippingProviders = await _mediator.Send(new GetShippingProviders());
+
+            if (command.IsDefault)
+            {
+                return shippingProviders.Rows.FirstOrDefault(e => e.IsDefault);
+            }
            
             return shippingProviders.Rows.SingleOrDefault(e => e.Id == command.Id);
         } 

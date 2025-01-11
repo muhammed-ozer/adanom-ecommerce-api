@@ -28,6 +28,9 @@ namespace Adanom.Ecommerce.API.Services.Azure
                 case EntityType.PICKUPSTORE:
                     folderName = AzureBlobStorageConstants.FolderNames.PickUpStores;
                     break;
+                case EntityType.LOCALDELIVERYPROVIDER:
+                    folderName = AzureBlobStorageConstants.FolderNames.LocalDeliveryProviders;
+                    break;
                 default:
                     break;
             }

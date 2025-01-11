@@ -171,6 +171,31 @@ namespace Adanom.Ecommerce.API.Validation.Validators
 
                     return;
                 }
+
+                var shippingAddress = await _mediator.Send(new GetShippingAddress(value.ShippingAddressId));
+
+                if (shippingAddress == null)
+                {
+                    return;
+                }
+
+                var supportedAddressDistricts = await _mediator.Send(new GetLocalDeliveryProvider_SupportedAddressDistricts(value.LocalDeliveryProviderId.Value));
+
+                if (supportedAddressDistricts == null || !supportedAddressDistricts.Any())
+                {
+                    return;
+                }
+
+                if (!supportedAddressDistricts.Select(e => e.Id).Contains(shippingAddress.AddressDistrictId))
+                {
+                    context.AddFailure(new ValidationFailure(nameof(CreateOrder.LocalDeliveryProviderId), null)
+                    {
+                        ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
+                        ErrorMessage = "Teslimat adresi için bu teslimat seçeneği kullanılamaz."
+                    });
+
+                    return;
+                }
             }
             else
             {
