@@ -56,6 +56,15 @@
             {
                 if (value.ShippingProviderId == null)
                 {
+                    var defaultShippingProvider = await _mediator.Send(new GetShippingProvider(true));
+
+                    if (defaultShippingProvider != null)
+                    {
+                        value.ShippingProviderId = defaultShippingProvider.Id;
+
+                        return;
+                    }
+
                     context.AddFailure(new ValidationFailure(nameof(GetCheckout.ShippingProviderId), null)
                     {
                         ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),

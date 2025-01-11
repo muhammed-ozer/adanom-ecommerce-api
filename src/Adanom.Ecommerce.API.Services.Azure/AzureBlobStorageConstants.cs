@@ -22,6 +22,8 @@
             public const string ShippingProviders = "shipping-providers";
 
             public const string PickUpStores = "pick-up-stores";
+
+            public const string LocalDeliveryProviders = "local-delivery-providers";
         }
     }
 }
