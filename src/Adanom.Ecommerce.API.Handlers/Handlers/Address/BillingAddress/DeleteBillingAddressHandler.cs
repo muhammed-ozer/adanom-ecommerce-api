@@ -6,16 +6,16 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public DeleteBillingAddressHandler(ApplicationDbContext applicationDbContext, IMediator mediator)
+        public DeleteBillingAddressHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
@@ -27,9 +27,11 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var billingAddress = await _applicationDbContext.BillingAddresses
-                .Where(e => e.DeletedAtUtc == null && 
-                            e.Id == command.Id && 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var billingAddress = await applicationDbContext.BillingAddresses
+                .Where(e => e.DeletedAtUtc == null &&
+                            e.Id == command.Id &&
                             e.UserId == userId)
                 .SingleAsync();
 
@@ -37,9 +39,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
             if (billingAddress.IsDefault)
             {
-                var randomBillingAddress = await _applicationDbContext.BillingAddresses
-                    .Where(e => e.DeletedAtUtc == null && 
-                                e.UserId == userId && 
+                var randomBillingAddress = await applicationDbContext.BillingAddresses
+                    .Where(e => e.DeletedAtUtc == null &&
+                                e.UserId == userId &&
                                 e.Id != command.Id)
                     .FirstOrDefaultAsync();
 
@@ -51,7 +53,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {
