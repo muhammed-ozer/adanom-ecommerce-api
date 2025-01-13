@@ -4,9 +4,13 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
     {
         public OrderPaymentProfile()
         {
-            CreateMap<OrderPayment, OrderPaymentResponse>();
+            CreateMap<OrderPayment, OrderPaymentResponse>()
+                .ForMember(member => member.OrderPaymentType, options =>
+                    options.MapFrom(e => new OrderPaymentTypeResponse(e.OrderPaymentType)));
 
-            CreateMap<OrderPaymentResponse, OrderPayment>();
+            CreateMap<OrderPaymentResponse, OrderPayment>()
+                .ForMember(member => member.OrderPaymentType, options =>
+                    options.MapFrom(e => e.OrderPaymentType.Key));
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Adanom.Ecommerce.API.Data.Models
         public string? TransactionId { get; set; } = null!;
 
         [StringLength(5000)]
-        public string? GatewayInitializationResponse { get; set; } = null!;
+        public string? GatewayInitializationResponse { get; set; }
 
         [StringLength(5000)]
         public string? GatewayResponse { get; set; }

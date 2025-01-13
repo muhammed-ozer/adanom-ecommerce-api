@@ -28,7 +28,8 @@ namespace Adanom.Ecommerce.API.Validation.Validators
             RuleFor(e => e)
                 .CustomAsync(ValidateDoesShippingAddressExistsAsync)
                 .CustomAsync(ValidateDoesBillingAddressExistsAsync)
-                .CustomAsync(ValidateDeliveryTypeAsync);
+                .CustomAsync(ValidateDeliveryTypeAsync)
+                .CustomAsync(ValidateOrderPaymentTypeAsync);
 
             RuleFor(e => e.Note)
                 .MaximumLength(100)
@@ -204,6 +205,29 @@ namespace Adanom.Ecommerce.API.Validation.Validators
                     ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
                     ErrorMessage = "Teslimat yöntemi bulunamadı."
                 });
+            }
+        }
+
+        #endregion
+
+        #region ValidateOrderPaymentTypeAsync
+
+        private async Task ValidateOrderPaymentTypeAsync(
+           CreateOrder value,
+           ValidationContext<CreateOrder> context,
+           CancellationToken cancellationToken)
+        {
+            var allowedPaymentTypes = await _mediator.Send(new GetAllowedPaymentTypesByDeliveryType(value.DeliveryType));
+
+            if (!allowedPaymentTypes.Select(e => e.Key).Contains(value.OrderPaymentType))
+            {
+                context.AddFailure(new ValidationFailure(nameof(CreateOrder.OrderPaymentType), null)
+                {
+                    ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
+                    ErrorMessage = "Ödeme seçeneği bu teslimat yöntemiyle kullanılamaz."
+                });
+
+                return;
             }
         }
 

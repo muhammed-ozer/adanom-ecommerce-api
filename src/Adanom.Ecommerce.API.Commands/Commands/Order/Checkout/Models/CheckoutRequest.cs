@@ -4,6 +4,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
     {
         public DeliveryType DeliveryType { get; set; }
 
+        public OrderPaymentType OrderPaymentType { get; set; }
+
         public long? ShippingProviderId { get; set; }
 
         public long? PickUpStoreId { get; set; }
