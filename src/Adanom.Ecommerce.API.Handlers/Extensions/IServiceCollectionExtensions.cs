@@ -20,8 +20,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #region Brand
 
-                options.AddBehavior<IPipelineBehavior<CreateBrand, BrandResponse?>, CreateBrand_CommitTransactionBehavior>();
-
                 options.AddBehavior<IPipelineBehavior<DeleteBrand, bool>, DeleteBrand_DeleteRelationsBehavior>();
 
                 #endregion
