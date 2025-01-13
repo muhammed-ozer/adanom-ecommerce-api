@@ -4,7 +4,7 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
@@ -12,12 +12,9 @@
 
         #region Ctor
 
-        public DeleteImagesHandler(
-            ApplicationDbContext applicationDbContext, 
-            IMapper mapper, 
-            IMediator mediator)
+        public DeleteImagesHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMapper mapper, IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
@@ -28,7 +25,9 @@
 
         public async Task<bool> Handle(DeleteImages command, CancellationToken cancellationToken)
         {
-            var images = await _applicationDbContext.Images
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var images = await applicationDbContext.Images
                 .Where(e => e.EntityId == command.EntityId &&
                             e.EntityType == command.EntityType)
                 .ToListAsync();
@@ -38,7 +37,7 @@
                 return true;
             }
 
-            foreach (var image in images) 
+            foreach (var image in images)
             {
                 var deleteImageRequest = new DeleteImageRequest()
                 {

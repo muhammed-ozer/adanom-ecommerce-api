@@ -7,7 +7,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
         private readonly IBlobStorageService _blobStorageService;
@@ -16,13 +16,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region Ctor
 
-        public DeleteImageHandler(
-            ApplicationDbContext applicationDbContext, 
-            IMapper mapper, 
-            IMediator mediator,
-            IBlobStorageService blobStorageService)
+        public DeleteImageHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMapper mapper, IMediator mediator, IBlobStorageService blobStorageService)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _blobStorageService = blobStorageService ?? throw new ArgumentNullException(nameof(blobStorageService));
@@ -36,13 +32,15 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var image = await _applicationDbContext.Images
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var image = await applicationDbContext.Images
                 .Where(e => e.Id == command.Id)
                 .SingleAsync();
 
             if (image.IsDefault)
             {
-                var randomEntityImage = await _applicationDbContext.Images
+                var randomEntityImage = await applicationDbContext.Images
                     .Where(e => e.EntityType == image.EntityType &&
                                 e.EntityId == image.EntityId)
                     .OrderBy(e => e.DisplayOrder)
@@ -58,11 +56,11 @@ namespace Adanom.Ecommerce.API.Handlers
 
             var deleteImageResponse = await _blobStorageService.DeleteFileAsync(image.Path);
 
-            _applicationDbContext.Remove(image);
+            applicationDbContext.Remove(image);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {
