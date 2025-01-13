@@ -60,5 +60,16 @@
         }
 
         #endregion
+
+        #region CalculateDiscountByDiscountRate
+
+        public decimal CalculateDiscountByDiscountRate(decimal value, decimal discountRate)
+        {
+            var result = value * discountRate / 100;
+
+            return PriceHelpers.Round(result);
+        }
+
+        #endregion
     }
 }

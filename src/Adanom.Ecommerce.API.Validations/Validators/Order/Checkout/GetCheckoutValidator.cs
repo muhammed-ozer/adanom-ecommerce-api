@@ -14,7 +14,8 @@
                     .WithMessage("Kullanıcı bilgilerine erişilemiyor.");
 
             RuleFor(e => e)
-                .CustomAsync(ValidateDeliveryTypeAsync);
+                .CustomAsync(ValidateDeliveryTypeAsync)
+                .CustomAsync(ValidateOrderPaymentTypeAsync);
         }
 
         #region Private Methods
@@ -120,6 +121,29 @@
                     ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
                     ErrorMessage = "Teslimat yöntemi bulunamadı."
                 });
+            }
+        }
+
+        #endregion
+
+        #region ValidateOrderPaymentTypeAsync
+
+        private async Task ValidateOrderPaymentTypeAsync(
+           GetCheckout value,
+           ValidationContext<GetCheckout> context,
+           CancellationToken cancellationToken)
+        {
+            var allowedPaymentTypes = await _mediator.Send(new GetAllowedPaymentTypesByDeliveryType(value.DeliveryType));
+
+            if (!allowedPaymentTypes.Select(e => e.Key).Contains(value.OrderPaymentType))
+            {
+                context.AddFailure(new ValidationFailure(nameof(GetCheckout.OrderPaymentType), null)
+                {
+                    ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
+                    ErrorMessage = "Ödeme seçeneği bu teslimat yöntemiyle kullanılamaz."
+                });
+
+                return;
             }
         }
 

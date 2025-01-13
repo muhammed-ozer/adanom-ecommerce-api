@@ -4,10 +4,11 @@ namespace Adanom.Ecommerce.API.Commands
     {
         #region Ctor
 
-        public CalculateShoppingCartItemSummary(ShoppingCartItemResponse shoppingCartItem, UserResponse user)
+        public CalculateShoppingCartItemSummary(ShoppingCartItemResponse shoppingCartItem, UserResponse user, OrderPaymentType? orderPaymentType = null)
         {
             ShoppingCartItem = shoppingCartItem;
             User = user;
+            OrderPaymentType = orderPaymentType;
         }
 
         #endregion
@@ -17,6 +18,8 @@ namespace Adanom.Ecommerce.API.Commands
         public ShoppingCartItemResponse ShoppingCartItem { get; }
 
         public UserResponse User { get; }
+
+        public OrderPaymentType? OrderPaymentType { get; set; }
 
         #endregion
     }

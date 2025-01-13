@@ -14,6 +14,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public decimal? UserDefaultDiscountRateBasedDiscount { get; set; }
 
+        public decimal? DiscountByOrderPaymentType { get; set; }
+
         public decimal GrandTotal { get; set; }
 
         public bool IsFreeShipping { get; set; }
@@ -26,6 +28,10 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public bool HasStocksChanges { get; set; }
 
+        public bool CanCreateOrder { get; set; } = true;
+
         public ICollection<ShoppingCartItemResponse> Items { get; set; } = [];
+
+        public ICollection<string> Errors { get; set; } = [];
     }
 }

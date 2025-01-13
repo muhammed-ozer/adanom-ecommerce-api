@@ -18,12 +18,13 @@ namespace Adanom.Ecommerce.API.Commands
             UpdateItems = updateItems;
         }
 
-        public GetShoppingCart(ClaimsPrincipal identity, bool includeItems, bool includeSummary, bool updateItems)
+        public GetShoppingCart(ClaimsPrincipal identity, bool includeItems, bool includeSummary, bool updateItems, OrderPaymentType? orderPaymentType = null)
         {
             Identity = identity ?? throw new ArgumentNullException(nameof(identity));
             IncludeItems = includeItems;
             IncludeSummary = includeSummary;
             UpdateItems = updateItems;
+            OrderPaymentType = orderPaymentType;
         }
 
         #endregion
@@ -41,6 +42,8 @@ namespace Adanom.Ecommerce.API.Commands
         public bool IncludeSummary { get; }
 
         public bool UpdateItems { get; }
+
+        public OrderPaymentType? OrderPaymentType { get; set; }
 
         #endregion
     }

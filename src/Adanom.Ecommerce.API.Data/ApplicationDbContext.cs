@@ -157,6 +157,7 @@ namespace Adanom.Ecommerce.API.Data
                 e.Property(e => e.SubTotal).HasPrecision(10, 2);
                 e.Property(e => e.TotalDiscount).HasPrecision(10, 2);
                 e.Property(e => e.UserDefaultDiscountRateBasedDiscount).HasPrecision(10, 2);
+                e.Property(e => e.DiscountByOrderPaymentType).HasPrecision(10, 2);
                 e.Property(e => e.TaxTotal).HasPrecision(10, 2);
             });
 

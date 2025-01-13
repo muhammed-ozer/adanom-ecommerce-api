@@ -9,5 +9,7 @@
         decimal CalculateTaxIncludedPrice(decimal taxExcludedPrice, decimal taxRate);
 
         decimal CalculateDiscountedPriceByDiscountRate(decimal originalPrice, decimal discountRate);
+
+        decimal CalculateDiscountByDiscountRate(decimal value, decimal discountRate);
     }
 }

@@ -41,7 +41,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 return null;
             }
 
-            var shoppingCart = await _mediator.Send(new GetShoppingCart(command.Identity, true, true, true));
+            var shoppingCart = await _mediator.Send(new GetShoppingCart(command.Identity, true, true, false, command.OrderPaymentType));
 
             if (shoppingCart == null)
             {

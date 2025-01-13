@@ -6,14 +6,20 @@ namespace Adanom.Ecommerce.API.Data.Models
     {
         public long OrderId { get; set; }
 
+        public OrderPaymentType OrderPaymentType { get; set; }
+
         [StringLength(100)]
-        public string TransactionId { get; set; } = null!;
+        public string? TransactionId { get; set; } = null!;
 
-        [StringLength(1000)]
-        public string GatewayInitializationResponse { get; set; } = null!;
+        [StringLength(5000)]
+        public string? GatewayInitializationResponse { get; set; }
 
-        [StringLength(1000)]
+        [StringLength(5000)]
         public string? GatewayResponse { get; set; }
+
+        public bool Paid { get; set; }
+
+        public DateTime? PaidAtUtc { get; set; }
 
         public Order Order { get; set; } = null!;
     }
