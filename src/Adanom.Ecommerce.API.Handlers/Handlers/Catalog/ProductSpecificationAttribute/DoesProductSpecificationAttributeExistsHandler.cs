@@ -4,15 +4,15 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
         #endregion
 
         #region Ctor
 
-        public DoesProductSpecificationAttributeExistsHandler(ApplicationDbContext applicationDbContext)
+        public DoesProductSpecificationAttributeExistsHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
 
         #endregion
@@ -21,7 +21,9 @@
 
         public async Task<bool> Handle(DoesEntityExists<ProductSpecificationAttributeResponse> command, CancellationToken cancellationToken)
         {
-            return await _applicationDbContext.ProductSpecificationAttributes
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            return await applicationDbContext.ProductSpecificationAttributes
                 .AnyAsync(e => e.DeletedAtUtc == null && e.Id == command.Id);
         }
 

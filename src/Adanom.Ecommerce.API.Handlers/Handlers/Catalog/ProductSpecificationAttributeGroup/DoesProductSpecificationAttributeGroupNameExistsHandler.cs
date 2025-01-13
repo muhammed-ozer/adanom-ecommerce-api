@@ -5,15 +5,15 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
         #endregion
 
         #region Ctor
 
-        public DoesProductSpecificationAttributeGroupNameExistsHandler(ApplicationDbContext applicationDbContext)
+        public DoesProductSpecificationAttributeGroupNameExistsHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
 
         #endregion
@@ -22,7 +22,9 @@
 
         public async Task<bool> Handle(DoesEntityNameExists<ProductSpecificationAttributeGroupResponse> command, CancellationToken cancellationToken)
         {
-            var query = _applicationDbContext.ProductSpecificationAttributeGroups
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var query = applicationDbContext.ProductSpecificationAttributeGroups
                 .AsNoTracking()
                 .Where(e => e.DeletedAtUtc == null &&
                             e.Name.ToLower() == command.Name.ToLower());

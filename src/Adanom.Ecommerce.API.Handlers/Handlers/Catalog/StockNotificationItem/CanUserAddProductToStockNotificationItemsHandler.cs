@@ -4,15 +4,15 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
         #endregion
 
         #region Ctor
 
-        public CanUserAddProductToStockNotificationItemsHandler(ApplicationDbContext applicationDbContext)
+        public CanUserAddProductToStockNotificationItemsHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
 
         #endregion
@@ -21,7 +21,9 @@
 
         public async Task<bool> Handle(CanUserAddProductToStockNotificationItems command, CancellationToken cancellationToken)
         {
-            var userHasProductOnStockNotificationItems = await _applicationDbContext.StockNotificationItems
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var userHasProductOnStockNotificationItems = await applicationDbContext.StockNotificationItems
                 .AnyAsync(e => e.UserId == command.UserId &&
                                e.ProductId == command.ProductId);
 

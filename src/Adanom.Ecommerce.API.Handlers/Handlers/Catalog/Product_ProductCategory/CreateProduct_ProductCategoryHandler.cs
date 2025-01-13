@@ -6,16 +6,16 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public CreateProduct_ProductCategoryHandler(ApplicationDbContext applicationDbContext, IMediator mediator)
+        public CreateProduct_ProductCategoryHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
         }
@@ -32,11 +32,13 @@ namespace Adanom.Ecommerce.API.Handlers
                 ProductCategoryId = command.ProductCategoryId
             };
 
-            await _applicationDbContext.AddAsync(product_ProductCategory);
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            await applicationDbContext.AddAsync(product_ProductCategory);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

@@ -6,16 +6,16 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory   ;
         private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public DeleteProductTag_DeleteRelationsBehavior(ApplicationDbContext applicationDbContext, IMediator mediator)
+        public DeleteProductTag_DeleteRelationsBehavior(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
         }
@@ -30,17 +30,19 @@ namespace Adanom.Ecommerce.API.Handlers
 
             if (deleteProductTagResponse)
             {
-                var product_ProductTag_Mappings = await _applicationDbContext.Product_ProductTag_Mappings
+                await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+                var product_ProductTag_Mappings = await applicationDbContext.Product_ProductTag_Mappings
                                 .Where(e => e.ProductTagId == command.Id)
                                 .ToListAsync();
 
                 if (product_ProductTag_Mappings.Any())
                 {
-                    _applicationDbContext.RemoveRange(product_ProductTag_Mappings);
+                    applicationDbContext.RemoveRange(product_ProductTag_Mappings);
 
                     try
                     {
-                        await _applicationDbContext.SaveChangesAsync();
+                        await applicationDbContext.SaveChangesAsync();
                     }
                     catch (Exception exception)
                     {

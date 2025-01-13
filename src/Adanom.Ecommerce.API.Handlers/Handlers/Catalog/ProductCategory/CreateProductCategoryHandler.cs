@@ -72,6 +72,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productCategory.Id),
             }));
 
+            await _mediator.Publish(new AddToCache<ProductCategoryResponse>(productCategoryResponse));
+
             return productCategoryResponse;
         }
 
