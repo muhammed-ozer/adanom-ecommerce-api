@@ -4,15 +4,15 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
         #endregion
 
         #region Ctor
 
-        public CanUserAddProductToFavoriteItemsHandler(ApplicationDbContext applicationDbContext)
+        public CanUserAddProductToFavoriteItemsHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
 
         #endregion
@@ -21,12 +21,14 @@
 
         public async Task<bool> Handle(CanUserAddProductToFavoriteItems command, CancellationToken cancellationToken)
         {
-            var userHasProductOnFavoriteItems = await _applicationDbContext.FavoriteItems
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var userHasProductOnFavoriteItems = await applicationDbContext.FavoriteItems
                 .AnyAsync(e => e.UserId == command.UserId &&
                                e.ProductId == command.ProductId);
 
             return !userHasProductOnFavoriteItems;
-         }
+        }
 
         #endregion
     }
