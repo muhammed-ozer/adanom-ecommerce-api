@@ -8,12 +8,18 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddApplicationData(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            Action<DbContextOptionsBuilder> configureApplicationDbContext = options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-
                 options.UseOpenIddict();
-            }, ServiceLifetime.Transient);
+            };
+
+            services.AddDbContext<ApplicationDbContext>(
+                configureApplicationDbContext,
+                contextLifetime: ServiceLifetime.Scoped,
+                optionsLifetime: ServiceLifetime.Singleton);
+
+            services.AddDbContextFactory<ApplicationDbContext>(configureApplicationDbContext);
 
             return services;
         }
