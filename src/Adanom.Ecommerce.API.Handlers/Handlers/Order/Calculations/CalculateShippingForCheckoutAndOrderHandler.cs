@@ -1,6 +1,4 @@
-﻿using HotChocolate.Execution;
-
-namespace Adanom.Ecommerce.API.Handlers
+﻿namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class CalculateShippingForCheckoutAndOrderHandler
         : IRequestHandler<CalculateShippingForCheckoutAndOrder, CalculateShippingForCheckoutAndOrderResponse?>
@@ -33,6 +31,8 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var response = new CalculateShippingForCheckoutAndOrderResponse();
 
+            response.IsShippable = true;
+
             if (command.DeliveryType == DeliveryType.PICK_UP_FROM_STORE)
             {
                 response.IsFreeShipping = true;
@@ -43,9 +43,10 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 if (localDeliveryProvider!.MinimumOrderGrandTotal > command.GrandTotal)
                 {
-                    var error = new Error($"Minimum sepet tutarı {localDeliveryProvider!.MinimumOrderGrandTotal}₺ olması gerekmektedir.", ValidationErrorCodesEnum.NOT_ALLOWED.ToString());
+                    response.IsShippable = false;
+                    response.ErrorMessage = $"Minimum sepet tutarı {localDeliveryProvider!.MinimumOrderGrandTotal}₺ olması gerekmektedir.";
 
-                    throw new QueryException(error);
+                    return response;
                 }
 
                 if (localDeliveryProvider!.MinimumFreeDeliveryOrderGrandTotal <= command.GrandTotal)
@@ -65,9 +66,10 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 if (shippingProvider!.MinimumOrderGrandTotal > command.GrandTotal)
                 {
-                    var error = new Error($"Minimum sepet tutarı {shippingProvider!.MinimumOrderGrandTotal}₺ olması gerekmektedir.", ValidationErrorCodesEnum.NOT_ALLOWED.ToString());
+                    response.IsShippable = false;
+                    response.ErrorMessage = $"Minimum sepet tutarı {shippingProvider!.MinimumOrderGrandTotal}₺ olması gerekmektedir.";
 
-                    throw new QueryException(error);
+                    return response;
                 }
 
                 if (shippingProvider!.MinimumFreeShippingOrderGrandTotal <= command.GrandTotal)

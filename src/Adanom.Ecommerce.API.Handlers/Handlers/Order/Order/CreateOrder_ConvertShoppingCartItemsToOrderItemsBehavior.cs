@@ -46,7 +46,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 return null;
             }
 
-            var shoppingCart = await _mediator.Send(new GetShoppingCart(command.Identity,true, false, false));
+            var shoppingCart = await _mediator.Send(new GetShoppingCart(command.Identity,true, false, false, command.OrderPaymentType));
 
             if (shoppingCart == null)
             {
@@ -62,7 +62,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             foreach (var shoppingCartItem in shoppingCart.Items)
             {
-                var shoppingCartItemSummary = await _mediator.Send(new CalculateShoppingCartItemSummary(shoppingCartItem, user));
+                var shoppingCartItemSummary = await _mediator.Send(new CalculateShoppingCartItemSummary(shoppingCartItem, user, command.OrderPaymentType));
 
                 if (shoppingCartItemSummary == null)
                 {
@@ -100,6 +100,16 @@ namespace Adanom.Ecommerce.API.Handlers
                     }
 
                     orderResponse.UserDefaultDiscountRateBasedDiscount += shoppingCartItemSummary.UserDefaultDiscountRateBasedDiscount;
+                }
+
+                if (shoppingCartItemSummary.DiscountByOrderPaymentType != null && shoppingCartItemSummary.DiscountByOrderPaymentType > 0)
+                {
+                    if (orderResponse.DiscountByOrderPaymentType == null)
+                    {
+                        orderResponse.DiscountByOrderPaymentType = 0;
+                    }
+
+                    orderResponse.DiscountByOrderPaymentType += shoppingCartItemSummary.DiscountByOrderPaymentType;
                 }
 
                 orderItems.Add(orderItem);

@@ -58,7 +58,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             foreach (var shoppingCartItem in shoppingCartResponse.Items)
             {
-                var shoppingCartItemSummary = await _mediator.Send(new CalculateShoppingCartItemSummary(shoppingCartItem, user));
+                var shoppingCartItemSummary = await _mediator.Send(new CalculateShoppingCartItemSummary(shoppingCartItem, user, command.OrderPaymentType));
 
                 if (shoppingCartItemSummary == null)
                 {
@@ -85,6 +85,16 @@ namespace Adanom.Ecommerce.API.Handlers
                     }
 
                     shoppingCartSummaryResponse.UserDefaultDiscountRateBasedDiscount += shoppingCartItemSummary.UserDefaultDiscountRateBasedDiscount;
+                }
+
+                if (shoppingCartItemSummary.DiscountByOrderPaymentType != null && shoppingCartItemSummary.DiscountByOrderPaymentType > 0)
+                {
+                    if (shoppingCartSummaryResponse.DiscountByOrderPaymentType == null)
+                    {
+                        shoppingCartSummaryResponse.DiscountByOrderPaymentType = 0;
+                    }
+
+                    shoppingCartSummaryResponse.DiscountByOrderPaymentType += shoppingCartItemSummary.DiscountByOrderPaymentType;
                 }
 
                 shoppingCartSummaryResponse.TaxTotal += shoppingCartItemSummary.TaxTotal;

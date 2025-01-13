@@ -1,4 +1,6 @@
-﻿namespace Adanom.Ecommerce.API.Handlers
+﻿using HotChocolate.Execution;
+
+namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class CreateOrder_CalculateShippingBehavior : IPipelineBehavior<CreateOrder, OrderResponse?>
     {
@@ -51,6 +53,12 @@
             orderResponse.IsFreeShipping = calculatedShippingResponse.IsFreeShipping;
             orderResponse.ShippingFeeTotal = calculatedShippingResponse.ShippingFeeTotal;
             orderResponse.ShippingFeeTax = calculatedShippingResponse.ShippingFeeTax;
+
+            if (!calculatedShippingResponse.IsShippable)
+            {
+                var error = new Error(calculatedShippingResponse.ErrorMessage ?? "Teslimat yöntemi şuan kullanılamaz.", ValidationErrorCodesEnum.NOT_ALLOWED.ToString());
+                throw new QueryException(error);
+            }
 
             return orderResponse;
         }

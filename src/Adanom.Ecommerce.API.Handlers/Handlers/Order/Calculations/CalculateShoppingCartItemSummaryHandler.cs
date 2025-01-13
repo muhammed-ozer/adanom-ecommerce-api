@@ -53,6 +53,7 @@
 
             decimal? subDiscountedTotal = null;
             decimal? userDefaultDiscountRateBasedDiscountTotal = null;
+            decimal? discountByOrderPaymentType = null;
 
             if (shoppingCartItem.DiscountedPrice != null && shoppingCartItem.DiscountedPrice.Value != 0)
             {
@@ -65,6 +66,22 @@
                 subDiscountedTotal = shoppingCartItem.DiscountedPrice.Value * shoppingCartItem.Amount;
 
                 userDefaultDiscountRateBasedDiscountTotal = subTotal - subDiscountedTotal;
+            }
+
+            if (command.OrderPaymentType != null)
+            {
+                var orderPaymentType = await _mediator.Send(new GetOrderPaymentType(command.OrderPaymentType.Value));
+
+                if (orderPaymentType != null && orderPaymentType.DiscountRate > 0)
+                {
+                    discountByOrderPaymentType = _calculationService.CalculateDiscountByDiscountRate(subDiscountedTotal ?? subTotal, orderPaymentType.DiscountRate);
+
+                    shoppingCartItem.DiscountedPrice = _calculationService.CalculateDiscountedPriceByDiscountRate(
+                        shoppingCartItem.DiscountedPrice ?? shoppingCartItem.OriginalPrice,
+                        orderPaymentType.DiscountRate);
+
+                    subDiscountedTotal = shoppingCartItem.DiscountedPrice.Value * shoppingCartItem.Amount;
+                }
             }
 
             decimal taxTotal;
@@ -87,6 +104,7 @@
                 TaxRate = taxCategory.Rate,
                 TaxTotal = taxTotal,
                 UserDefaultDiscountRateBasedDiscount = userDefaultDiscountRateBasedDiscountTotal,
+                DiscountByOrderPaymentType = discountByOrderPaymentType,
                 SubTotal = subTotal,
                 DiscountTotal = (subTotal - subDiscountedTotal) ?? 0
             };

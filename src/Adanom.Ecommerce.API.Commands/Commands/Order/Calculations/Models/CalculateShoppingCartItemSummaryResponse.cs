@@ -11,5 +11,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public decimal? DiscountTotal { get; set; }
 
         public decimal? UserDefaultDiscountRateBasedDiscount { get; set; }
+
+        public decimal? DiscountByOrderPaymentType { get; set; }
     }
 }

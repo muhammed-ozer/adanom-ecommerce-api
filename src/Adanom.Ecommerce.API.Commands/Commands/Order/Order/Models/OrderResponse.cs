@@ -31,6 +31,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public decimal? UserDefaultDiscountRateBasedDiscount { get; set; }
 
+        public decimal? DiscountByOrderPaymentType { get; set; }
+
         public decimal TaxTotal { get; set; }
 
         public decimal ShippingFeeTotal { get; set; }

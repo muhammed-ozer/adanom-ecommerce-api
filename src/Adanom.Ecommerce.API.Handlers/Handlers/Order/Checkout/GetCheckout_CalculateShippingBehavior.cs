@@ -42,6 +42,12 @@
 
             checkoutResponse.GrandTotal += checkoutResponse.ShippingFeeTotal;
 
+            if (!calculatedShippingResponse.IsShippable)
+            {
+                checkoutResponse.CanCreateOrder = false;
+                checkoutResponse.Errors = [calculatedShippingResponse.ErrorMessage ?? "Teslimat yöntemi şuan kullanılamaz."];
+            }
+
             return checkoutResponse;
         }
 
