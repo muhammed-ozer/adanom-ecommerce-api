@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
@@ -14,10 +14,10 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public MarkAsReadNotificationsHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
@@ -29,9 +29,11 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             foreach (var id in command.Ids)
             {
-                var notification = await _applicationDbContext.Notifications
+                var notification = await applicationDbContext.Notifications
                     .Where(e => e.Id == id)
                     .SingleOrDefaultAsync();
 
@@ -46,7 +48,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch
             {
@@ -60,7 +62,7 @@ namespace Adanom.Ecommerce.API.Handlers
             }
 
             return true;
-        } 
+        }
 
         #endregion
     }

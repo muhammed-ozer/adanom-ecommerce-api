@@ -4,7 +4,7 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
@@ -12,10 +12,10 @@
         #region Ctor
 
         public UpdateShoppingCart_LastModifiedDateHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
@@ -25,7 +25,9 @@
 
         public async Task<bool> Handle(UpdateShoppingCart_LastModifiedDate command, CancellationToken cancellationToken)
         {
-            var shoppingCart = await _applicationDbContext.ShoppingCarts
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var shoppingCart = await applicationDbContext.ShoppingCarts
                 .Where(e => e.Id == command.Id)
                 .SingleOrDefaultAsync();
 
@@ -38,7 +40,7 @@
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

@@ -6,16 +6,16 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public DeleteLocalDeliveryProviderHandler(ApplicationDbContext applicationDbContext, IMediator mediator)
+        public DeleteLocalDeliveryProviderHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
@@ -27,7 +27,9 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var localDeliveryProvider = await _applicationDbContext.LocalDeliveryProviders
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var localDeliveryProvider = await applicationDbContext.LocalDeliveryProviders
                 .Where(e => e.DeletedAtUtc == null && e.Id == command.Id)
                 .SingleAsync();
 
@@ -36,7 +38,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             if (localDeliveryProvider.IsDefault)
             {
-                var randomLocalDeliveryProvider = await _applicationDbContext.LocalDeliveryProviders
+                var randomLocalDeliveryProvider = await applicationDbContext.LocalDeliveryProviders
                     .Where(e => e.DeletedAtUtc == null && e.Id != command.Id)
                     .FirstOrDefaultAsync();
 
@@ -48,7 +50,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {
@@ -71,6 +73,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 TransactionType = TransactionType.DELETE,
                 Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, localDeliveryProvider.Id),
             }));
+
+            await _mediator.Publish(new ClearEntityCache<LocalDeliveryProviderResponse>());
 
             return true;
         }

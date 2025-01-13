@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
@@ -15,11 +15,11 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public CreateLocalDeliveryProviderHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
@@ -33,9 +33,11 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             if (!command.IsDefault)
             {
-                var hasAnyOtherLocalDeliveryProvider = await _applicationDbContext.LocalDeliveryProviders
+                var hasAnyOtherLocalDeliveryProvider = await applicationDbContext.LocalDeliveryProviders
                     .AsNoTracking()
                     .AnyAsync(e => e.DeletedAtUtc == null);
 
@@ -46,7 +48,7 @@ namespace Adanom.Ecommerce.API.Handlers
             }
             else
             {
-                var currentDefaultLocalDeliveryProvider = await _applicationDbContext.LocalDeliveryProviders
+                var currentDefaultLocalDeliveryProvider = await applicationDbContext.LocalDeliveryProviders
                     .Where(e => e.DeletedAtUtc == null &&
                                 e.IsDefault)
                     .SingleOrDefaultAsync();
@@ -66,11 +68,11 @@ namespace Adanom.Ecommerce.API.Handlers
                 });
             });
 
-            await _applicationDbContext.AddAsync(localDeliveryProvider);
+            await applicationDbContext.AddAsync(localDeliveryProvider);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
 
                 foreach (var addressDistrictId in command.SupportedAddressDistrictIds)
                 {

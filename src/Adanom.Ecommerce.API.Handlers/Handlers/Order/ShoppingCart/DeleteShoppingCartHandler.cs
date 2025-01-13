@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
@@ -14,10 +14,10 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public DeleteShoppingCartHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
@@ -29,17 +29,19 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             ShoppingCart? shoppingCart = null;
 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             if (command.Identity != null)
             {
                 var userId = command.Identity.GetUserId();
 
-                shoppingCart = await _applicationDbContext.ShoppingCarts
+                shoppingCart = await applicationDbContext.ShoppingCarts
                     .Where(e => e.UserId == userId)
                     .SingleOrDefaultAsync();
             }
             else
             {
-                shoppingCart = await _applicationDbContext.ShoppingCarts
+                shoppingCart = await applicationDbContext.ShoppingCarts
                     .Where(e => e.Id == command.Id)
                     .SingleOrDefaultAsync();
             }
@@ -49,11 +51,11 @@ namespace Adanom.Ecommerce.API.Handlers
                 return true;
             }
 
-            _applicationDbContext.Remove(shoppingCart);
+            applicationDbContext.Remove(shoppingCart);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

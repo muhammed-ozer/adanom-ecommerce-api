@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
@@ -15,11 +15,11 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public DeleteShoppingCartItem_DeleteShoppingCartBehavior(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMediator mediator,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -30,6 +30,8 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<bool> Handle(DeleteShoppingCartItem command, RequestHandlerDelegate<bool> next, CancellationToken cancellationToken)
         {
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             var deleteShoppingCartItemResponse = await next();
 
             if (!deleteShoppingCartItemResponse)
@@ -39,7 +41,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             var userId = command.Identity.GetUserId();
 
-            var shoppingCart = await _applicationDbContext.ShoppingCarts
+            var shoppingCart = await applicationDbContext.ShoppingCarts
                 .Where(e => e.UserId == userId)
                 .Include(e => e.Items)
                 .SingleOrDefaultAsync();

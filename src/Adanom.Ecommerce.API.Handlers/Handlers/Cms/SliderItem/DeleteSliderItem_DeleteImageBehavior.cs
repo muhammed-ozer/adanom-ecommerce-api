@@ -5,8 +5,6 @@ namespace Adanom.Ecommerce.API.Handlers
     public sealed class DeleteSliderItem_DeleteImageBehavior : IPipelineBehavior<DeleteSliderItem, bool>
     {
         #region Fields
-
-        private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
@@ -15,11 +13,9 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public DeleteSliderItem_DeleteImageBehavior(
-            ApplicationDbContext applicationDbContext,
             IMediator mediator, 
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }

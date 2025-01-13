@@ -5,7 +5,6 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMediator _mediator;
         private readonly ICalculationService _calculationService;
 
@@ -14,11 +13,9 @@
         #region Ctor
 
         public CalculateShippingForCheckoutAndOrderHandler(
-            ApplicationDbContext applicationDbContext,
             IMediator mediator,
             ICalculationService calculationService)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _calculationService = calculationService ?? throw new ArgumentNullException(nameof(calculationService));
         }
@@ -36,8 +33,8 @@
             if (command.DeliveryType == DeliveryType.PICK_UP_FROM_STORE)
             {
                 response.IsFreeShipping = true;
-            } 
-            else if(command.DeliveryType == DeliveryType.LOCAL_DELIVERY)
+            }
+            else if (command.DeliveryType == DeliveryType.LOCAL_DELIVERY)
             {
                 var localDeliveryProvider = await _mediator.Send(new GetLocalDeliveryProvider(command.LocalDeliveryProviderId!.Value));
 
@@ -52,7 +49,7 @@
                 if (localDeliveryProvider!.MinimumFreeDeliveryOrderGrandTotal <= command.GrandTotal)
                 {
                     response.IsFreeShipping = true;
-                } 
+                }
                 else
                 {
                     response.IsFreeShipping = false;

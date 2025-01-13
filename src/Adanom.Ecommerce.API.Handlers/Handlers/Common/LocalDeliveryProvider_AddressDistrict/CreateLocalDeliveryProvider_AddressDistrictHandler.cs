@@ -6,16 +6,16 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public CreateLocalDeliveryProvider_AddressDistrictHandler(ApplicationDbContext applicationDbContext, IMediator mediator)
+        public CreateLocalDeliveryProvider_AddressDistrictHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
         }
@@ -32,11 +32,13 @@ namespace Adanom.Ecommerce.API.Handlers
                 AddressDistrictId = command.AddressDistrictId
             };
 
-            await _applicationDbContext.AddAsync(localDeliveryProvider_AddressDistrict);
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            await applicationDbContext.AddAsync(localDeliveryProvider_AddressDistrict);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

@@ -4,7 +4,7 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
@@ -12,10 +12,10 @@
         #region Ctor
 
         public DeleteAnonymousShoppingCartHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
@@ -25,7 +25,9 @@
 
         public async Task<bool> Handle(DeleteAnonymousShoppingCart command, CancellationToken cancellationToken)
         {
-            var anonymousShoppingCart = await _applicationDbContext.AnonymousShoppingCarts
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var anonymousShoppingCart = await applicationDbContext.AnonymousShoppingCarts
                 .Where(e => e.Id == command.Id)
                 .SingleOrDefaultAsync();
 
@@ -34,11 +36,11 @@
                 return true;
             }
 
-            _applicationDbContext.Remove(anonymousShoppingCart);
+            applicationDbContext.Remove(anonymousShoppingCart);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

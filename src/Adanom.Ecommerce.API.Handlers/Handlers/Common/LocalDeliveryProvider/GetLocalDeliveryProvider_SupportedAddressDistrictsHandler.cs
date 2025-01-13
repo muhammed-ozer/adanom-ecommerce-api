@@ -5,7 +5,7 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
@@ -13,10 +13,10 @@
         #region Ctor
 
         public GetLocalDeliveryProvider_SupportedAddressDistrictsHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -26,7 +26,9 @@
 
         public async Task<IEnumerable<AddressDistrictResponse>> Handle(GetLocalDeliveryProvider_SupportedAddressDistricts command, CancellationToken cancellationToken)
         {
-            var addressDistrictsQuery = _applicationDbContext.LocalDeliveryProvider_AddressDistrict_Mappings
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var addressDistrictsQuery = applicationDbContext.LocalDeliveryProvider_AddressDistrict_Mappings
                 .Where(e => e.LocalDeliveryProviderId == command.LocalDeliveryProviderId && e.LocalDeliveryProvider.DeletedAtUtc == null)
                 .Select(e => e.AddressDistrict);
 

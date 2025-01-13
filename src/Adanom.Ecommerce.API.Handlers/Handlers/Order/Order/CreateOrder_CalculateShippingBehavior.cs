@@ -6,22 +6,16 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
         public CreateOrder_CalculateShippingBehavior(
-            ApplicationDbContext applicationDbContext,
-            IMediator mediator,
-            IMapper mapper)
+            IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         #endregion
