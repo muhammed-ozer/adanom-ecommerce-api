@@ -4,16 +4,18 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public GetShippingAddressHandler(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public GetShippingAddressHandler(
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
+            IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -25,23 +27,25 @@
         {
             ShippingAddress? shippingAddress = null;
 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             if (command.IncludeDeleted != null && command.IncludeDeleted.Value)
             {
-                shippingAddress = await _applicationDbContext.ShippingAddresses
+                shippingAddress = await applicationDbContext.ShippingAddresses
                     .Where(e => e.Id == command.Id)
                     .AsNoTracking()
                     .SingleOrDefaultAsync();
             }
             else
             {
-                shippingAddress = await _applicationDbContext.ShippingAddresses
+                shippingAddress = await applicationDbContext.ShippingAddresses
                     .Where(e => e.DeletedAtUtc == null && e.Id == command.Id)
                     .AsNoTracking()
                     .SingleOrDefaultAsync();
             }
 
             return _mapper.Map<ShippingAddressResponse>(shippingAddress);
-        } 
+        }
 
         #endregion
     }

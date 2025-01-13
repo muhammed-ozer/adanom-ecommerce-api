@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class GetProductSpecificationAttributeGroupsHandler : 
+    public sealed class GetProductSpecificationAttributeGroupsHandler :
         IRequestHandler<GetProductSpecificationAttributeGroups, PaginatedData<ProductSpecificationAttributeGroupResponse>>,
         INotificationHandler<ClearEntityCache<ProductSpecificationAttributeGroupResponse>>,
         INotificationHandler<AddToCache<ProductSpecificationAttributeGroupResponse>>,
@@ -11,7 +11,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         private readonly static ConcurrentDictionary<long, ProductSpecificationAttributeGroupResponse> _cache = new();
@@ -21,10 +21,10 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public GetProductSpecificationAttributeGroupsHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -34,7 +34,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<PaginatedData<ProductSpecificationAttributeGroupResponse>> Handle(GetProductSpecificationAttributeGroups command, CancellationToken cancellationToken)
         {
-            var productSpecificationAttributeGroupsCountOnDb = await _applicationDbContext.ProductSpecificationAttributeGroups
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var productSpecificationAttributeGroupsCountOnDb = await applicationDbContext.ProductSpecificationAttributeGroups
                 .Where(e => e.DeletedAtUtc == null)
                 .CountAsync();
 
@@ -42,7 +44,7 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 _cache.Clear();
 
-                var productSpecificationAttributeGroupsOnDb = await _applicationDbContext.ProductSpecificationAttributeGroups
+                var productSpecificationAttributeGroupsOnDb = await applicationDbContext.ProductSpecificationAttributeGroups
                    .AsNoTracking()
                    .Where(e => e.DeletedAtUtc == null)
                    .ToListAsync();

@@ -8,8 +8,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
-        private readonly IMediator _mediator;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
@@ -17,12 +16,10 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public GetShippingAddressesHandler(
-            ApplicationDbContext applicationDbContext,
-            IMediator mediator,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -34,7 +31,9 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var shippingAddressesQuery = _applicationDbContext.ShippingAddresses
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var shippingAddressesQuery = applicationDbContext.ShippingAddresses
                 .Where(e => e.DeletedAtUtc == null && e.UserId == userId)
                 .AsNoTracking();
 

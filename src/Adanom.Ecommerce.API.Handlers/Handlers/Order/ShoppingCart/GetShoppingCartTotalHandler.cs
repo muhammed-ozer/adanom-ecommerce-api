@@ -5,15 +5,15 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
         #endregion
 
         #region Ctor
 
-        public GetShoppingCartTotalHandler(ApplicationDbContext applicationDbContext)
+        public GetShoppingCartTotalHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
 
         #endregion
@@ -22,7 +22,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<decimal> Handle(GetShoppingCartTotal command, CancellationToken cancellationToken)
         {
-            var shoppingCartItemsQuery = _applicationDbContext.ShoppingCartItems.AsNoTracking();
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var shoppingCartItemsQuery = applicationDbContext.ShoppingCartItems.AsNoTracking();
             decimal total = 0;
 
             if (command.UserId != null && command.UserId != Guid.Empty)
@@ -31,7 +33,7 @@ namespace Adanom.Ecommerce.API.Handlers
                     .Where(e => e.ShoppingCart.UserId == command.UserId)
                     .SumAsync(e => e.Amount * (e.DiscountedPrice != null ? e.DiscountedPrice.Value : e.OriginalPrice));
             }
-            else 
+            else
             {
                 total = await shoppingCartItemsQuery
                     .Where(e => e.ShoppingCart.Id == command.Id)

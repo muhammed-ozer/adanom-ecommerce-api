@@ -11,7 +11,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         private readonly static ConcurrentDictionary<long, TaxCategoryResponse> _cache = new();
@@ -21,10 +21,10 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public GetTaxCategoriesHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -34,7 +34,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<PaginatedData<TaxCategoryResponse>> Handle(GetTaxCategories command, CancellationToken cancellationToken)
         {
-            var taxCategoriesCountOnDb = await _applicationDbContext.TaxCategories
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var taxCategoriesCountOnDb = await applicationDbContext.TaxCategories
                 .Where(e => e.DeletedAtUtc == null)
                 .CountAsync();
 
@@ -42,7 +44,7 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 _cache.Clear();
 
-                var taxCategoriesOnDb = await _applicationDbContext.TaxCategories
+                var taxCategoriesOnDb = await applicationDbContext.TaxCategories
                    .AsNoTracking()
                    .Where(e => e.DeletedAtUtc == null)
                    .ToListAsync();
@@ -65,7 +67,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 if (!string.IsNullOrEmpty(command.Filter.Query))
                 {
                     taxCategories = taxCategories
-                        .Where(e => 
+                        .Where(e =>
                             e.Name.Contains(command.Filter.Query, StringComparison.InvariantCultureIgnoreCase) ||
                             e.GroupName.Contains(command.Filter.Query, StringComparison.InvariantCultureIgnoreCase));
                 }

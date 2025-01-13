@@ -4,7 +4,7 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
@@ -12,10 +12,10 @@
         #region Ctor
 
         public GetEntityImageHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -25,7 +25,9 @@
 
         public async Task<ImageResponse?> Handle(GetEntityImage command, CancellationToken cancellationToken)
         {
-            var imagesQuery = _applicationDbContext.Images
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var imagesQuery = applicationDbContext.Images
                  .AsNoTracking()
                  .Where(e => e.EntityId == command.EntityId &&
                              e.EntityType == command.EntityType);
@@ -38,7 +40,7 @@
                     .Where(e => e.IsDefault)
                     .FirstOrDefaultAsync();
             }
-            
+
             if (command.ImageType != null)
             {
                 image = await imagesQuery

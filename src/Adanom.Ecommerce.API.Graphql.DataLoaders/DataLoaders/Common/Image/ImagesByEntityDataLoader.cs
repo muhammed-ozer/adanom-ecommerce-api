@@ -7,25 +7,27 @@ namespace Adanom.Ecommerce.API.Graphql.DataLoaders
 {
     public class ImagesByEntityDataLoader : BatchDataLoader<(long EntityId, EntityType EntityType), List<Image>>
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
         public ImagesByEntityDataLoader(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IBatchScheduler batchScheduler,
             DataLoaderOptions? options = null)
             : base(batchScheduler, options)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
 
         protected override async Task<IReadOnlyDictionary<(long EntityId, EntityType EntityType), List<Image>>> LoadBatchAsync(
             IReadOnlyList<(long EntityId, EntityType EntityType)> keys,
             CancellationToken cancellationToken)
         {
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             var entityIds = keys.Select(k => k.EntityId).Distinct();
             var entityTypes = keys.Select(k => k.EntityType).Distinct();
 
-            var images = await _applicationDbContext.Images
+            var images = await applicationDbContext.Images
                 .AsNoTracking()
                 .Where(e => entityIds.Contains(e.EntityId) && entityTypes.Contains(e.EntityType))
                 .OrderBy(e => e.EntityId)

@@ -4,7 +4,7 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
@@ -12,10 +12,10 @@
         #region Ctor
 
         public GetProduct_ProductTagsHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -25,7 +25,9 @@
 
         public async Task<IEnumerable<ProductTagResponse>> Handle(GetProduct_ProductTags command, CancellationToken cancellationToken)
         {
-            var productTagsQuery = _applicationDbContext.Product_ProductTag_Mappings
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var productTagsQuery = applicationDbContext.Product_ProductTag_Mappings
                 .Where(e => e.ProductId == command.ProductId && e.Product.DeletedAtUtc == null)
                 .Select(e => e.ProductTag);
 

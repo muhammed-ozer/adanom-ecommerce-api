@@ -2,7 +2,7 @@
 
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class GetProductTagsHandler : 
+    public sealed class GetProductTagsHandler :
         IRequestHandler<GetProductTags, PaginatedData<ProductTagResponse>>,
         INotificationHandler<ClearEntityCache<ProductTagResponse>>,
         INotificationHandler<AddToCache<ProductTagResponse>>,
@@ -11,7 +11,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         private readonly static ConcurrentDictionary<long, ProductTagResponse> _cache = new();
@@ -21,10 +21,10 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public GetProductTagsHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -34,7 +34,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<PaginatedData<ProductTagResponse>> Handle(GetProductTags command, CancellationToken cancellationToken)
         {
-            var productTagsCountOnDb = await _applicationDbContext.ProductTags
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var productTagsCountOnDb = await applicationDbContext.ProductTags
                 .Where(e => e.DeletedAtUtc == null)
                 .CountAsync();
 
@@ -42,7 +44,7 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 _cache.Clear();
 
-                var productTagsOnDb = await _applicationDbContext.ProductTags
+                var productTagsOnDb = await applicationDbContext.ProductTags
                    .AsNoTracking()
                    .Where(e => e.DeletedAtUtc == null)
                    .ToListAsync();

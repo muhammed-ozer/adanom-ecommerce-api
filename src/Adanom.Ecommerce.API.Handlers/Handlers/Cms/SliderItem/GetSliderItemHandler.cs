@@ -4,16 +4,18 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public GetSliderItemHandler(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public GetSliderItemHandler(
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
+            IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -23,13 +25,15 @@
 
         public async Task<SliderItemResponse?> Handle(GetSliderItem command, CancellationToken cancellationToken)
         {
-            var sliderItem = await _applicationDbContext.SliderItems
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var sliderItem = await applicationDbContext.SliderItems
                 .AsNoTracking()
                 .Where(e => e.Id == command.Id)
                 .SingleOrDefaultAsync();
-           
+
             return _mapper.Map<SliderItemResponse>(sliderItem);
-        } 
+        }
 
         #endregion
     }

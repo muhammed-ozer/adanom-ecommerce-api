@@ -4,16 +4,18 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public GetProductSKUHandler(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public GetProductSKUHandler(
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
+            IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -25,23 +27,25 @@
         {
             ProductSKU? productSKU = null;
 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             if (command.Code.IsNotNullOrEmpty())
             {
-                productSKU = await _applicationDbContext.ProductSKUs
+                productSKU = await applicationDbContext.ProductSKUs
                     .Where(e => e.DeletedAtUtc == null && e.Code == command.Code)
                     .AsNoTracking()
                     .SingleOrDefaultAsync();
             }
             else
             {
-                productSKU = await _applicationDbContext.ProductSKUs
+                productSKU = await applicationDbContext.ProductSKUs
                     .Where(e => e.DeletedAtUtc == null && e.Id == command.Id)
                     .AsNoTracking()
                     .SingleOrDefaultAsync();
             }
-            
+
             return _mapper.Map<ProductSKUResponse>(productSKU);
-        } 
+        }
 
         #endregion
     }

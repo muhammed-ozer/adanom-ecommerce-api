@@ -7,22 +7,24 @@ namespace Adanom.Ecommerce.API.Graphql.DataLoaders
 {
     public class ProductSKUByCodeDataLoader : BatchDataLoader<string, ProductSKU>
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
         public ProductSKUByCodeDataLoader(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IBatchScheduler batchScheduler,
             DataLoaderOptions? options = null)
             : base(batchScheduler, options)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
 
         protected override async Task<IReadOnlyDictionary<string, ProductSKU>> LoadBatchAsync(
             IReadOnlyList<string> keys,
             CancellationToken cancellationToken)
         {
-            var productSKUs = await _applicationDbContext.ProductSKUs
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var productSKUs = await applicationDbContext.ProductSKUs
                 .Where(e => keys.Contains(e.Code) && e.DeletedAtUtc == null)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);

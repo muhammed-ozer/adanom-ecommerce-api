@@ -11,7 +11,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
@@ -22,11 +22,11 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public GetBrandsHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMediator mediator,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -37,7 +37,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<PaginatedData<BrandResponse>> Handle(GetBrands command, CancellationToken cancellationToken)
         {
-            var brandsCountOnDb = await _applicationDbContext.Brands
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var brandsCountOnDb = await applicationDbContext.Brands
                 .Where(e => e.DeletedAtUtc == null)
                 .CountAsync();
 
@@ -45,7 +47,7 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 _cache.Clear();
 
-                var brandsOnDb = await _applicationDbContext.Brands
+                var brandsOnDb = await applicationDbContext.Brands
                    .AsNoTracking()
                    .Where(e => e.DeletedAtUtc == null)
                    .ToListAsync();

@@ -7,7 +7,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
@@ -15,10 +15,10 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public GetAnonymousShoppingCartsHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -28,7 +28,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<PaginatedData<AnonymousShoppingCartResponse>> Handle(GetAnonymousShoppingCarts command, CancellationToken cancellationToken)
         {
-            var anonymousShoppingCartsQuery = _applicationDbContext.AnonymousShoppingCarts.AsNoTracking();
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var anonymousShoppingCartsQuery = applicationDbContext.AnonymousShoppingCarts.AsNoTracking();
 
             if (command.Filter is not null)
             {

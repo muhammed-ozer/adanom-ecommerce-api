@@ -4,7 +4,7 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
@@ -12,10 +12,10 @@
         #region Ctor
 
         public GetProductsHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -25,7 +25,9 @@
 
         public async Task<ProductCatalogResponse> Handle(GetProducts command, CancellationToken cancellationToken)
         {
-            var productsQuery = _applicationDbContext.Products
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var productsQuery = applicationDbContext.Products
                 .Where(e => e.DeletedAtUtc == null)
                 .AsNoTracking();
 
@@ -37,9 +39,9 @@
 
                 if (command.Filter.ProductCategoryUrlSlugs != null && command.Filter.ProductCategoryUrlSlugs.Count > 0)
                 {
-                    var childProductCategoriesIds = await GetChildProductCategoriesIdsAsync(command.Filter.ProductCategoryUrlSlugs);
+                    var childProductCategoriesIds = await GetChildProductCategoriesIdsAsync(command.Filter.ProductCategoryUrlSlugs, applicationDbContext);
 
-                    productsQuery = _applicationDbContext.Product_ProductCategory_Mappings
+                    productsQuery = applicationDbContext.Product_ProductCategory_Mappings
                                                 .Where(e => childProductCategoriesIds.Contains(e.ProductCategoryId))
                                                 .Select(e => e.Product)
                                                 .Distinct();
@@ -47,7 +49,7 @@
 
                 if (command.Filter.ProductSpecificationAttributeIds != null && command.Filter.ProductSpecificationAttributeIds.Count > 0)
                 {
-                    productsQuery = _applicationDbContext.Product_ProductSpecificationAttribute_Mappings
+                    productsQuery = applicationDbContext.Product_ProductSpecificationAttribute_Mappings
                                                 .Where(e => command.Filter.ProductSpecificationAttributeIds.Contains(e.ProductSpecificationAttributeId))
                                                 .Select(e => e.Product)
                                                 .Distinct();
@@ -55,8 +57,8 @@
 
                 if (command.Filter.BrandUrlSlugs != null && command.Filter.BrandUrlSlugs.Count > 0)
                 {
-                    productsQuery = _applicationDbContext.Products
-                      .Where(p => p.BrandId.HasValue && _applicationDbContext.Brands
+                    productsQuery = applicationDbContext.Products
+                      .Where(p => p.BrandId.HasValue && applicationDbContext.Brands
                           .Where(b => command.Filter.BrandUrlSlugs.Contains(b.UrlSlug))
                           .Select(b => b.Id)
                           .ToList()
@@ -212,10 +214,10 @@
 
         #region GetChildProductCategoriesIdsAsync
 
-        private async Task<List<long>> GetChildProductCategoriesIdsAsync(ICollection<string> urlSlugs)
+        private async Task<List<long>> GetChildProductCategoriesIdsAsync(ICollection<string> urlSlugs, ApplicationDbContext applicationDbContext)
         {
             // Get the parent categories based on the provided URL slugs
-            var parentCategories = await _applicationDbContext.ProductCategories
+            var parentCategories = await applicationDbContext.ProductCategories
                 .Where(e => e.DeletedAtUtc == null && urlSlugs.Contains(e.UrlSlug))
                 .ToListAsync();
 
@@ -224,7 +226,7 @@
                 return [];
             }
 
-            var allProductCategories = await _applicationDbContext.ProductCategories
+            var allProductCategories = await applicationDbContext.ProductCategories
                 .Where(e => e.DeletedAtUtc == null)
                 .ToListAsync();
 
