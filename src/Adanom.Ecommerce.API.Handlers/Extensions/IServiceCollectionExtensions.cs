@@ -8,6 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddApplicationHandlers(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TransactionalBehavior<,>));
 
             services.AddMediatR(options =>
             {
@@ -21,7 +22,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 options.AddBehavior<IPipelineBehavior<CreateBrand, BrandResponse?>, CreateBrand_CommitTransactionBehavior>();
 
-                options.AddBehavior<IPipelineBehavior<DeleteBrand, bool>, DeleteBrand_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteBrand, bool>, DeleteBrand_DeleteRelationsBehavior>();
 
                 #endregion
