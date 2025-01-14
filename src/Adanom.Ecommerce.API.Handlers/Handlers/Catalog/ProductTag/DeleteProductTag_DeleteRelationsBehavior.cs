@@ -39,34 +39,9 @@ namespace Adanom.Ecommerce.API.Handlers
                 if (product_ProductTag_Mappings.Any())
                 {
                     applicationDbContext.RemoveRange(product_ProductTag_Mappings);
-
-                    try
-                    {
-                        await applicationDbContext.SaveChangesAsync();
-                    }
-                    catch (Exception exception)
-                    {
-                        await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                        {
-                            UserId = command.Identity.GetUserId(),
-                            EntityType = EntityType.PRODUCTTAG,
-                            TransactionType = TransactionType.DELETE,
-                            Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                            Exception = exception.ToString()
-                        }));
-
-                        return false;
-                    }
+                    await applicationDbContext.SaveChangesAsync();
                 }
             }
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = command.Identity.GetUserId(),
-                EntityType = EntityType.PRODUCTTAG,
-                TransactionType = TransactionType.DELETE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, "-"),
-            }));
 
             return deleteProductTagResponse;
         }

@@ -69,46 +69,22 @@ namespace Adanom.Ecommerce.API.Handlers
             });
 
             await applicationDbContext.AddAsync(localDeliveryProvider);
+            await applicationDbContext.SaveChangesAsync();
 
-            try
+            foreach (var addressDistrictId in command.SupportedAddressDistrictIds)
             {
-                await applicationDbContext.SaveChangesAsync();
-
-                foreach (var addressDistrictId in command.SupportedAddressDistrictIds)
+                var request = new CreateLocalDeliveryProvider_AddressDistrictRequest()
                 {
-                    var request = new CreateLocalDeliveryProvider_AddressDistrictRequest()
-                    {
-                        LocalDeliveryProviderId = localDeliveryProvider.Id,
-                        AddressDistrictId = addressDistrictId
-                    };
+                    LocalDeliveryProviderId = localDeliveryProvider.Id,
+                    AddressDistrictId = addressDistrictId
+                };
 
-                    var createLocalDeliveryProvider_AddressDistrictCommand = _mapper.Map(request, new CreateLocalDeliveryProvider_AddressDistrict(command.Identity));
+                var createLocalDeliveryProvider_AddressDistrictCommand = _mapper.Map(request, new CreateLocalDeliveryProvider_AddressDistrict(command.Identity));
 
-                    await _mediator.Send(createLocalDeliveryProvider_AddressDistrictCommand);
-                }
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.LOCALDELIVERYPROVIDER,
-                    TransactionType = TransactionType.CREATE,
-                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return null;
+                await _mediator.Send(createLocalDeliveryProvider_AddressDistrictCommand);
             }
 
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.LOCALDELIVERYPROVIDER,
-                TransactionType = TransactionType.CREATE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, localDeliveryProvider.Id),
-            }));
-
+           
             await _mediator.Publish(new ClearEntityCache<LocalDeliveryProviderResponse>());
 
             var localDeliveryProviderResponse = _mapper.Map<LocalDeliveryProviderResponse>(localDeliveryProvider);

@@ -1,4 +1,7 @@
-﻿using System.Transactions;
+﻿using System.Security.Claims;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Transactions;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
@@ -22,9 +25,11 @@ namespace Adanom.Ecommerce.API.Handlers
                 try
                 {
                     return await next();
-                } catch
+                } catch (Exception exception)
                 {
-                    // TODO: Implement logging
+                    await CreateLogAsync(command, exception);
+
+                    return default;
                 }
             }
 
@@ -51,19 +56,57 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 return response;
             }
-            catch {
-                // TODO: Implement logging
-                //await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                //{
-                //    UserId = userId,
-                //    EntityType = EntityType.BRAND,
-                //    TransactionType = TransactionType.DELETE,
-                //    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                //    Exception = exception.ToString()
-                //}));
+            catch(Exception exception) 
+            {
+                transactionScope.Dispose();
+
+                await CreateLogAsync(command, exception);
 
                 throw;
             }
+        }
+
+        private async Task CreateLogAsync(TRequest command, Exception exception)
+        {
+            var transactionLogRequest = new TransactionLogRequest()
+            {
+                LogLevel = LogLevel.ERROR,
+                CommandName = typeof(TRequest).Name,
+                Exception = exception.ToString()
+            };
+
+            var filteredProperties = typeof(TRequest)
+                .GetProperties()
+                .Where(p => p.PropertyType != typeof(ClaimsPrincipal)) // Identity gibi karmaşık yapıları hariç tut
+                .ToDictionary(p => p.Name, p => p.GetValue(command));
+
+            string serializedCommand = JsonSerializer.Serialize(filteredProperties, new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = false
+            });
+
+            transactionLogRequest.CommandValues = serializedCommand;
+
+            var identity = typeof(TRequest)
+                .GetProperties()
+                .Where(p => p.PropertyType == typeof(ClaimsPrincipal)) // Identity gibi karmaşık yapıları hariç tut
+                .ToDictionary(p => p.Name, p => p.GetValue(command))
+                .SingleOrDefault();
+
+            if (identity.Value != null)
+            {
+                var identityValue = identity.Value as ClaimsPrincipal;
+
+                if (identityValue != null)
+                {
+                    var userId = identityValue.GetUserId();
+
+                    transactionLogRequest.UserId = userId;
+                }
+            }
+
+            await _mediator.Publish(new CreateLog(transactionLogRequest));
         }
     }
 }

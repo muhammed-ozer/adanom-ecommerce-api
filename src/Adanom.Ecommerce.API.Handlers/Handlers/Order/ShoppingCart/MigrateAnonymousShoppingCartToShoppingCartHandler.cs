@@ -72,24 +72,7 @@ namespace Adanom.Ecommerce.API.Handlers
             }
 
             applicationDbContext.Remove(_mapper.Map<AnonymousShoppingCart>(anonymousShoppingCart));
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.SHOPPINGCART,
-                    TransactionType = TransactionType.CREATE,
-                    Description = LogMessages.CustomerTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return false;
-            }
+            await applicationDbContext.SaveChangesAsync();
 
             return true;
         }

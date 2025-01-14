@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-
-namespace Adanom.Ecommerce.API.Handlers
+﻿namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class CreateOrderBillingAddressHandler : IRequestHandler<CreateOrderBillingAddress, OrderBillingAddressResponse?>
     {
@@ -35,16 +33,8 @@ namespace Adanom.Ecommerce.API.Handlers
             await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
 
             await applicationDbContext.AddAsync(orderBillingAddress);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch
-            {
-                return null;
-            }
-
+            await applicationDbContext.SaveChangesAsync();
+            
             var orderBillingAddressResponse = _mapper.Map<OrderBillingAddressResponse>(orderBillingAddress);
 
             return orderBillingAddressResponse;

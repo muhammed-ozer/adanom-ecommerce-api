@@ -1,6 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class DeleteExpiredAdminLogsHandler : INotificationHandler<DeleteExpiredAdminLogs>
+    public sealed class DeleteExpiredTransactionLogsHandler : INotificationHandler<DeleteExpiredTransactionLogs>
     {
         #region Fields
 
@@ -10,7 +10,7 @@
 
         #region Ctor
 
-        public DeleteExpiredAdminLogsHandler(ILogService logService)
+        public DeleteExpiredTransactionLogsHandler(ILogService logService)
         {
             _logService = logService ?? throw new ArgumentNullException(nameof(logService));
         }
@@ -19,9 +19,9 @@
 
         #region INotificationHandler Members
 
-        public async Task Handle(DeleteExpiredAdminLogs command, CancellationToken cancellationToken)
+        public async Task Handle(DeleteExpiredTransactionLogs command, CancellationToken cancellationToken)
         {
-            await _logService.DeleteExpiredAdminLogsAsync();
+            await _logService.DeleteExpiredTransactionLogsAsync();
         } 
 
         #endregion

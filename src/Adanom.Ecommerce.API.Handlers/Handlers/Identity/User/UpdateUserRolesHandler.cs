@@ -49,14 +49,6 @@ namespace Adanom.Ecommerce.API.Handlers
                 await _userManager.RemoveFromRoleAsync(user, role);
             }
 
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.USER,
-                TransactionType = TransactionType.UPDATE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, user.Id),
-            }));
-
             return true;
         }
 

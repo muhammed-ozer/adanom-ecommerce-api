@@ -31,11 +31,8 @@ namespace Adanom.Ecommerce.API.Logging
                 case AuthLogRequest authLogRequest:
                     await CreateAuthLogAsync(authLogRequest);
                     break;
-                case AdminTransactionLogRequest adminTransactionLogRequest:
-                    await CreateAdminTransactionLogAsync(adminTransactionLogRequest);
-                    break;
-                case CustomerTransactionLogRequest customerTransactionLogRequest:
-                    await CreateCustomerTransactionLogAsync(customerTransactionLogRequest);
+                case TransactionLogRequest transactionLogRequest:
+                    await CreateTransactionLogAsync(transactionLogRequest);
                     break;
                 default:
                     break;
@@ -44,34 +41,15 @@ namespace Adanom.Ecommerce.API.Logging
 
         #endregion
 
-        #region DeleteExpiredAdminLogsAsync
+        #region DeleteExpiredTransactionLogsAsync
 
-        public async Task DeleteExpiredAdminLogsAsync()
+        public async Task DeleteExpiredTransactionLogsAsync()
         {
             var currentExpirationTimeUtc = DateTime.UtcNow.AddMonths(3 * -1);
 
             try
             {
-                await _logDbContext.AdminTransactionLogs
-                    .Where(e => e.CreatedAtUtc <= currentExpirationTimeUtc)
-                    .ExecuteDeleteAsync();
-            }
-            catch
-            {
-            }
-        }
-
-        #endregion
-
-        #region DeleteExpiredCustomerLogsAsync
-
-        public async Task DeleteExpiredCustomerLogsAsync()
-        {
-            var currentExpirationTimeUtc = DateTime.UtcNow.AddYears(1 * -1);
-
-            try
-            {
-                await _logDbContext.CustomerTransactionLogs
+                await _logDbContext.TransactionLogs
                     .Where(e => e.CreatedAtUtc <= currentExpirationTimeUtc)
                     .ExecuteDeleteAsync();
             }
@@ -104,43 +82,21 @@ namespace Adanom.Ecommerce.API.Logging
 
         #endregion
 
-        #region CreateAdminTransactionLogAsync
+        #region CreateTransactionLogAsync
 
-        private async Task CreateAdminTransactionLogAsync(AdminTransactionLogRequest request)
+        private async Task CreateTransactionLogAsync(TransactionLogRequest request)
         {
-            var log = new AdminTransactionLog()
+            var log = new TransactionLog()
             {
                 LogLevel = request.LogLevel,
-                EntityType = request.EntityType,
-                TransactionType = request.TransactionType,
-                UserId = request.UserId,
-                Description = request.Description,
                 Exception = request.Exception,
+                CommandName = request.CommandName,
+                CommandValues = request.CommandValues,
+                UserId = request.UserId,
                 CreatedAtUtc = DateTime.UtcNow,
             };
 
-            await _logDbContext.AdminTransactionLogs.AddAsync(log);
-            await _logDbContext.SaveChangesAsync();
-        }
-
-        #endregion
-
-        #region CreateCustomerTransactionLogAsync
-
-        private async Task CreateCustomerTransactionLogAsync(CustomerTransactionLogRequest request)
-        {
-            var log = new CustomerTransactionLog()
-            {
-                LogLevel = request.LogLevel,
-                EntityType = request.EntityType,
-                TransactionType = request.TransactionType,
-                UserId = request.UserId,
-                Description = request.Description,
-                Exception = request.Exception,
-                CreatedAtUtc = DateTime.UtcNow,
-            };
-
-            await _logDbContext.CustomerTransactionLogs.AddAsync(log);
+            await _logDbContext.TransactionLogs.AddAsync(log);
             await _logDbContext.SaveChangesAsync();
         }
 

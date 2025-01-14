@@ -48,32 +48,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 }
             }
 
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.LOCALDELIVERYPROVIDER,
-                    TransactionType = TransactionType.DELETE,
-                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return false;
-            }
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.LOCALDELIVERYPROVIDER,
-                TransactionType = TransactionType.DELETE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, localDeliveryProvider.Id),
-            }));
-
+            await applicationDbContext.SaveChangesAsync();
+           
             await _mediator.Publish(new ClearEntityCache<LocalDeliveryProviderResponse>());
 
             return true;

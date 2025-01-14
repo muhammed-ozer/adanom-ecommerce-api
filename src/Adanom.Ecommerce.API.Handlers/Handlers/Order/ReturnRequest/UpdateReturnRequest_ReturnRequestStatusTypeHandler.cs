@@ -46,32 +46,7 @@ namespace Adanom.Ecommerce.API.Handlers
             returnRequest.UpdatedByUserId = userId;
 
             applicationDbContext.Update(returnRequest);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.RETURNREQUEST,
-                    TransactionType = TransactionType.UPDATE,
-                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return false;
-            }
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.RETURNREQUEST,
-                TransactionType = TransactionType.UPDATE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, returnRequest.Id),
-            }));
+            await applicationDbContext.SaveChangesAsync();
 
             return true;
         }

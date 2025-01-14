@@ -46,36 +46,11 @@ namespace Adanom.Ecommerce.API.Handlers
             productCategory.UpdatedByUserId = userId;
 
             applicationDbContext.Update(productCategory);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.PRODUCTCATEGORY,
-                    TransactionType = TransactionType.UPDATE,
-                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return null;
-            }
+            await applicationDbContext.SaveChangesAsync();
 
             var productCategoryResponse = _mapper.Map<ProductCategoryResponse>(productCategory);
 
             await _mediator.Publish(new UpdateFromCache<ProductCategoryResponse>(productCategoryResponse));
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.PRODUCTCATEGORY,
-                TransactionType = TransactionType.UPDATE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productCategory.Id),
-            }));
 
             return productCategoryResponse;
         }

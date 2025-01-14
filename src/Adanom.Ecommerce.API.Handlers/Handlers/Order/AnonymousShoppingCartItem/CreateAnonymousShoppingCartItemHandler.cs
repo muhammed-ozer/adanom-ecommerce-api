@@ -90,23 +90,7 @@
 
             applicationDbContext.Update(anonymousShoppingCart);
 
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new CustomerTransactionLogRequest()
-                {
-                    UserId = Guid.Empty,
-                    EntityType = EntityType.SHOPPINGCARTITEM,
-                    TransactionType = TransactionType.CREATE,
-                    Description = LogMessages.CustomerTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return createAnonymousShoppingCartItemResponse;
-            }
+            await applicationDbContext.SaveChangesAsync();
 
             createAnonymousShoppingCartItemResponse.IsSuccess = true;
             createAnonymousShoppingCartItemResponse.AnonymousShoppingCart = anonymousShoppingCartResponse;
