@@ -4,8 +4,6 @@
     {
         Task CreateAsync(BaseLogRequest request);
 
-        Task DeleteExpiredAdminLogsAsync();
-
-        Task DeleteExpiredCustomerLogsAsync();
+        Task DeleteExpiredTransactionLogsAsync();
     }
 }

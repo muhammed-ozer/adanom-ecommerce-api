@@ -22,26 +22,4 @@ public static class LogMessages
         /// </summary>
         public const string UserChangesCommercialSMSPreference = "Kullanıcı reklam SMS'leri izin tercihi. Yeni tercih: {0} --- Eski tercih: {1}";
     }
-
-    public static class AdminTransaction
-    {
-        public const string DatabaseSaveChangesSuccessful = @"Veri tabanı işlemi başarılı bir şekilde gerçekleştirildi. Id: {0}";
-
-        public const string DatabaseSaveChangesHasFailed = "Veri tabanı işlemi sırasında hata meydana geldi.";
-
-        public const string DatabaseTransactionHasFailed = "Veri tabanı transaction sırasında hata meydana geldi.";
-
-        public const string BatchUpdateProductSKUNotFound = @"Toplu işlem sırasında ürün kodu bulunamadı. Kod: {0}";
-
-        public const string BatchCreateProductsError = @"Toplu işlem sırasında hata meydana geldi. ExcelRow: {0}";
-    }
-
-    public static class CustomerTransaction
-    {
-        public const string DatabaseSaveChangesSuccessful = @"Veri tabanı işlemi başarılı bir şekilde gerçekleştirildi. Id: {0}";
-
-        public const string DatabaseSaveChangesHasFailed = "Veri tabanı işlemi sırasında hata meydana geldi.";
-
-        public const string DatabaseTransactionHasFailed = "Veri tabanı transaction sırasında hata meydana geldi.";
-    }
 }

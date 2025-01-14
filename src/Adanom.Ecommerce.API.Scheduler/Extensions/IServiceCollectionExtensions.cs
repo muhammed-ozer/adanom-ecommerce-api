@@ -38,27 +38,15 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #endregion
 
-                #region DeleteExpiredAdminLogsJob
+                #region DeleteExpiredTransactionLogsJob
 
-                options.AddJob<DeleteExpiredAdminLogsJob>(e =>
-                           e.WithIdentity("DeleteExpiredAdminLogsJob", "AdminLogsGroup"));
+                options.AddJob<DeleteExpiredTransactionLogsJob>(e =>
+                           e.WithIdentity("DeleteExpiredTransactionLogsJob", "TransactionLogsGroup"));
 
                 options.AddTrigger(e =>
-                    e.WithIdentity("DeleteExpiredAdminLogsTrigger", "AdminLogsGroup")
+                    e.WithIdentity("DeleteExpiredTransactionLogsTrigger", "TransactionLogsGroup")
                        .WithCronSchedule("0 0 2 5 1/1 ? *") // Every 5th day of every month 2:00am
-                       .ForJob("DeleteExpiredAdminLogsJob", "AdminLogsGroup"));
-
-                #endregion
-
-                #region DeleteExpiredCustomerLogsJob
-
-                options.AddJob<DeleteExpiredCustomerLogsJob>(e =>
-                           e.WithIdentity("DeleteExpiredCustomerLogsJob", "CustomerLogsGroup"));
-
-                options.AddTrigger(e =>
-                    e.WithIdentity("DeleteExpiredCustomerLogsTrigger", "CustomerLogsGroup")
-                       .WithCronSchedule("0 0 2 10 1/3 ? *") // Every 10th day of every 3 month 2:00am
-                       .ForJob("DeleteExpiredCustomerLogsJob", "CustomerLogsGroup"));
+                       .ForJob("DeleteExpiredTransactionLogsJob", "TransactionLogsGroup"));
 
                 #endregion
             });

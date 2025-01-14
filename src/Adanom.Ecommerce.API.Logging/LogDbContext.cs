@@ -14,10 +14,8 @@ namespace Adanom.Ecommerce.API.Logging
             base.OnModelCreating(modelBuilder);
         }
 
-        public DbSet<AdminTransactionLog> AdminTransactionLogs { get; set; }
+        public DbSet<TransactionLog> TransactionLogs { get; set; }
 
         public DbSet<AuthLog> AuthLogs { get; set; }
-
-        public DbSet<CustomerTransactionLog> CustomerTransactionLogs { get; set; }
     }
 }

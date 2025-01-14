@@ -5,8 +5,6 @@ namespace Adanom.Ecommerce.API.Logging.Models
 {
     public class AuthLog : BaseLogEntity<long>
     {
-        public LogLevel LogLevel { get; set; }
-
         public string? UserEmail { get; set; }
 
         [StringLength(500)]

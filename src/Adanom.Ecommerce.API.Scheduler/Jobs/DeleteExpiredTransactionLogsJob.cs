@@ -4,18 +4,18 @@ using Quartz;
 
 namespace Adanom.Ecommerce.API.Scheduler.Jobs
 {
-    public class DeleteExpiredCustomerLogsJob : IJob
+    public class DeleteExpiredTransactionLogsJob : IJob
     {
         private readonly IMediator _mediator;
 
-        public DeleteExpiredCustomerLogsJob(IMediator mediator)
+        public DeleteExpiredTransactionLogsJob(IMediator mediator)
         {
             _mediator = mediator;
         }
 
         public async Task Execute(IJobExecutionContext context)
         {
-            await _mediator.Send(new DeleteExpiredCustomerLogs());
+            await _mediator.Send(new DeleteExpiredTransactionLogs());
         }
     }
 }
