@@ -6,16 +6,16 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public DeleteProductPriceHandler(ApplicationDbContext applicationDbContext, IMediator mediator)
+        public DeleteProductPriceHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
         }
@@ -28,12 +28,14 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var productPrice = await _applicationDbContext.ProductPrices
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var productPrice = await applicationDbContext.ProductPrices
                 .Where(e => e.DeletedAtUtc == null && e.Id == command.Id)
                 .SingleAsync();
 
             // Check productSKU has deleted before price delete
-            var productSKUsThatUseProductPrice = await _applicationDbContext.ProductSKUs
+            var productSKUsThatUseProductPrice = await applicationDbContext.ProductSKUs
                         .Where(e => e.DeletedAtUtc == null && e.ProductPriceId == productPrice.Id)
                         .ToListAsync();
 
@@ -47,7 +49,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

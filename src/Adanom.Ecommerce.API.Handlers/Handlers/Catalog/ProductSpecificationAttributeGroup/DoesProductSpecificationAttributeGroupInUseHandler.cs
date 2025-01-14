@@ -4,15 +4,15 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
         #endregion
 
         #region Ctor
 
-        public DoesProductSpecificationAttributeGroupInUseHandler(ApplicationDbContext applicationDbContext)
+        public DoesProductSpecificationAttributeGroupInUseHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
 
         #endregion
@@ -21,7 +21,9 @@
 
         public async Task<bool> Handle(DoesEntityInUse<ProductSpecificationAttributeGroupResponse> command, CancellationToken cancellationToken)
         {
-            return await _applicationDbContext.ProductSpecificationAttributes
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            return await applicationDbContext.ProductSpecificationAttributes
                 .Where(e => e.DeletedAtUtc == null && e.ProductSpecificationAttributeGroupId == command.Id)
                 .AnyAsync();
         }

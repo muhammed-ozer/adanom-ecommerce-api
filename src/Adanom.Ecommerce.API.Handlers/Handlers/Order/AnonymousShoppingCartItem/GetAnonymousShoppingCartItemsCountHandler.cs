@@ -4,8 +4,7 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
-        private readonly IMapper _mapper;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
@@ -13,12 +12,10 @@
         #region Ctor
 
         public GetAnonymousShoppingCartItemsCountHandler(
-            ApplicationDbContext applicationDbContext,
-            IMapper mapper,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
@@ -28,7 +25,9 @@
 
         public async Task<int> Handle(GetAnonymousShoppingCartItemsCount command, CancellationToken cancellationToken)
         {
-            return await _applicationDbContext.AnonymousShoppingCartItems
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            return await applicationDbContext.AnonymousShoppingCartItems
                 .Where(e => e.AnonymousShoppingCart.Id == command.AnonymousSHoppingCartId)
                 .CountAsync();
         }

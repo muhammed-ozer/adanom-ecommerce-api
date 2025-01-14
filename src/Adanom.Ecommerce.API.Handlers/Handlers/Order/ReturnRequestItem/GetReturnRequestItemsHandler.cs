@@ -5,18 +5,16 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public GetReturnRequestItemsHandler(
-            ApplicationDbContext applicationDbContext,
-            IMapper mapper)
+        public GetReturnRequestItemsHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -26,7 +24,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<IEnumerable<ReturnRequestItemResponse>> Handle(GetReturnRequestItems command, CancellationToken cancellationToken)
         {
-            var returnRequestItems = await _applicationDbContext.ReturnRequestItems
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var returnRequestItems = await applicationDbContext.ReturnRequestItems
                 .AsNoTracking()
                 .Where(e => e.ReturnRequestId == command.Filter.ReturnRequestId)
                 .ToListAsync();

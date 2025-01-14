@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
@@ -15,11 +15,11 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public UpdateShoppingCartItemsHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
@@ -30,7 +30,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<UpdateShoppingCartItemsResponse> Handle(UpdateShoppingCartItems command, CancellationToken cancellationToken)
         {
-            var shoppingCartItemsQuery = _applicationDbContext.ShoppingCartItems.AsQueryable();
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var shoppingCartItemsQuery = applicationDbContext.ShoppingCartItems.AsQueryable();
 
             var shoppingCartItems = new List<ShoppingCartItem>();
 
@@ -116,11 +118,11 @@ namespace Adanom.Ecommerce.API.Handlers
                 var shoppingCartId = shoppingCartItems.Select(e => e.ShoppingCartId).FirstOrDefault();
 
                 await _mediator.Send(new UpdateShoppingCart_LastModifiedDate(shoppingCartId));
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
 
                 var shoppingCartItemsCount = await _mediator.Send(new GetShoppingCartItemsCount(command.Identity!));
 
-                if (shoppingCartItemsCount == 0) 
+                if (shoppingCartItemsCount == 0)
                 {
                     response.HasNoItem = true;
                 }

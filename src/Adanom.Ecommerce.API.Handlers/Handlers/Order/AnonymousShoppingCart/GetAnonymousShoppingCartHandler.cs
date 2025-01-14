@@ -7,7 +7,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
@@ -15,10 +15,10 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public GetAnonymousShoppingCartHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -37,7 +37,9 @@ namespace Adanom.Ecommerce.API.Handlers
                         .ForMember(e => e.Items, options => options.Ignore());
             });
 
-            return await _applicationDbContext.AnonymousShoppingCarts
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            return await applicationDbContext.AnonymousShoppingCarts
                 .AsNoTracking()
                 .Where(e => e.Id == command.Id)
                 .ProjectTo<AnonymousShoppingCartResponse>(mappingConfiguration)

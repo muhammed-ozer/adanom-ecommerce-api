@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
@@ -14,9 +14,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region Ctor
 
-        public UpdateImageHandler(ApplicationDbContext applicationDbContext, IMapper mapper, IMediator mediator)
+        public UpdateImageHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMapper mapper, IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
@@ -29,13 +29,15 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var image = await _applicationDbContext.Images
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var image = await applicationDbContext.Images
                 .Where(e => e.Id == command.Id)
                 .SingleAsync();
 
             if (command.IsDefault && !image.IsDefault)
             {
-                var cuurentDefaultImage = await _applicationDbContext.Images
+                var cuurentDefaultImage = await applicationDbContext.Images
                     .Where(e => e.EntityType == image.EntityType &&
                                 e.EntityId == image.EntityId &&
                                 e.IsDefault)
@@ -53,11 +55,11 @@ namespace Adanom.Ecommerce.API.Handlers
 
             image = _mapper.Map(command, image);
 
-            _applicationDbContext.Update(image);
+            applicationDbContext.Update(image);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

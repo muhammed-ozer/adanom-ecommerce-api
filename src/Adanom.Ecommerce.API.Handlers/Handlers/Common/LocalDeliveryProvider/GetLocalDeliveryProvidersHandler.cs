@@ -8,7 +8,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
@@ -19,11 +19,11 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public GetLocalDeliveryProvidersHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMediator mediator,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -34,7 +34,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<PaginatedData<LocalDeliveryProviderResponse>> Handle(GetLocalDeliveryProviders command, CancellationToken cancellationToken)
         {
-            var localDeliveryProvidersCountOnDb = await _applicationDbContext.LocalDeliveryProviders
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var localDeliveryProvidersCountOnDb = await applicationDbContext.LocalDeliveryProviders
                 .Where(e => e.DeletedAtUtc == null)
                 .CountAsync();
 
@@ -42,7 +44,7 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 _cache.Clear();
 
-                var localDeliveryProvidersOnDb = await _applicationDbContext.LocalDeliveryProviders
+                var localDeliveryProvidersOnDb = await applicationDbContext.LocalDeliveryProviders
                    .AsNoTracking()
                    .Where(e => e.DeletedAtUtc == null)
                    .ToListAsync();

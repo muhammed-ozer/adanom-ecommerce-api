@@ -4,15 +4,15 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
         #endregion
 
         #region Ctor
 
-        public DoesShippingAddressTitleExistsHandler(ApplicationDbContext applicationDbContext)
+        public DoesShippingAddressTitleExistsHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
 
         #endregion
@@ -23,7 +23,9 @@
         {
             var title = command.Name.ToLower();
 
-            var query = _applicationDbContext.ShippingAddresses
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var query = applicationDbContext.ShippingAddresses
                 .AsNoTracking()
                 .Where(e => e.DeletedAtUtc == null &&
                             e.UserId == command.UserId &&

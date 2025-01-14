@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
@@ -15,11 +15,11 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public UpdateTaxCategoryHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
@@ -32,7 +32,9 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var taxCategory = await _applicationDbContext.TaxCategories
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var taxCategory = await applicationDbContext.TaxCategories
                 .Where(e => e.DeletedAtUtc == null &&
                             e.Id == command.Id)
                 .SingleAsync();
@@ -42,11 +44,11 @@ namespace Adanom.Ecommerce.API.Handlers
             taxCategory.UpdatedAtUtc = DateTime.UtcNow;
             taxCategory.UpdatedByUserId = userId;
 
-            _applicationDbContext.Update(taxCategory);
+            applicationDbContext.Update(taxCategory);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

@@ -4,7 +4,7 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
@@ -13,11 +13,11 @@
         #region Ctor
 
         public CreateAnonymousShoppingCartItemHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
@@ -58,6 +58,8 @@
                 return createAnonymousShoppingCartItemResponse;
             }
 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             if (anonymousShoppingCartItemResponse == null)
             {
                 var anonymousShoppingCartItem = _mapper.Map<CreateAnonymousShoppingCartItem, AnonymousShoppingCartItem>(command, options =>
@@ -70,7 +72,7 @@
                     });
                 });
 
-                await _applicationDbContext.AddAsync(anonymousShoppingCartItem);
+                await applicationDbContext.AddAsync(anonymousShoppingCartItem);
             }
             else
             {
@@ -80,17 +82,17 @@
                 anonymousShoppingCartItem.OriginalPrice = productPrice.OriginalPrice;
                 anonymousShoppingCartItem.DiscountedPrice = productPrice.DiscountedPrice;
 
-                _applicationDbContext.Update(anonymousShoppingCartItem);
+                applicationDbContext.Update(anonymousShoppingCartItem);
             }
 
             var anonymousShoppingCart = _mapper.Map<AnonymousShoppingCart>(anonymousShoppingCartResponse);
             anonymousShoppingCart.LastModifiedAtUtc = DateTime.UtcNow;
 
-            _applicationDbContext.Update(anonymousShoppingCart);
+            applicationDbContext.Update(anonymousShoppingCart);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

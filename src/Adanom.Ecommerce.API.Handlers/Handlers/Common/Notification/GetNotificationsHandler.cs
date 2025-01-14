@@ -5,7 +5,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
@@ -13,10 +13,10 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public GetNotificationsHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -26,7 +26,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<PaginatedData<NotificationResponse>> Handle(GetNotifications command, CancellationToken cancellationToken)
         {
-            var notificationsQuery = _applicationDbContext.Notifications.AsNoTracking();
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var notificationsQuery = applicationDbContext.Notifications.AsNoTracking();
 
             if (command.Filter != null)
             {

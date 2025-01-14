@@ -8,6 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddApplicationHandlers(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TransactionalBehavior<,>));
 
             services.AddMediatR(options =>
             {
@@ -19,50 +20,40 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #region Brand
 
-                options.AddBehavior<IPipelineBehavior<CreateBrand, BrandResponse?>, CreateBrand_CommitTransactionBehavior>();
-
-                options.AddBehavior<IPipelineBehavior<DeleteBrand, bool>, DeleteBrand_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteBrand, bool>, DeleteBrand_DeleteRelationsBehavior>();
 
                 #endregion
 
                 #region Product
 
-                options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CreateProduct_ProductCategoryBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateProduct, ProductResponse?>, CreateProduct_CreateProductSKUBehavior>();
 
-                options.AddBehavior<IPipelineBehavior<DeleteProduct, bool>, DeleteProduct_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteProduct, bool>, DeleteProduct_DeleteRelationsBehavior>();
 
                 #endregion
 
                 #region ProductSKU
 
-                options.AddBehavior<IPipelineBehavior<DeleteProductSKU, bool>, DeleteProductSKU_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteProductSKU, bool>, DeleteProductSKU_DeleteRelationsBehavior>();
 
                 #endregion
 
                 #region ProductCategory
 
-                options.AddBehavior<IPipelineBehavior<CreateProductCategory, ProductCategoryResponse?>, CreateProductCategory_CommitTransactionBehavior>();
 
-                options.AddBehavior<IPipelineBehavior<DeleteProductCategory, bool>, DeleteProductCategory_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteProductCategory, bool>, DeleteProductCategory_DeleteRelationsBehavior>();
 
                 #endregion
 
                 #region ProductSpecificationAttribute
 
-                options.AddBehavior<IPipelineBehavior<DeleteProductSpecificationAttribute, bool>, DeleteProductSpecificationAttribute_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteProductSpecificationAttribute, bool>, DeleteProductSpecificationAttribute_DeleteRelationsBehavior>();
 
                 #endregion
 
                 #region ProductTag
 
-                options.AddBehavior<IPipelineBehavior<DeleteProductTag, bool>, DeleteProductTag_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteProductTag, bool>, DeleteProductTag_DeleteRelationsBehavior>();
 
                 #endregion
@@ -79,14 +70,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #region ShippingProvider
 
-                options.AddBehavior<IPipelineBehavior<DeleteShippingProvider, bool>, DeleteShippingProvider_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteShippingProvider, bool>, DeleteShippingProvider_DeleteRelationsBehavior>();
 
                 #endregion
 
-                #region ShippingProvider
+                #region LocalDeliveryProvider
 
-                options.AddBehavior<IPipelineBehavior<DeleteLocalDeliveryProvider, bool>, DeleteLocalDeliveryProvider_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteLocalDeliveryProvider, bool>, DeleteLocalDeliveryProvider_DeleteRelationsBehavior>();
 
                 #endregion
@@ -97,10 +86,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #region SliderItem
 
-                options.AddBehavior<IPipelineBehavior<CreateSliderItem, SliderItemResponse?>, CreateSliderItem_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateSliderItem, SliderItemResponse?>, CreateSliderItem_CreateImageBehavior>();
 
-                options.AddBehavior<IPipelineBehavior<DeleteSliderItem, bool>, DeleteSliderItem_CommitTransactionBehavior>();
                 options.AddBehavior<IPipelineBehavior<DeleteSliderItem, bool>, DeleteSliderItem_DeleteImageBehavior>();
 
                 #endregion
@@ -110,8 +97,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 #region Order
 
                 #region Order
-
-                options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CommitTransactionBehavior>();
+                
+                options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_SaveChangesBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CalculateTotalBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CalculateShippingBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_ConvertShoppingCartItemsToOrderItems>();
@@ -133,7 +120,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 options.AddBehavior<IPipelineBehavior<CreateReturnRequest, ReturnRequestResponse?>, CreateReturnRequest_CreateNotificationBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateReturnRequest, ReturnRequestResponse?>, CreateReturnRequest_SendMailsBehavior>();
-                options.AddBehavior<IPipelineBehavior<CreateReturnRequest, ReturnRequestResponse?>, CreateReturnRequest_CommitTransactionBehavior>();
+                options.AddBehavior<IPipelineBehavior<CreateReturnRequest, ReturnRequestResponse?>, CreateReturnRequest_SaveChangesBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateReturnRequest, ReturnRequestResponse?>, CreateReturnRequest_CalculateTotalBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateReturnRequest, ReturnRequestResponse?>, CreateReturnRequest_CreateReturnRequestItemsBehavior>();
 

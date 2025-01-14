@@ -1,6 +1,4 @@
-﻿using Adanom.Ecommerce.API.Services.Azure;
-
-namespace Adanom.Ecommerce.API.Handlers
+﻿namespace Adanom.Ecommerce.API.Handlers
 {
     public sealed class DeleteBrand_DeleteRelationsBehavior : IPipelineBehavior<DeleteBrand, bool>
     {

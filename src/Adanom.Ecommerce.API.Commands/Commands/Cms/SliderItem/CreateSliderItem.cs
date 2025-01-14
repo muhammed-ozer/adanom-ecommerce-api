@@ -2,6 +2,7 @@ using System.Security.Claims;
 
 namespace Adanom.Ecommerce.API.Commands
 {
+    [Transactional]
     public class CreateSliderItem : IRequest<SliderItemResponse?>
     {
         #region Ctor

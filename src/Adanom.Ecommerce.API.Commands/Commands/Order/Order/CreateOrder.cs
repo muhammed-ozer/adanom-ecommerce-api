@@ -2,6 +2,7 @@ using System.Security.Claims;
 
 namespace Adanom.Ecommerce.API.Commands
 {
+    [Transactional]
     public class CreateOrder : IRequest<OrderResponse?>
     {
         #region Ctor

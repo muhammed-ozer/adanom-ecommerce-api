@@ -4,15 +4,15 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
         #endregion
 
         #region Ctor
 
-        public DoesProductCategoryExistsHandler(ApplicationDbContext applicationDbContext)
+        public DoesProductCategoryExistsHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
 
         #endregion
@@ -21,7 +21,9 @@
 
         public async Task<bool> Handle(DoesEntityExists<ProductCategoryResponse> command, CancellationToken cancellationToken)
         {
-            return await _applicationDbContext.ProductCategories
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            return await applicationDbContext.ProductCategories
                 .AnyAsync(e => e.DeletedAtUtc == null && e.Id == command.Id);
         }
 

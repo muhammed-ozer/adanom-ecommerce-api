@@ -4,7 +4,6 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
@@ -13,11 +12,9 @@
         #region Ctor
 
         public DeleteProductCategory_DeleteRelationsBehavior(
-            ApplicationDbContext applicationDbContext,
             IMapper mapper,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }

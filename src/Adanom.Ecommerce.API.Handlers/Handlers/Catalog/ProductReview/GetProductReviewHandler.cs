@@ -4,16 +4,18 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public GetProductReviewHandler(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public GetProductReviewHandler(
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
+            IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -23,13 +25,15 @@
 
         public async Task<ProductReviewResponse?> Handle(GetProductReview command, CancellationToken cancellationToken)
         {
-            var productReview = await _applicationDbContext.ProductReviews
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var productReview = await applicationDbContext.ProductReviews
                 .AsNoTracking()
                 .Where(e => e.Id == command.Id)
                 .SingleOrDefaultAsync();
-           
+
             return _mapper.Map<ProductReviewResponse>(productReview);
-        } 
+        }
 
         #endregion
     }

@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
 
@@ -15,11 +15,11 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public CreateOrder_ConvertShoppingCartItemsToOrderItems(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMediator mediator,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
@@ -46,7 +46,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 return null;
             }
 
-            var shoppingCart = await _mediator.Send(new GetShoppingCart(command.Identity,true, false, false, command.OrderPaymentType));
+            var shoppingCart = await _mediator.Send(new GetShoppingCart(command.Identity, true, false, false, command.OrderPaymentType));
 
             if (shoppingCart == null)
             {
@@ -57,6 +57,8 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 return null;
             }
+
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
 
             var orderItems = new List<OrderItem>();
 
@@ -116,12 +118,14 @@ namespace Adanom.Ecommerce.API.Handlers
 
                 productSKU.StockQuantity -= orderItem.Amount;
 
-                _applicationDbContext.Update(_mapper.Map<ProductSKU>(productSKU));
-                await _applicationDbContext.SaveChangesAsync();
+                applicationDbContext.Update(_mapper.Map<ProductSKU>(productSKU));
+                await applicationDbContext.SaveChangesAsync();
             }
 
             var orderItemResponses = _mapper.Map<IEnumerable<OrderItemResponse>>(orderItems);
             orderResponse.Items = orderItemResponses.ToList();
+
+            await _mediator.Send(new DeleteShoppingCart(command.Identity));
 
             return orderResponse;
         }

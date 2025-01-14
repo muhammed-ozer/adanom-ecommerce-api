@@ -4,16 +4,16 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public GetAnonymousShoppingCartItemHandler(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public GetAnonymousShoppingCartItemHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -25,25 +25,27 @@
         {
             AnonymousShoppingCartItem? anonymousShoppingCartItem = null;
 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             if (command.Id != null)
             {
-                anonymousShoppingCartItem = await _applicationDbContext.AnonymousShoppingCartItems
+                anonymousShoppingCartItem = await applicationDbContext.AnonymousShoppingCartItems
                     .Where(e => e.Id == command.Id)
                     .AsNoTracking()
                     .SingleOrDefaultAsync();
             }
             else
             {
-                anonymousShoppingCartItem = await _applicationDbContext.AnonymousShoppingCartItems
-                    .Where(e => 
-                        e.AnonymousShoppingCart.Id == command.AnonymousShoppingCartId && 
+                anonymousShoppingCartItem = await applicationDbContext.AnonymousShoppingCartItems
+                    .Where(e =>
+                        e.AnonymousShoppingCart.Id == command.AnonymousShoppingCartId &&
                         e.ProductId == command.ProductId)
                     .AsNoTracking()
                     .SingleOrDefaultAsync();
             }
 
             return _mapper.Map<AnonymousShoppingCartItemResponse>(anonymousShoppingCartItem);
-        } 
+        }
 
         #endregion
     }

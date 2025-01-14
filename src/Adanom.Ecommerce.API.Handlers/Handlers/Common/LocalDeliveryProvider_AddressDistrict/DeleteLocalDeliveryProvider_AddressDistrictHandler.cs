@@ -6,16 +6,16 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public DeleteLocalDeliveryProvider_AddressDistrictHandler(ApplicationDbContext applicationDbContext, IMediator mediator)
+        public DeleteLocalDeliveryProvider_AddressDistrictHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
         }
@@ -26,23 +26,25 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<bool> Handle(DeleteLocalDeliveryProvider_AddressDistrict command, CancellationToken cancellationToken)
         {
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             if (command.AddressDistrictId == null)
             {
-                await _applicationDbContext.LocalDeliveryProvider_AddressDistrict_Mappings
+                await applicationDbContext.LocalDeliveryProvider_AddressDistrict_Mappings
                     .Where(e => e.LocalDeliveryProviderId == command.LocalDeliveryProviderId).ExecuteDeleteAsync();
             }
             else
             {
-                await _applicationDbContext.LocalDeliveryProvider_AddressDistrict_Mappings
-                    .Where(e => 
+                await applicationDbContext.LocalDeliveryProvider_AddressDistrict_Mappings
+                    .Where(e =>
                         e.LocalDeliveryProviderId == command.LocalDeliveryProviderId &&
-                        e.AddressDistrictId == command.AddressDistrictId) 
+                        e.AddressDistrictId == command.AddressDistrictId)
                     .ExecuteDeleteAsync();
             }
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

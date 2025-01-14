@@ -4,16 +4,16 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public GetShoppingCartItemHandler(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public GetShoppingCartItemHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -23,27 +23,29 @@
 
         public async Task<ShoppingCartItemResponse?> Handle(GetShoppingCartItem command, CancellationToken cancellationToken)
         {
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             ShoppingCartItem? shoppingCartItem = null;
 
             if (command.Id != null)
             {
-                shoppingCartItem = await _applicationDbContext.ShoppingCartItems
+                shoppingCartItem = await applicationDbContext.ShoppingCartItems
                     .Where(e => e.Id == command.Id)
                     .AsNoTracking()
                     .SingleOrDefaultAsync();
             }
             else
             {
-                shoppingCartItem = await _applicationDbContext.ShoppingCartItems
-                    .Where(e => 
-                        e.ShoppingCart.UserId == command.UserId && 
+                shoppingCartItem = await applicationDbContext.ShoppingCartItems
+                    .Where(e =>
+                        e.ShoppingCart.UserId == command.UserId &&
                         e.ProductId == command.ProductId)
                     .AsNoTracking()
                     .SingleOrDefaultAsync();
             }
 
             return _mapper.Map<ShoppingCartItemResponse>(shoppingCartItem);
-        } 
+        }
 
         #endregion
     }

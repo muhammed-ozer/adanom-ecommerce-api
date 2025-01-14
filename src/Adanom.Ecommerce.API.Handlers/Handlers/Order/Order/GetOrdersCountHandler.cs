@@ -5,15 +5,15 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
         #endregion
 
         #region Ctor
 
-        public GetOrdersCountHandler(ApplicationDbContext applicationDbContext)
+        public GetOrdersCountHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
 
         #endregion
@@ -22,7 +22,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<int> Handle(GetOrdersCount command, CancellationToken cancellationToken)
         {
-            var ordersQuery = _applicationDbContext.Orders.AsNoTracking();
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var ordersQuery = applicationDbContext.Orders.AsNoTracking();
 
             #region Apply filtering
 

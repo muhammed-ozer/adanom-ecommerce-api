@@ -4,7 +4,7 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
@@ -12,10 +12,10 @@
         #region Ctor
 
         public GetEntityImagesHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -25,11 +25,13 @@
 
         public async Task<IEnumerable<ImageResponse>> Handle(GetEntityImages command, CancellationToken cancellationToken)
         {
-            var images = await _applicationDbContext.Images
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var images = await applicationDbContext.Images
                  .AsNoTracking()
                  .Where(e => e.EntityId == command.EntityId &&
                              e.EntityType == command.EntityType)
-                 .OrderBy(e => e.IsDefault)  
+                 .OrderBy(e => e.IsDefault)
                  .ThenBy(e => e.DisplayOrder)
                  .ToListAsync();
 

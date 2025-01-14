@@ -4,16 +4,16 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public GetOrderShippingAddressHandler(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public GetOrderShippingAddressHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -23,13 +23,15 @@
 
         public async Task<OrderShippingAddressResponse?> Handle(GetOrderShippingAddress command, CancellationToken cancellationToken)
         {
-            var orderShippingAddress = await _applicationDbContext.OrderShippingAddresses
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var orderShippingAddress = await applicationDbContext.OrderShippingAddresses
                 .Where(e => e.Id == command.Id)
                 .AsNoTracking()
                 .SingleOrDefaultAsync();
 
             return _mapper.Map<OrderShippingAddressResponse>(orderShippingAddress);
-        } 
+        }
 
         #endregion
     }

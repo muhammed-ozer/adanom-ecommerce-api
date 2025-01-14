@@ -4,7 +4,7 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
@@ -12,10 +12,10 @@
         #region Ctor
 
         public DeleteExpiredAnonymousShoppingCartsHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
@@ -27,15 +27,17 @@
         {
             var currentExpirationTimeUtc = DateTime.UtcNow.AddDays(7 * -1);
 
-            var anonymousShoppingCarts = await _applicationDbContext.AnonymousShoppingCarts
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var anonymousShoppingCarts = await applicationDbContext.AnonymousShoppingCarts
                 .Where(e => e.LastModifiedAtUtc <= currentExpirationTimeUtc)
                 .ToListAsync();
 
-            _applicationDbContext.AnonymousShoppingCarts.RemoveRange(anonymousShoppingCarts);
+            applicationDbContext.AnonymousShoppingCarts.RemoveRange(anonymousShoppingCarts);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

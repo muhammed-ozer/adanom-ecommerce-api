@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
@@ -14,12 +14,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region Ctor
 
-        public CreateBillingAddressHandler(
-            ApplicationDbContext applicationDbContext,
-            IMapper mapper,
-            IMediator mediator)
+        public CreateBillingAddressHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMapper mapper, IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
@@ -33,9 +30,12 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             if (!command.IsDefault)
             {
-                var hasUserAnyOtherBillingAddress = await _applicationDbContext.BillingAddresses
+
+                var hasUserAnyOtherBillingAddress = await applicationDbContext.BillingAddresses
                     .AsNoTracking()
                     .AnyAsync(e => e.DeletedAtUtc == null && e.UserId == userId);
 
@@ -46,7 +46,7 @@ namespace Adanom.Ecommerce.API.Handlers
             }
             else
             {
-                var currentDefaultBillingAddress = await _applicationDbContext.BillingAddresses
+                var currentDefaultBillingAddress = await applicationDbContext.BillingAddresses
                     .Where(e => e.DeletedAtUtc == null &&
                                 e.UserId == userId &&
                                 e.IsDefault)
@@ -67,11 +67,11 @@ namespace Adanom.Ecommerce.API.Handlers
                 });
             });
 
-            await _applicationDbContext.AddAsync(billingAddress);
+            await applicationDbContext.AddAsync(billingAddress);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

@@ -11,7 +11,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         private readonly static ConcurrentDictionary<long, ProductCategoryResponse> _cache = new();
@@ -21,10 +21,10 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public GetProductCategoriesHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -34,7 +34,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<PaginatedData<ProductCategoryResponse>> Handle(GetProductCategories command, CancellationToken cancellationToken)
         {
-            var productCategoriesCountOnDb = await _applicationDbContext.ProductCategories
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var productCategoriesCountOnDb = await applicationDbContext.ProductCategories
                 .Where(e => e.DeletedAtUtc == null)
                 .CountAsync();
 
@@ -42,7 +44,7 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 _cache.Clear();
 
-                var productCategoriesOnDb = await _applicationDbContext.ProductCategories
+                var productCategoriesOnDb = await applicationDbContext.ProductCategories
                    .AsNoTracking()
                    .Where(e => e.DeletedAtUtc == null)
                    .ToListAsync();

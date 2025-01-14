@@ -5,18 +5,16 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public GetOrderPaymentHandler(
-            ApplicationDbContext applicationDbContext,
-            IMapper mapper)
+        public GetOrderPaymentHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -28,16 +26,18 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             OrderPayment? orderPayment;
 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             if (command.OrderNumber.IsNotNullOrEmpty())
             {
-                orderPayment = await _applicationDbContext.OrderPayments
+                orderPayment = await applicationDbContext.OrderPayments
                     .AsNoTracking()
                     .Where(e => e.Order.OrderNumber == command.OrderNumber)
                     .SingleOrDefaultAsync();
             }
             else
             {
-                orderPayment = await _applicationDbContext.OrderPayments
+                orderPayment = await applicationDbContext.OrderPayments
                     .AsNoTracking()
                     .Where(e => e.Id == command.Id)
                     .SingleOrDefaultAsync();

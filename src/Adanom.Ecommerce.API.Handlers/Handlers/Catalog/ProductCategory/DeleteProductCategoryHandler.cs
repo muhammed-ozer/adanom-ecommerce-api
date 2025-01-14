@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
@@ -14,10 +14,10 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public DeleteProductCategoryHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
@@ -29,7 +29,9 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var productCategory = await _applicationDbContext.ProductCategories
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var productCategory = await applicationDbContext.ProductCategories
                 .Where(e => e.DeletedAtUtc == null &&
                             e.Id == command.Id)
                 .SingleAsync();
@@ -39,7 +41,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {
@@ -62,6 +64,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 TransactionType = TransactionType.DELETE,
                 Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productCategory.Id),
             }));
+
+            await _mediator.Publish(new RemoveFromCache<ProductCategoryResponse>(command.Id));
 
             return true;
         }

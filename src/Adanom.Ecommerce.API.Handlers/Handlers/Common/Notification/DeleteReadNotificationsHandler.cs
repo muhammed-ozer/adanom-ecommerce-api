@@ -4,7 +4,7 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
@@ -12,10 +12,10 @@
         #region Ctor
 
         public DeleteReadNotificationsHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
@@ -25,15 +25,17 @@
 
         public async Task<bool> Handle(DeleteReadNotifications command, CancellationToken cancellationToken)
         {
-            var notifications = await _applicationDbContext.Notifications
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var notifications = await applicationDbContext.Notifications
                 .Where(e => e.ReadAtUtc != null)
                 .ToListAsync();
 
-            _applicationDbContext.Notifications.RemoveRange(notifications);
+            applicationDbContext.Notifications.RemoveRange(notifications);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

@@ -4,15 +4,15 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
         #endregion
 
         #region Ctor
 
-        public DoesBillingAddressExistsHandler(ApplicationDbContext applicationDbContext)
+        public DoesBillingAddressExistsHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
 
         #endregion
@@ -21,9 +21,11 @@
 
         public async Task<bool> Handle(DoesUserEntityExists<BillingAddressResponse> command, CancellationToken cancellationToken)
         {
-            return await _applicationDbContext.BillingAddresses
-                .AnyAsync(e => e.DeletedAtUtc == null && 
-                               e.UserId == command.UserId && 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            return await applicationDbContext.BillingAddresses
+                .AnyAsync(e => e.DeletedAtUtc == null &&
+                               e.UserId == command.UserId &&
                                e.Id == command.Id);
         }
 

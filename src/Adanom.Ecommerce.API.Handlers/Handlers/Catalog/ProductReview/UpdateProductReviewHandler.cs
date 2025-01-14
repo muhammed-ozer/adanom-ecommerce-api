@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
@@ -14,9 +14,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region Ctor
 
-        public UpdateProductReviewHandler(ApplicationDbContext applicationDbContext, IMapper mapper, IMediator mediator)
+        public UpdateProductReviewHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMapper mapper, IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
@@ -30,7 +30,9 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var productReview = await _applicationDbContext.ProductReviews
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var productReview = await applicationDbContext.ProductReviews
                 .Where(e => e.Id == command.Id)
                 .SingleAsync();
 
@@ -46,11 +48,11 @@ namespace Adanom.Ecommerce.API.Handlers
                 });
             });
 
-            _applicationDbContext.Update(productReview);
+            applicationDbContext.Update(productReview);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

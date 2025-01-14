@@ -8,7 +8,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
         private readonly IBlobStorageService _blobStorageService;
@@ -18,12 +18,12 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public CreateImageHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper,
             IMediator mediator,
             IBlobStorageService blobStorageService)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _blobStorageService = blobStorageService ?? throw new ArgumentNullException(nameof(blobStorageService));
@@ -64,9 +64,11 @@ namespace Adanom.Ecommerce.API.Handlers
                 return null;
             }
 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             if (!command.IsDefault)
             {
-                var hasAnyOtherImage = await _applicationDbContext.Images
+                var hasAnyOtherImage = await applicationDbContext.Images
                     .AsNoTracking()
                     .AnyAsync(e => e.EntityId == command.EntityId &&
                                    e.EntityType == command.EntityType);
@@ -78,7 +80,7 @@ namespace Adanom.Ecommerce.API.Handlers
             }
             else
             {
-                var cuurentDefaultImage = await _applicationDbContext.Images
+                var cuurentDefaultImage = await applicationDbContext.Images
                     .Where(e => e.EntityType == command.EntityType &&
                                 e.EntityId == command.EntityId &&
                                 e.IsDefault)
@@ -100,11 +102,11 @@ namespace Adanom.Ecommerce.API.Handlers
                 });
             });
 
-            await _applicationDbContext.AddAsync(image);
+            await applicationDbContext.AddAsync(image);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

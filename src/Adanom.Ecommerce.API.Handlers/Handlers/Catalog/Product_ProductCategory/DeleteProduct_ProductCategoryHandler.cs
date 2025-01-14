@@ -6,16 +6,16 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public DeleteProduct_ProductCategoryHandler(ApplicationDbContext applicationDbContext, IMediator mediator)
+        public DeleteProduct_ProductCategoryHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
         }
@@ -26,17 +26,19 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<bool> Handle(DeleteProduct_ProductCategory command, CancellationToken cancellationToken)
         {
-            var product_ProductCategory = await _applicationDbContext.Product_ProductCategory_Mappings
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var product_ProductCategory = await applicationDbContext.Product_ProductCategory_Mappings
                 .Where(e =>
                     e.ProductId == command.ProductId &&
                     e.ProductCategoryId == command.ProductCategoryId)
                 .SingleAsync();
 
-            _applicationDbContext.Remove(product_ProductCategory);
+            applicationDbContext.Remove(product_ProductCategory);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

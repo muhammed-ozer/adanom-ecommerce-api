@@ -4,16 +4,18 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public GetProductPriceHandler(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public GetProductPriceHandler(
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
+            IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -23,13 +25,15 @@
 
         public async Task<ProductPriceResponse?> Handle(GetProductPrice command, CancellationToken cancellationToken)
         {
-            var productPrice = await _applicationDbContext.ProductPrices
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var productPrice = await applicationDbContext.ProductPrices
                 .AsNoTracking()
                 .Where(e => e.DeletedAtUtc == null && e.Id == command.Id)
                 .SingleOrDefaultAsync();
-           
+
             return _mapper.Map<ProductPriceResponse>(productPrice);
-        } 
+        }
 
         #endregion
     }

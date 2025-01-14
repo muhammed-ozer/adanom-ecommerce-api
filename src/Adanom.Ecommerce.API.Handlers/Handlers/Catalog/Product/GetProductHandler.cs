@@ -4,16 +4,16 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
 
         #endregion
 
         #region Ctor
 
-        public GetProductHandler(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public GetProductHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMapper mapper)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -25,16 +25,18 @@
         {
             Product? product = null;
 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             if (command.UrlSlug.IsNotNullOrEmpty())
             {
-                product = await _applicationDbContext.Products
+                product = await applicationDbContext.Products
                     .Where(e => e.DeletedAtUtc == null && e.UrlSlug == command.UrlSlug)
                     .AsNoTracking()
                     .SingleOrDefaultAsync();
             }
             else
             {
-                product = await _applicationDbContext.Products
+                product = await applicationDbContext.Products
                     .Where(e => e.DeletedAtUtc == null && e.Id == command.Id)
                     .AsNoTracking()
                     .SingleOrDefaultAsync();

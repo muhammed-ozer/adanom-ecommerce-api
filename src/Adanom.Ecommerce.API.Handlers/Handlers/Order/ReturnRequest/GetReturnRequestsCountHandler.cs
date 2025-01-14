@@ -5,15 +5,15 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
 
         #endregion
 
         #region Ctor
 
-        public GetReturnRequestsCountHandler(ApplicationDbContext applicationDbContext)
+        public GetReturnRequestsCountHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
 
         #endregion
@@ -22,7 +22,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task<int> Handle(GetReturnRequestsCount command, CancellationToken cancellationToken)
         {
-            var returnRequestsQuery = _applicationDbContext.ReturnRequests.AsNoTracking();
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var returnRequestsQuery = applicationDbContext.ReturnRequests.AsNoTracking();
 
             #region Apply filtering
 

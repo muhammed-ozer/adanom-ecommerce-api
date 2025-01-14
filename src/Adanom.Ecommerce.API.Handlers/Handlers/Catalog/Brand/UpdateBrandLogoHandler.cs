@@ -7,7 +7,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
@@ -16,11 +16,11 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public UpdateBrandLogoHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
@@ -33,7 +33,9 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
-            var brand = await _applicationDbContext.Brands
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var brand = await applicationDbContext.Brands
                 .Where(e => e.DeletedAtUtc == null &&
                             e.Id == command.Id)
                 .SingleAsync();
@@ -79,11 +81,11 @@ namespace Adanom.Ecommerce.API.Handlers
             brand.UpdatedAtUtc = DateTime.UtcNow;
             brand.UpdatedByUserId = userId;
 
-            _applicationDbContext.Update(brand);
+            applicationDbContext.Update(brand);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

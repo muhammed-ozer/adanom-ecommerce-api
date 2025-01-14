@@ -6,7 +6,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
@@ -15,11 +15,11 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public CreatePickUpStoreHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMapper mapper,
             IMediator mediator)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
@@ -33,9 +33,11 @@ namespace Adanom.Ecommerce.API.Handlers
         {
             var userId = command.Identity.GetUserId();
 
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
             if (!command.IsDefault)
             {
-                var hasAnyOtherPickUpStore = await _applicationDbContext.PickUpStores
+                var hasAnyOtherPickUpStore = await applicationDbContext.PickUpStores
                     .AsNoTracking()
                     .AnyAsync(e => e.DeletedAtUtc == null);
 
@@ -46,7 +48,7 @@ namespace Adanom.Ecommerce.API.Handlers
             }
             else
             {
-                var currentDefaultPickUpStore = await _applicationDbContext.PickUpStores
+                var currentDefaultPickUpStore = await applicationDbContext.PickUpStores
                     .Where(e => e.DeletedAtUtc == null &&
                                 e.IsDefault)
                     .SingleOrDefaultAsync();
@@ -66,11 +68,11 @@ namespace Adanom.Ecommerce.API.Handlers
                 });
             });
 
-            await _applicationDbContext.AddAsync(pickUpStore);
+            await applicationDbContext.AddAsync(pickUpStore);
 
             try
             {
-                await _applicationDbContext.SaveChangesAsync();
+                await applicationDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {

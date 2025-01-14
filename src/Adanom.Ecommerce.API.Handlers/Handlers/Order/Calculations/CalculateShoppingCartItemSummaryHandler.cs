@@ -5,7 +5,6 @@
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
         private readonly ICalculationService _calculationService;
@@ -15,12 +14,10 @@
         #region Ctor
 
         public CalculateShoppingCartItemSummaryHandler(
-            ApplicationDbContext applicationDbContext,
             IMapper mapper,
             IMediator mediator,
             ICalculationService calculationService)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             _calculationService = calculationService ?? throw new ArgumentNullException(nameof(calculationService));
