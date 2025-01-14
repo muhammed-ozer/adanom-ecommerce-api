@@ -39,21 +39,7 @@
             await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
 
             await applicationDbContext.AddAsync(notification);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = Guid.Empty,
-                    EntityType = EntityType.NOTIFICATION,
-                    TransactionType = TransactionType.CREATE,
-                    Description = LogMessages.AdminTransaction.DatabaseTransactionHasFailed,
-                }));
-            }
+            await applicationDbContext.SaveChangesAsync();
         }
 
         #endregion

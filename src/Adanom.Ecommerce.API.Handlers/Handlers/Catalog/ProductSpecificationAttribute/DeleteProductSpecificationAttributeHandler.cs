@@ -39,31 +39,7 @@ namespace Adanom.Ecommerce.API.Handlers
             productSpecificationAttribute.DeletedAtUtc = DateTime.UtcNow;
             productSpecificationAttribute.DeletedByUserId = userId;
 
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.PRODUCTSPECIFICATIONATTRIBUTE,
-                    TransactionType = TransactionType.DELETE,
-                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return false;
-            }
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.PRODUCTSPECIFICATIONATTRIBUTE,
-                TransactionType = TransactionType.DELETE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productSpecificationAttribute.Id),
-            }));
+            await applicationDbContext.SaveChangesAsync();
 
             await _mediator.Publish(new RemoveFromCache<ProductSpecificationAttributeResponse>(command.Id));
 

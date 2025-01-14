@@ -37,14 +37,7 @@ namespace Adanom.Ecommerce.API.Handlers
             brand.DeletedAtUtc = DateTime.UtcNow;
             brand.DeletedByUserId = userId;
 
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch
-            {
-                return false;
-            }
+            await applicationDbContext.SaveChangesAsync();
 
             await _mediator.Publish(new RemoveFromCache<BrandResponse>(command.Id));
 

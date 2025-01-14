@@ -40,24 +40,7 @@ namespace Adanom.Ecommerce.API.Handlers
             await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
 
             await applicationDbContext.AddAsync(shoppingCart);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.SHOPPINGCART,
-                    TransactionType = TransactionType.CREATE,
-                    Description = LogMessages.CustomerTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return null;
-            }
+            await applicationDbContext.SaveChangesAsync();
 
             var shoppingCartResponse = _mapper.Map<ShoppingCartResponse>(shoppingCart);
 

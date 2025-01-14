@@ -103,32 +103,7 @@ namespace Adanom.Ecommerce.API.Handlers
             });
 
             await applicationDbContext.AddAsync(image);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.IMAGE,
-                    TransactionType = TransactionType.CREATE,
-                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return null;
-            }
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.IMAGE,
-                TransactionType = TransactionType.CREATE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, image.Id),
-            }));
+            await applicationDbContext.SaveChangesAsync();
 
             var imageResponse = _mapper.Map<ImageResponse>(image);
 

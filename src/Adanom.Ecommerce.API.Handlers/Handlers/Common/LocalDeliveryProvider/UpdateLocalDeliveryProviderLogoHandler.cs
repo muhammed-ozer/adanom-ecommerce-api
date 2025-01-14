@@ -77,14 +77,6 @@ namespace Adanom.Ecommerce.API.Handlers
 
             await _mediator.Publish(new ClearEntityCache<LocalDeliveryProviderResponse>());
 
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.LOCALDELIVERYPROVIDER,
-                TransactionType = TransactionType.UPDATE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, localDeliveryProvider.Id),
-            }));
-
             return true;
         }
 

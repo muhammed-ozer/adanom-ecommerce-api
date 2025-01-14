@@ -46,20 +46,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 notification.ReadByUserId = userId;
             }
 
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = Guid.Empty,
-                    EntityType = EntityType.NOTIFICATION,
-                    TransactionType = TransactionType.UPDATE,
-                    Description = LogMessages.AdminTransaction.DatabaseTransactionHasFailed,
-                }));
-            }
+            await applicationDbContext.SaveChangesAsync();
 
             return true;
         }

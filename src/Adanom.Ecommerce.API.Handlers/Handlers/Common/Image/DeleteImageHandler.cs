@@ -57,32 +57,7 @@ namespace Adanom.Ecommerce.API.Handlers
             var deleteImageResponse = await _blobStorageService.DeleteFileAsync(image.Path);
 
             applicationDbContext.Remove(image);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.IMAGE,
-                    TransactionType = TransactionType.DELETE,
-                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return false;
-            }
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.IMAGE,
-                TransactionType = TransactionType.DELETE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, image.Id),
-            }));
+            await applicationDbContext.SaveChangesAsync();
 
             return true;
         }

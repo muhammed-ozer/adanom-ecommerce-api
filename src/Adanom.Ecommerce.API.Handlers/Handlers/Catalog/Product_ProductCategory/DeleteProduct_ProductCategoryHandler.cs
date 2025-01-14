@@ -35,32 +35,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 .SingleAsync();
 
             applicationDbContext.Remove(product_ProductCategory);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = command.Identity.GetUserId(),
-                    EntityType = EntityType.PRODUCT_PRODUCTCATEGORY,
-                    TransactionType = TransactionType.DELETE,
-                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return false;
-            }
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = command.Identity.GetUserId(),
-                EntityType = EntityType.PRODUCT_PRODUCTCATEGORY,
-                TransactionType = TransactionType.DELETE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, $"{product_ProductCategory.ProductId}-{product_ProductCategory.ProductCategoryId}"),
-            }));
+            await applicationDbContext.SaveChangesAsync();
 
             return true;
         }

@@ -35,34 +35,8 @@ namespace Adanom.Ecommerce.API.Handlers
                     .ToListAsync();
 
                 applicationDbContext.RemoveRange(product_ProductSpecificationAttribute_Mappings);
-
-                try
-                {
-                    await applicationDbContext.SaveChangesAsync();
-                }
-                catch (Exception exception)
-                {
-                    await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                    {
-                        UserId = command.Identity.GetUserId(),
-                        EntityType = EntityType.PRODUCT_PRODUCTSPECIFICATIONATTRIBUTE,
-                        TransactionType = TransactionType.DELETE,
-                        Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                        Exception = exception.ToString()
-                    }));
-
-                    return false;
-                }
+                await applicationDbContext.SaveChangesAsync();
             }
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = command.Identity.GetUserId(),
-                EntityType = EntityType.PRODUCT_PRODUCTSPECIFICATIONATTRIBUTE,
-                TransactionType = TransactionType.DELETE,
-                Description = string.Format(
-                    LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, "-"),
-            }));
 
             return deleteProductSpecificationAttributeResponse;
         }

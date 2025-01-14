@@ -70,24 +70,7 @@ namespace Adanom.Ecommerce.API.Handlers
             });
 
             await applicationDbContext.AddAsync(shippingAddress);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new CustomerTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.SHIPPINGADDRESS,
-                    TransactionType = TransactionType.CREATE,
-                    Description = LogMessages.CustomerTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return false;
-            }
+            await applicationDbContext.SaveChangesAsync();
 
             return true;
         }

@@ -35,15 +35,7 @@ namespace Adanom.Ecommerce.API.Handlers
             await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
 
             await applicationDbContext.AddAsync(orderShippingAddress);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch
-            {
-                return null;
-            }
+            await applicationDbContext.SaveChangesAsync();
 
             var orderShippingAddressResponse = _mapper.Map<OrderShippingAddressResponse>(orderShippingAddress);
 

@@ -69,32 +69,7 @@ namespace Adanom.Ecommerce.API.Handlers
             });
 
             await applicationDbContext.AddAsync(pickUpStore);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.PICKUPSTORE,
-                    TransactionType = TransactionType.CREATE,
-                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return null;
-            }
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.PICKUPSTORE,
-                TransactionType = TransactionType.CREATE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, pickUpStore.Id),
-            }));
+            await applicationDbContext.SaveChangesAsync();
 
             await _mediator.Publish(new ClearEntityCache<PickUpStoreResponse>());
 

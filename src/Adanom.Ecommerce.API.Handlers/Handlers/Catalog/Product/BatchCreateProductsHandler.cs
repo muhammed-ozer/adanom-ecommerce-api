@@ -102,28 +102,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 try
                 {
                     var createProductResponse = await _mediator.Send(createProductCommand);
-
-                    if (createProductResponse == null)
-                    {
-                        await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                        {
-                            UserId = userId,
-                            EntityType = EntityType.PRODUCT,
-                            TransactionType = TransactionType.CREATE,
-                            Description = string.Format(LogMessages.AdminTransaction.BatchCreateProductsError, row.RowNum),
-                        }));
-                    }
-                }
-                catch
+                } catch
                 {
-                    await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                    {
-                        UserId = userId,
-                        EntityType = EntityType.PRODUCT,
-                        TransactionType = TransactionType.CREATE,
-                        Description = string.Format(LogMessages.AdminTransaction.BatchCreateProductsError, row.RowNum),
-                    }));
-
                     continue;
                 }
             }

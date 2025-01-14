@@ -39,24 +39,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 .SingleAsync();
 
             applicationDbContext.Remove(shoppingCartItem);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new CustomerTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.SHOPPINGCARTITEM,
-                    TransactionType = TransactionType.DELETE,
-                    Description = LogMessages.CustomerTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return false;
-            }
+            await applicationDbContext.SaveChangesAsync();
 
             return true;
         }

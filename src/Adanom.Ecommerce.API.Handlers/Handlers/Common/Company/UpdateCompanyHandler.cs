@@ -42,31 +42,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             company = _mapper.Map(command, company);
 
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.COMPANY,
-                    TransactionType = TransactionType.UPDATE,
-                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return false;
-            }
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.COMPANY,
-                TransactionType = TransactionType.UPDATE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, company.Id),
-            }));
+            await applicationDbContext.SaveChangesAsync();
 
             await _mediator.Publish(new ClearEntityCache<CompanyResponse>());
 

@@ -39,33 +39,9 @@ namespace Adanom.Ecommerce.API.Handlers
             taxCategory.DeletedAtUtc = DateTime.UtcNow;
             taxCategory.DeletedByUserId = userId;
 
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.TAXCATEGORY,
-                    TransactionType = TransactionType.DELETE,
-                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return false;
-            }
+            await applicationDbContext.SaveChangesAsync();
 
             await _mediator.Publish(new RemoveFromCache<TaxCategoryResponse>(taxCategory.Id));
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.TAXCATEGORY,
-                TransactionType = TransactionType.DELETE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, taxCategory.Id),
-            }));
 
             return true;
         }

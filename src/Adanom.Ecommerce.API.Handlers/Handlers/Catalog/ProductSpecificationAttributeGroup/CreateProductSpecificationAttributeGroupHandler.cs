@@ -46,36 +46,11 @@ namespace Adanom.Ecommerce.API.Handlers
             await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
 
             await applicationDbContext.AddAsync(productSpecificationAttributeGroup);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.PRODUCTSPECIFICATIONATTRIBUTEGROUP,
-                    TransactionType = TransactionType.CREATE,
-                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return null;
-            }
+            await applicationDbContext.SaveChangesAsync();
 
             var productSpecificationAttributeGroupResponse = _mapper.Map<ProductSpecificationAttributeGroupResponse>(productSpecificationAttributeGroup);
 
             await _mediator.Publish(new AddToCache<ProductSpecificationAttributeGroupResponse>(productSpecificationAttributeGroupResponse));
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.PRODUCTSPECIFICATIONATTRIBUTEGROUP,
-                TransactionType = TransactionType.CREATE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productSpecificationAttributeGroup.Id),
-            }));
 
             return productSpecificationAttributeGroupResponse;
         }

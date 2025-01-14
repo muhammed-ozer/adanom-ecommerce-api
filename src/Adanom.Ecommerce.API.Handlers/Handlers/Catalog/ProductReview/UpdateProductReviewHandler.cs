@@ -49,32 +49,7 @@ namespace Adanom.Ecommerce.API.Handlers
             });
 
             applicationDbContext.Update(productReview);
-
-            try
-            {
-                await applicationDbContext.SaveChangesAsync();
-            }
-            catch (Exception exception)
-            {
-                await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-                {
-                    UserId = userId,
-                    EntityType = EntityType.PRODUCTREVIEW,
-                    TransactionType = TransactionType.UPDATE,
-                    Description = LogMessages.AdminTransaction.DatabaseSaveChangesHasFailed,
-                    Exception = exception.ToString()
-                }));
-
-                return false;
-            }
-
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.PRODUCTREVIEW,
-                TransactionType = TransactionType.UPDATE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, productReview.Id),
-            }));
+            await applicationDbContext.SaveChangesAsync();
 
             return true;
         }
