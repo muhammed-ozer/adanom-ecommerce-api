@@ -52,14 +52,6 @@ namespace Adanom.Ecommerce.API.Handlers
 
             await _mediator.Publish(new UpdateFromCache<BrandResponse>(brandResponse));
 
-            await _mediator.Publish(new CreateLog(new AdminTransactionLogRequest()
-            {
-                UserId = userId,
-                EntityType = EntityType.BRAND,
-                TransactionType = TransactionType.UPDATE,
-                Description = string.Format(LogMessages.AdminTransaction.DatabaseSaveChangesSuccessful, brand.Id),
-            }));
-
             return brandResponse;
         }
 
