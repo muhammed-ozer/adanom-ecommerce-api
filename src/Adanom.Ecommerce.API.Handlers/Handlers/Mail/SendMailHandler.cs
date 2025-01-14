@@ -8,7 +8,7 @@ namespace Adanom.Ecommerce.API.Handlers
     {
         #region Fields
 
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
         private readonly IMailService _mailService;
 
         #endregion
@@ -16,10 +16,10 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Ctor
 
         public SendMailHandler(
-            ApplicationDbContext applicationDbContext,
+            IDbContextFactory<ApplicationDbContext> applicationDbContextFactory,
             IMailService mailService)
         {
-            _applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
+            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mailService = mailService ?? throw new ArgumentNullException(nameof(mailService));
         }
 
@@ -29,7 +29,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
         public async Task Handle(SendMail command, CancellationToken cancellationToken)
         {
-            var mailTemplate = await _applicationDbContext.MailTemplates
+            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
+
+            var mailTemplate = await applicationDbContext.MailTemplates
                 .SingleOrDefaultAsync(e => e.Key == command.Key);
 
             if (mailTemplate is null)
