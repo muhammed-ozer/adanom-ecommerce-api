@@ -41,7 +41,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 return null;
             }
 
-            var shoppingCart = await _mediator.Send(new GetShoppingCart(command.Identity, true, true, false, command.OrderPaymentType));
+            var shoppingCart = await _mediator.Send(new GetShoppingCart(command.Identity, true, true, true, command.OrderPaymentType));
 
             if (shoppingCart == null)
             {
@@ -56,6 +56,11 @@ namespace Adanom.Ecommerce.API.Handlers
             if (shoppingCart.Summary == null)
             {
                 return null;
+            }
+
+            if (shoppingCart.HasStocksChanges || shoppingCart.HasPriceChanges || shoppingCart.HasNoItem || shoppingCart.HasProductDeleted)
+            {
+                checkoutResponse.CanCreateOrder = false;
             }
 
             checkoutResponse = _mapper.Map(shoppingCart.Summary, checkoutResponse);

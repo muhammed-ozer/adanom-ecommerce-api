@@ -4,15 +4,15 @@
     {
         #region Fields
 
-        private readonly IDbContextFactory<ApplicationDbContext> _applicationDbContextFactory;
+        private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public DoesProductHasStocksHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
+        public DoesProductHasStocksHandler(IMediator mediator)
         {
-            _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
         #endregion
@@ -21,19 +21,14 @@
 
         public async Task<bool> Handle(DoesProductHasStocks command, CancellationToken cancellationToken)
         {
-            await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
-
-            var productStocks = await applicationDbContext.Products
-                .Where(e => e.DeletedAtUtc == null && e.Id == command.ProductId)
-                .Select(e => e.ProductSKU.StockQuantity)
-                .SingleOrDefaultAsync();
+            var stocks = await _mediator.Send(new GetProductStockQuantity(command.ProductId));
 
             if (command.Amount != null)
             {
-                return productStocks >= command.Amount.Value;
+                return stocks >= command.Amount.Value;
             }
 
-            return productStocks != 0;
+            return stocks != 0;
         }
 
         #endregion

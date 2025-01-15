@@ -115,11 +115,6 @@ namespace Adanom.Ecommerce.API.Handlers
                 }
 
                 orderItems.Add(orderItem);
-
-                productSKU.StockQuantity -= orderItem.Amount;
-
-                applicationDbContext.Update(_mapper.Map<ProductSKU>(productSKU));
-                await applicationDbContext.SaveChangesAsync();
             }
 
             var orderItemResponses = _mapper.Map<IEnumerable<OrderItemResponse>>(orderItems);
