@@ -98,6 +98,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #region Order
                 
+                options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_StockReservationsBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_SaveChangesBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CalculateTotalBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CalculateShippingBehavior>();

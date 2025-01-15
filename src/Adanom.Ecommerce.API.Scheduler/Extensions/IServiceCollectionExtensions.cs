@@ -49,6 +49,18 @@ namespace Microsoft.Extensions.DependencyInjection
                        .ForJob("DeleteExpiredTransactionLogsJob", "TransactionLogsGroup"));
 
                 #endregion
+
+                #region DeleteExpiredStockReservationsJob
+
+                options.AddJob<DeleteExpiredStockReservationsJob>(e =>
+                           e.WithIdentity("DeleteExpiredStockReservationsJob", "StockReservationsGroup"));
+
+                options.AddTrigger(e =>
+                    e.WithIdentity("DeleteExpiredStockReservationsTrigger", "StockReservationsGroup")
+                       .WithCronSchedule("0 0 */4 * * ? *") // Every 4 hour
+                       .ForJob("DeleteExpiredStockReservationsJob", "StockReservationsGroup"));
+
+                #endregion
             });
 
             // Register the Quartz.NET service and configure it to block shutdown until jobs are complete.

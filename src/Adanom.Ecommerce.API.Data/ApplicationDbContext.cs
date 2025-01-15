@@ -267,6 +267,8 @@ namespace Adanom.Ecommerce.API.Data
 
         public DbSet<StockNotificationItem> StockNotificationItems { get; set; } = null!;
 
+        public DbSet<StockReservation> StockReservations { get; set; } = null!;
+
         #endregion
 
         #region Cms DbSets

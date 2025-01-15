@@ -37,6 +37,8 @@
             await applicationDbContext.AddAsync(order);
             await applicationDbContext.SaveChangesAsync();
 
+            orderResponse.Id = order.Id;
+
             return orderResponse;
         }
 

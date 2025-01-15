@@ -94,7 +94,9 @@ namespace Adanom.Ecommerce.API.Handlers
                     response.HasPriceChanges = true;
                 }
 
-                if (productSKU!.StockQuantity == 0 && command.Identity != null)
+                var productStockQuantity = await _mediator.Send(new GetProductStockQuantity(item.ProductId));
+
+                if (productStockQuantity == 0 && command.Identity != null)
                 {
                     await DeleteShoppingCartItemAsync(command.Identity, item.Id);
 
@@ -103,9 +105,9 @@ namespace Adanom.Ecommerce.API.Handlers
                     continue;
                 }
 
-                if (item.Amount > productSKU.StockQuantity)
+                if (item.Amount > productStockQuantity)
                 {
-                    item.Amount = productSKU.StockQuantity;
+                    item.Amount = productStockQuantity;
 
                     response.HasStocksChanges = true;
 
