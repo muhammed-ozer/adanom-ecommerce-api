@@ -99,6 +99,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 #region Order
                 
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_SendMailsBehavior>();
+                options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CreateOrderPaymentBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_StockReservationsBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_SaveChangesBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CalculateTotalBehavior>();
@@ -113,6 +114,12 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeReadyBehavior>();
                 options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeApprovedBehavior>();
                 options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeNewBehavior>();
+
+                #endregion
+
+                #region OrderPayment
+
+                options.AddBehavior<IPipelineBehavior<UpdateOrderPayment, bool>, UpdateOrderPayment_UpdateOrderStatusTypeBehavior>();
 
                 #endregion
 

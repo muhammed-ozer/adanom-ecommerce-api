@@ -87,6 +87,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<TaxCategoryMutations>()
                 .AddType<UserMutations>()
                 .AddType<OrderMutations>()
+                .AddType<OrderPaymentMutations>()
                 .AddType<ReturnRequestMutations>();
 
             #endregion
