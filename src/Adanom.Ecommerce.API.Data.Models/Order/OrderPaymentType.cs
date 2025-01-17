@@ -4,8 +4,8 @@ namespace Adanom.Ecommerce.API.Data.Models
 {
     public enum OrderPaymentType : byte
     {
-        [EnumDisplayName("Kredi Kartı")]
-        ONLINE_CREDIT_CARD,
+        [EnumDisplayName("Online Ödeme")]
+        ONLINE_PAYMENT,
 
         [EnumDisplayName("Havale/EFT")]
         [EnumDiscountRate(5)]

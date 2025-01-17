@@ -21,10 +21,10 @@
         {
             var expiresAtUtc = command.OrderPaymentType switch
             {
-                OrderPaymentType.ONLINE_CREDIT_CARD => command.ReservedAtUtc.AddDays(1),
-                OrderPaymentType.BANK_TRANSFER => command.ReservedAtUtc.AddDays(2),
-                OrderPaymentType.CREDIT_CARD_ON_DELIVERY => command.ReservedAtUtc.AddDays(2),
-                OrderPaymentType.CASH_ON_DELIVERY => command.ReservedAtUtc.AddDays(2),
+                OrderPaymentType.ONLINE_PAYMENT => command.ReservedAtUtc.AddDays(2),
+                OrderPaymentType.BANK_TRANSFER => command.ReservedAtUtc.AddDays(3),
+                OrderPaymentType.CREDIT_CARD_ON_DELIVERY => command.ReservedAtUtc.AddDays(3),
+                OrderPaymentType.CASH_ON_DELIVERY => command.ReservedAtUtc.AddDays(3),
                 _ => DateTime.UtcNow.AddMinutes(15)
             };
 

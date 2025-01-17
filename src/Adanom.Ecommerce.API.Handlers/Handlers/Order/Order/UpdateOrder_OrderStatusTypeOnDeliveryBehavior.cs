@@ -1,0 +1,95 @@
+﻿using Adanom.Ecommerce.API.Services.Mail;
+
+namespace Adanom.Ecommerce.API.Handlers
+{
+    public sealed class UpdateOrder_OrderStatusTypeOnDeliveryBehavior : IPipelineBehavior<UpdateOrder_OrderStatusType, bool>
+    {
+        #region Fields
+
+        private readonly IMediator _mediator;
+
+        #endregion
+
+        #region Ctor
+
+        public UpdateOrder_OrderStatusTypeOnDeliveryBehavior(IMediator mediator)
+        {
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        }
+
+        #endregion
+
+        #region IPipelineBehavior Members
+
+        public async Task<bool> Handle(UpdateOrder_OrderStatusType command, RequestHandlerDelegate<bool> next, CancellationToken cancellationToken)
+        {
+            var updateOrder_OrderStatusTypeResponse = await next();
+
+            if (!updateOrder_OrderStatusTypeResponse)
+            {
+                return updateOrder_OrderStatusTypeResponse;
+            }
+
+            if (command.OldOrderStatusType == command.NewOrderStatusType)
+            {
+                return updateOrder_OrderStatusTypeResponse;
+            }
+
+            if (command.NewOrderStatusType != OrderStatusType.ON_DELIVERY)
+            {
+                return updateOrder_OrderStatusTypeResponse;
+            }
+
+            var order = await _mediator.Send(new GetOrder(command.Id));
+
+            if (order == null)
+            {
+                return updateOrder_OrderStatusTypeResponse;
+            }
+
+            if (order.DeliveryType.Key == DeliveryType.PICK_UP_FROM_STORE)
+            {
+                return updateOrder_OrderStatusTypeResponse;
+            }
+
+            var user = await _mediator.Send(new GetUser(order.UserId));
+
+            if (user == null)
+            {
+                return updateOrder_OrderStatusTypeResponse;
+            }
+
+            var sendMailCommand = new SendMail()
+            {
+                To = user.Email,
+                Replacements = new Dictionary<string, string>()
+                {
+                    { MailConstants.Replacements.User.FullName, $"{user.FirstName} {user.LastName}" },
+                    { MailConstants.Replacements.Order.Number, order.OrderNumber }
+                }
+            };
+
+            if (order.DeliveryType.Key == DeliveryType.CARGO_SHIPMENT)
+            {
+                var shippingProvider = await _mediator.Send(new GetShippingProvider(order.ShippingProviderId!.Value));
+
+                sendMailCommand.Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_ON_DELIVERY_CARGO_SHIPMENT;
+
+                sendMailCommand.Replacements.Add(
+                            new KeyValuePair<string, string>(MailConstants.Replacements.Order.ShippingTrackingCode, order.ShippingTrackingCode ?? "Kargo takip kodu için lütfen iletişime geçiniz."));
+
+                sendMailCommand.Replacements.Add(
+                    new KeyValuePair<string, string>(MailConstants.Replacements.Order.ShippingProviderName, shippingProvider?.DisplayName ?? "Kargo firması için lütfen iletişime geçiniz."));
+            } else if (order.DeliveryType.Key == DeliveryType.LOCAL_DELIVERY)
+            {
+                sendMailCommand.Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_ON_DELIVERY_LOCAL_DELIVERY;
+            }
+
+            await _mediator.Publish(sendMailCommand);
+
+            return updateOrder_OrderStatusTypeResponse;
+        }
+
+        #endregion
+    }
+}

@@ -29,7 +29,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 DeliveryType.PICK_UP_FROM_STORE => orderPaymentTypes,
                 DeliveryType.LOCAL_DELIVERY => orderPaymentTypes,
                 DeliveryType.CARGO_SHIPMENT => orderPaymentTypes
-                    .Where(e => e.Key == OrderPaymentType.ONLINE_CREDIT_CARD ||
+                    .Where(e => e.Key == OrderPaymentType.ONLINE_PAYMENT ||
                                 e.Key == OrderPaymentType.BANK_TRANSFER)
                     .ToList(),
                 _ => throw new ArgumentException($"Unsupported delivery type: {command.DeliveryType}")

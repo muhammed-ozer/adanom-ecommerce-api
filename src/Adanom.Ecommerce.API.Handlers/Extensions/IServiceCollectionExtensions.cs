@@ -98,6 +98,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #region Order
                 
+                options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_SendMailsBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_StockReservationsBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_SaveChangesBehavior>();
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CalculateTotalBehavior>();
@@ -106,7 +107,12 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.AddBehavior<IPipelineBehavior<CreateOrder, OrderResponse?>, CreateOrder_CreateAddressesBehavior>();
 
                 options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeCreateNotification>();
-                options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeSendMailsBehavior>();
+                options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeCancelBehavior>();
+                options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeDoneBehavior>();
+                options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeOnDeliveryBehavior>();
+                options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeReadyBehavior>();
+                options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeApprovedBehavior>();
+                options.AddBehavior<IPipelineBehavior<UpdateOrder_OrderStatusType, bool>, UpdateOrder_OrderStatusTypeNewBehavior>();
 
                 #endregion
 

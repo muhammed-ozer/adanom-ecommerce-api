@@ -10,19 +10,22 @@ namespace Adanom.Ecommerce.API.Data.Models
         [EnumDisplayName("Yeni Sipariş")]
         NEW,
 
-        [EnumDisplayName("Hazırlanıyor")]
+        [EnumDisplayName("Onaylandı")]
+        APPROVED,
+
+        [EnumDisplayName("İşlemde")]
         IN_PROGRESS,
 
         [EnumDisplayName("Hazırlandı")]
         READY,
 
-        [EnumDisplayName("Kargo Firmasına Teslim Edildi")]
-        DELIVERED_TO_SHIPPING_PROVIDER,
+        [EnumDisplayName("Teslimatta")]
+        ON_DELIVERY,
 
-        [EnumDisplayName("Teslim Edildi")]
-        DELIVERED_TO_CUSTOMER,
+        [EnumDisplayName("Tamamlandı")]
+        DONE,
 
-        [EnumDisplayName("İptal")]
+        [EnumDisplayName("İptal Edildi")]
         CANCEL
     }
 }

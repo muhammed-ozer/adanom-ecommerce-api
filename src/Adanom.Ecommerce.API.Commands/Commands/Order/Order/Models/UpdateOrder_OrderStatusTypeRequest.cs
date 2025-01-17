@@ -6,6 +6,10 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public OrderStatusType NewOrderStatusType { get; set; }
 
+        public DeliveryType DeliveryType { get; set; }
+
+        public OrderPaymentType OrderPaymentType { get; set; }
+
         public string? ShippingTrackingCode { get; set; }
     }
 }

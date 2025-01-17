@@ -38,10 +38,13 @@ namespace Adanom.Ecommerce.API.Handlers
                 {
                     target.UserId = userId;
                     target.OrderNumber = await _mediator.Send(new CreateOrderNumber());
-                    target.OrderStatusType = OrderStatusType.PAYMENT_PENDING;
                     target.CreatedAtUtc = DateTime.UtcNow;
                 });
             });
+
+            var orderStatusType = await _mediator.Send(new GetCreatedOrderStatusTypeByOrderPaymentType(command.OrderPaymentType));
+
+            order.OrderStatusType = orderStatusType.Key;
 
             var orderResponse = _mapper.Map<OrderResponse>(order);
 
