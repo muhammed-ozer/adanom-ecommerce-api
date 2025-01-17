@@ -70,9 +70,10 @@ namespace Adanom.Ecommerce.API.Handlers
 
             await _mediator.Publish(sendMailCommand);
 
-            // Delete stock reservations when online payment successful
+            // Delete stock reservations and shopping cart when online payment successful
             if (command.OrderPaymentType == OrderPaymentType.ONLINE_PAYMENT)
             {
+                await _mediator.Send(new DeleteShoppingCart(command.Identity));
                 await _mediator.Send(new DeleteStockReservations(order.Id, true));
             }
 

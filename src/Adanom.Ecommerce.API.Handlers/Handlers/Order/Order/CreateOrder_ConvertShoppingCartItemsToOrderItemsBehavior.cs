@@ -120,7 +120,12 @@ namespace Adanom.Ecommerce.API.Handlers
             var orderItemResponses = _mapper.Map<IEnumerable<OrderItemResponse>>(orderItems);
             orderResponse.Items = orderItemResponses.ToList();
 
-            await _mediator.Send(new DeleteShoppingCart(command.Identity));
+            // Delete shopping cart if payment type is not online payment
+            if (command.OrderPaymentType != OrderPaymentType.ONLINE_PAYMENT)
+            {
+                await _mediator.Send(new DeleteShoppingCart(command.Identity));
+            }
+
 
             return orderResponse;
         }
