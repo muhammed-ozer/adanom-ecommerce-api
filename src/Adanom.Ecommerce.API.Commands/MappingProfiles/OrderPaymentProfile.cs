@@ -11,6 +11,14 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<OrderPaymentResponse, OrderPayment>()
                 .ForMember(member => member.OrderPaymentType, options =>
                     options.MapFrom(e => e.OrderPaymentType.Key));
+
+            CreateMap<CreateOrderPaymentRequest, CreateOrderPayment>();
+
+            CreateMap<CreateOrderPayment, OrderPayment>();
+
+            CreateMap<UpdateOrderPaymentRequest, UpdateOrderPayment>();
+
+            CreateMap<UpdateOrderPayment, OrderPayment>();
         }
     }
 }

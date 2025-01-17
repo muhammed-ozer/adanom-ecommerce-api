@@ -29,7 +29,7 @@ namespace Adanom.Ecommerce.API.Handlers
                 {
                     await CreateLogAsync(command, exception);
 
-                    return default;
+                    throw;
                 }
             }
 
