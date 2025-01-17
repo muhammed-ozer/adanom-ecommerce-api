@@ -23,6 +23,10 @@ namespace Adanom.Ecommerce.API.Commands
 
         public OrderStatusType? OldOrderStatusType { get; set; }
 
+        public DeliveryType DeliveryType { get; set; }
+
+        public OrderPaymentType OrderPaymentType { get; set; }
+
         public string? ShippingTrackingCode { get; set; }
 
         #endregion

@@ -69,16 +69,18 @@ namespace Adanom.Ecommerce.API.Data
                     Description = "Yeni sipariş için kullanıcıya gönderilir.",
                     Subject = "Siparişiniz oluşturuldu",
                     Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
-                                <p><strong>{ORDER_NUMBER}</strong> numaralari siparişiniz oluşturulmuştur.</p>"
+                                <p><strong>{ORDER_NUMBER}</strong> numaralı siparişiniz oluşturulmuştur.</p>"
                 },
                 new()
                 {
-                    Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_IN_PROGRESS,
-                    Description = "İşleme alınan sipariş için kullanıcıya gönderilir.",
-                    Subject = "Siparişiniz işleme alındı",
+                    Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_NEW_ORDERPAYMENTTYPE_BANK_TRANSFER,
+                    Description = "banka havalesi yöntemi ile oluşturulan yeni sipariş için kullanıcıya gönderilir.",
+                    Subject = "Siparişiniz oluşturuldu",
                     Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
-                                <p>Siparişiniz işleme alınmıştır.</p>
-                                <p>Sipariş Numarası: <strong>{ORDER_NUMBER}</strong></p>"
+                                <p><strong>{ORDER_NUMBER}</strong> numaralı siparişiniz oluşturulmuştur.</p>
+                                <p>Banka havalesi ödemesi için aşağıdaki hesap numarasına sipariş tutarını göndermeniz beklenmektedir.</p>
+                                <p>BANKA</p>
+                                <p>IBAN</p>"
                 },
                 new()
                 {
@@ -86,27 +88,33 @@ namespace Adanom.Ecommerce.API.Data
                     Description = "Mağazadan teslim alınacak ve hazırlanan sipariş için kullanıcıya gönderilir.",
                     Subject = "Siparişiniz teslime hazır",
                     Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
-                                <p>Siparişiniz teslime hazır.</p>
-                                <p>Sipariş Numarası: <strong>{ORDER_NUMBER}</strong></p>"
+                                <p><strong>{ORDER_NUMBER}</strong> numaralı siparişiniz seçtiğiniz mağazada teslime hazır.</p>"
                 },
                 new()
                 {
-                    Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_DELIVERED_TO_SHIPPING_PROVIDER_CARGO_SHIPMENT,
+                    Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_ON_DELIVERY_CARGO_SHIPMENT,
                     Description = "Siparişin kargo firmasına teslim edilmesi durumunda kullanıcıya gönderilir.",
                     Subject = "Siparişiniz kargoya teslim edildi",
                     Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
-                                <p>Siparişiniz kargo firmasına teslim edildi</p>
+                                <p><strong>{ORDER_NUMBER}</strong> numaralı siparişiniz kargo firmasına teslim edildi</p>
                                 <p>Kargo firması: <strong>{ORDER_SHIPPING_PROVIDER_NAME}</strong></p>
-                                <p>Sipariş Numarası: <strong>{ORDER_NUMBER}</strong></p>"
+                                <p>Kargo takip numarası: <strong>{ORDER_SHIPPING_TRACKING_CODE}</strong></p>"
                 },
                 new()
                 {
-                    Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_DELIVERED_TO_CUSTOMER,
+                    Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_ON_DELIVERY_LOCAL_DELIVERY,
+                    Description = "Sipariş yerel teslimat ile teslimata çıktığı zaman kullanıcıya gönderilir.",
+                    Subject = "Siparişiniz teslimata çıktı",
+                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
+                                <p><strong>{ORDER_NUMBER}</strong> numaralı siparişiniz teslimata çıktı, en kısa sürede adresinize teslim edilecektir.</p>"
+                },
+                new()
+                {
+                    Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_DONE,
                     Description = "Siparişi teslim edilen müşteriye gönderilir.",
                     Subject = "Siparişiniz teslim edildi",
                     Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
-                                <p>Siparişiniz teslim edildi.</p>
-                                <p>Sipariş Numarası: <strong>{ORDER_NUMBER}</strong></p>"
+                                <p><strong>{ORDER_NUMBER}</strong> numaralı siparişiniz teslim edildi.</p>"
                 },
                 new()
                 {
@@ -114,9 +122,7 @@ namespace Adanom.Ecommerce.API.Data
                     Description = "Siparişi iptal edilen müşteriye gönderilir",
                     Subject = "Siparişiniz iptal edildi",
                     Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
-                                <p>Siparişiniz iptal edildi.</p>
-                                <p>Sipariş Numarası: <strong>{ORDER_NUMBER}</strong></p>
-                                <p>En kısa sürede sizinle iletişime geçilecektir.</p>"
+                                <p><strong>{ORDER_NUMBER}</strong> numaralı siparişiniz iptal edildi.</p>"
                 },
                 new()
                 {
@@ -174,7 +180,7 @@ namespace Adanom.Ecommerce.API.Data
                 {
                     Key = MailTemplateKey.ADMIN_ORDER_RECEIVED,
                     Description = "Sipariş oluştuktan sonra yöneticiye gönderilir",
-                    Subject = "Yeni iade talebi",
+                    Subject = "Yeni sipariş",
                     Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{ORDER_NUMBER}</strong> numaralı sipariş oluşturdu.</p>"
                 }
             };
