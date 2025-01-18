@@ -34,7 +34,7 @@
             var order = await _mediator.Send(new GetOrder(command.OrderId));
             var orderPayment = await _mediator.Send(new GetOrderPayment(command.Id));
 
-            if (orderPayment!.Paid)
+            if (!orderPayment!.Paid)
             {
                 return updateOrderPaymentResponse;
             }

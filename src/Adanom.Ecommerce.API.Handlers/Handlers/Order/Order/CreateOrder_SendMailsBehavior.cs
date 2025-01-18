@@ -59,6 +59,9 @@ namespace Adanom.Ecommerce.API.Handlers
             if (command.OrderPaymentType == OrderPaymentType.BANK_TRANSFER)
             {
                 sendMailCommand.Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_NEW_ORDERPAYMENTTYPE_BANK_TRANSFER;
+
+                sendMailCommand.Replacements.Add(
+                            new KeyValuePair<string, string>(MailConstants.Replacements.Order.GrandTotal, $"{orderResponse.GrandTotal}₺"));
             }
             else
             {
@@ -67,6 +70,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
             await _mediator.Publish(sendMailCommand);
 
+            var deliveryType = await _mediator.Send(new GetDeliveryType(orderResponse.DeliveryType.Key));
+            var orderPaymentType = await _mediator.Send(new GetOrderPaymentType(command.OrderPaymentType));
+
             var sendToManagerMailCommand = new SendMail()
             {
                 To = MailNotificationConstants.Receivers.NewOrder,
@@ -74,7 +80,9 @@ namespace Adanom.Ecommerce.API.Handlers
                 Replacements = new Dictionary<string, string>()
                 {
                     { MailConstants.Replacements.User.FullName, $"{user.FirstName} {user.LastName}" },
-                    { MailConstants.Replacements.Order.Number, orderResponse.OrderNumber }
+                    { MailConstants.Replacements.Order.Number, orderResponse.OrderNumber },
+                    { MailConstants.Replacements.Order.DeliveryType, deliveryType.Name },
+                    { MailConstants.Replacements.Order.OrderPaymentType, orderPaymentType.Name },
                 }
             };
 

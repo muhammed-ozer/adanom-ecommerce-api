@@ -74,11 +74,12 @@ namespace Adanom.Ecommerce.API.Data
                 new()
                 {
                     Key = MailTemplateKey.ORDER_ORDERSTATUSTYPE_NEW_ORDERPAYMENTTYPE_BANK_TRANSFER,
-                    Description = "banka havalesi yöntemi ile oluşturulan yeni sipariş için kullanıcıya gönderilir.",
+                    Description = "Banka havalesi yöntemi ile oluşturulan yeni sipariş için kullanıcıya gönderilir.",
                     Subject = "Siparişiniz oluşturuldu",
                     Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
                                 <p><strong>{ORDER_NUMBER}</strong> numaralı siparişiniz oluşturulmuştur.</p>
-                                <p>Banka havalesi ödemesi için aşağıdaki hesap numarasına sipariş tutarını göndermeniz beklenmektedir.</p>
+                                <p>Banka havalesi ödemesi için aşağıdaki hesap numarasına sipariş tutarını göndermeniz beklenmektedir. Sipariş numarasını açıklama kısmına yazmayı unutmayınız.</p>
+                                <p><strong>Toplam tutar</strong>: {GRAND_TOTAL}</p>
                                 <p>BANKA</p>
                                 <p>IBAN</p>"
                 },
@@ -181,7 +182,9 @@ namespace Adanom.Ecommerce.API.Data
                     Key = MailTemplateKey.ADMIN_ORDER_RECEIVED,
                     Description = "Sipariş oluştuktan sonra yöneticiye gönderilir",
                     Subject = "Yeni sipariş",
-                    Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{ORDER_NUMBER}</strong> numaralı sipariş oluşturdu.</p>"
+                    Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{ORDER_NUMBER}</strong> numaralı sipariş oluşturdu.</p>
+                                <p><strong>Teslimat yöntemi:</strong> {DELIVERY_TYPE}</p>
+                                <p><strong>Ödeme yöntemi:</strong> {ORDER_PAYMENT_TYPE}</p>"
                 }
             };
         }
