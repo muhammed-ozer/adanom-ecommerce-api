@@ -1,4 +1,6 @@
-﻿using Adanom.Ecommerce.API.Services.Mail;
+﻿using System.Net.Mail;
+using System.Net.Mime;
+using Adanom.Ecommerce.API.Services.Mail;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
@@ -7,14 +9,16 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Fields
 
         private readonly IMediator _mediator;
+        private readonly IPdfGeneratorService _pdfGeneratorService;
 
         #endregion
 
         #region Ctor
 
-        public CreateOrder_SendMailsBehavior(IMediator mediator)
+        public CreateOrder_SendMailsBehavior(IMediator mediator, IPdfGeneratorService pdfGeneratorService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _pdfGeneratorService = pdfGeneratorService ?? throw new ArgumentNullException(nameof(pdfGeneratorService));
 
         }
 
@@ -53,8 +57,28 @@ namespace Adanom.Ecommerce.API.Handlers
                 }
             };
 
-            //TODO: Send documents when order status type is not online payment, because we pending payment when order payment type is online payment
-            // TODO: Attach documents
+            //Send documents when order status type is not online payment, because we pending payment when order payment type is online payment
+            var orderDocumentsResponse = await _mediator.Send(
+                new Order_CreateOrderDocuments(
+                    user,
+                    orderResponse,
+                    command.OrderPaymentType,
+                    orderResponse.OrderShippingAddressId,
+                    orderResponse.OrderBillingAddressId));
+
+            var distanceSellingContractPdf = _pdfGeneratorService.GeneratePdf(
+                orderDocumentsResponse.DistanceSellingContractHtmlContent,
+                $"Mesafeli Satış Sözleşmesi.pdf");
+
+            var preliminaryInformationFormPdf = _pdfGeneratorService.GeneratePdf(
+                orderDocumentsResponse.PreliminaryInformationFormHtmlContent,
+                $"Ön Bilgilendirme Formu.pdf");
+
+            sendMailCommand.Attachments =
+            [
+                new Attachment(new MemoryStream(distanceSellingContractPdf), "Mesafeli Satış Sözleşmesi.pdf", MediaTypeNames.Application.Pdf),
+                new Attachment(new MemoryStream(preliminaryInformationFormPdf), "Ön Bilgilendirme Formu.pdf", MediaTypeNames.Application.Pdf),
+            ];
 
             if (command.OrderPaymentType == OrderPaymentType.BANK_TRANSFER)
             {

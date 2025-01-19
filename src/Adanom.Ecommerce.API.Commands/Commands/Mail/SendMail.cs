@@ -1,5 +1,4 @@
-using Adanom.Ecommerce.API.Data.Models;
-using MediatR;
+using System.Net.Mail;
 
 namespace Adanom.Ecommerce.API.Commands
 {
@@ -15,7 +14,7 @@ namespace Adanom.Ecommerce.API.Commands
 
         public IDictionary<string, string>? Replacements { get; set; }
 
-        public IEnumerable<UploadedFile>? Attachments { get; set; }
+        public IEnumerable<Attachment>? Attachments { get; set; }
 
     }
 }

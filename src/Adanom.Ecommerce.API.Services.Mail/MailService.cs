@@ -27,7 +27,7 @@ namespace Adanom.Ecommerce.API.Services.Mail
         public async Task SendAsync(MailRequest request)
         {
             var mail = new MimeMessage()
-            { 
+            {
                 Subject = request.Subject,
             };
 
@@ -47,15 +47,15 @@ namespace Adanom.Ecommerce.API.Services.Mail
 
             builder.HtmlBody = request.Content;
 
-            mail.Body = builder.ToMessageBody();
-
             if (request.Attachments is not null)
             {
                 foreach (var attachment in request.Attachments)
                 {
-                    builder.Attachments.Add(attachment.Name, attachment.Content, ContentType.Parse(attachment.Content));
+                    builder.Attachments.Add(attachment.Name, attachment.ContentStream);
                 }
             }
+
+            mail.Body = builder.ToMessageBody();
 
             await SenMailAsync(mail);
         }
