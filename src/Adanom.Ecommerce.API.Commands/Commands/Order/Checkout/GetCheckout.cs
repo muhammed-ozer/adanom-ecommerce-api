@@ -21,6 +21,10 @@ namespace Adanom.Ecommerce.API.Commands
 
         public OrderPaymentType OrderPaymentType { get; set; }
 
+        public long ShippingAddressId { get; set; }
+
+        public long? BillingAddressId { get; set; }
+
         public long? ShippingProviderId { get; set; }
 
         public long? PickUpStoreId { get; set; }

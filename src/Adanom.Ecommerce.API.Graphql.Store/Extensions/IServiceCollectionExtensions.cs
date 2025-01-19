@@ -42,6 +42,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddType<AnonymousShoppingCartQueries>()
                 .AddType<AnonymousShoppingCartItemQueries>()
                 .AddType<OrderQueries>()
+                .AddType<OrderDocumentQueries>()
                 .AddType<OrderPaymentTypeQueries>()
                 .AddType<ReturnRequestQueries>()
                 .AddType<CheckoutQueries>();
