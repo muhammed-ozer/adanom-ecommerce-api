@@ -1,4 +1,4 @@
-﻿using Adanom.Ecommerce.API.Data.Models;
+﻿using System.Net.Mail;
 
 namespace Adanom.Ecommerce.API.Services.Mail
 {
@@ -14,6 +14,6 @@ namespace Adanom.Ecommerce.API.Services.Mail
 
         public string? Bcc { get; set; }
 
-        public IEnumerable<UploadedFile>? Attachments { get; set; }
+        public IEnumerable<Attachment>? Attachments { get; set; }
     }
 }

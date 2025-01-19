@@ -33,5 +33,9 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public ICollection<ShoppingCartItemResponse> Items { get; set; } = [];
 
         public ICollection<string> Errors { get; set; } = [];
+
+        public string DistanceSellingContractHtmlContent { get; set; } = null!;
+
+        public string PreliminaryInformationFormHtmlContent { get; set; } = null!;
     }
 }

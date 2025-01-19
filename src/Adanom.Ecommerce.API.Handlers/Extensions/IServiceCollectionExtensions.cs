@@ -125,6 +125,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 #region Checkout
 
+                options.AddBehavior<IPipelineBehavior<GetCheckout, CheckoutResponse?>, GetCheckout_CreateOrderDocumentsBehavior>();
                 options.AddBehavior<IPipelineBehavior<GetCheckout, CheckoutResponse?>, GetCheckout_CalculateShippingBehavior>();
                 options.AddBehavior<IPipelineBehavior<GetCheckout, CheckoutResponse?>, GetCheckout_CalculateShoppingCartSummaryBehavior>();
 

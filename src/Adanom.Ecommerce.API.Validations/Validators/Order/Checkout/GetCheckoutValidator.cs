@@ -1,4 +1,6 @@
-﻿namespace Adanom.Ecommerce.API.Validation.Validators
+﻿using System.Security.Claims;
+
+namespace Adanom.Ecommerce.API.Validation.Validators
 {
     public sealed class GetCheckoutValidator : AbstractValidator<GetCheckout>
     {
@@ -14,11 +16,62 @@
                     .WithMessage("Kullanıcı bilgilerine erişilemiyor.");
 
             RuleFor(e => e)
+                .CustomAsync(ValidateDoesShippingAddressExistsAsync)
+                .CustomAsync(ValidateDoesBillingAddressExistsAsync)
                 .CustomAsync(ValidateDeliveryTypeAsync)
                 .CustomAsync(ValidateOrderPaymentTypeAsync);
         }
 
         #region Private Methods
+
+        #region ValidateDoesShippingAddressExistsAsync
+
+        private async Task ValidateDoesShippingAddressExistsAsync(
+            GetCheckout value,
+            ValidationContext<GetCheckout> context,
+            CancellationToken cancellationToken)
+        {
+            var userId = value.Identity.GetUserId();
+
+            var shippingAddressExists = await _mediator.Send(new DoesUserEntityExists<ShippingAddressResponse>(userId, value.ShippingAddressId));
+
+            if (!shippingAddressExists)
+            {
+                context.AddFailure(new ValidationFailure(nameof(GetCheckout.ShippingAddressId), null)
+                {
+                    ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
+                    ErrorMessage = "Teslimat adresi bulunamadı."
+                });
+            }
+        }
+
+        #endregion
+
+        #region ValidateDoesBillingAddressExistsAsync
+
+        private async Task ValidateDoesBillingAddressExistsAsync(
+            GetCheckout value,
+            ValidationContext<GetCheckout> context,
+            CancellationToken cancellationToken)
+        {
+            if (value.BillingAddressId != null)
+            {
+                var userId = value.Identity.GetUserId();
+
+                var billingAddressExists = await _mediator.Send(new DoesUserEntityExists<BillingAddressResponse>(userId, value.BillingAddressId.Value));
+
+                if (!billingAddressExists)
+                {
+                    context.AddFailure(new ValidationFailure(nameof(GetCheckout.BillingAddressId), null)
+                    {
+                        ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
+                        ErrorMessage = "Fatura adresi bulunamadı."
+                    });
+                }
+            }
+        }
+
+        #endregion
 
         #region ValidateDeliveryTypeAsync
 
@@ -92,7 +145,7 @@
             {
                 if (value.LocalDeliveryProviderId == null)
                 {
-                    context.AddFailure(new ValidationFailure(nameof(CreateOrder.LocalDeliveryProviderId), null)
+                    context.AddFailure(new ValidationFailure(nameof(GetCheckout.LocalDeliveryProviderId), null)
                     {
                         ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
                         ErrorMessage = "Yerel teslimat bulunamadı."
@@ -105,10 +158,35 @@
 
                 if (!localDeliveryProviderExists)
                 {
-                    context.AddFailure(new ValidationFailure(nameof(CreateOrder.LocalDeliveryProviderId), null)
+                    context.AddFailure(new ValidationFailure(nameof(GetCheckout.LocalDeliveryProviderId), null)
                     {
                         ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
                         ErrorMessage = "Yerel teslimat bulunamadı."
+                    });
+
+                    return;
+                }
+
+                var shippingAddress = await _mediator.Send(new GetShippingAddress(value.ShippingAddressId));
+
+                if (shippingAddress == null)
+                {
+                    return;
+                }
+
+                var supportedAddressDistricts = await _mediator.Send(new GetLocalDeliveryProvider_SupportedAddressDistricts(value.LocalDeliveryProviderId.Value));
+
+                if (supportedAddressDistricts == null || !supportedAddressDistricts.Any())
+                {
+                    return;
+                }
+
+                if (!supportedAddressDistricts.Select(e => e.Id).Contains(shippingAddress.AddressDistrictId))
+                {
+                    context.AddFailure(new ValidationFailure(nameof(GetCheckout.LocalDeliveryProviderId), null)
+                    {
+                        ErrorCode = ValidationErrorCodesEnum.NOT_ALLOWED.ToString(),
+                        ErrorMessage = "Teslimat adresi için bu teslimat seçeneği kullanılamaz."
                     });
 
                     return;

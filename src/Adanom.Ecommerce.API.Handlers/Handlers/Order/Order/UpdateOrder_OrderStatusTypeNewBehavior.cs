@@ -1,4 +1,6 @@
-﻿using Adanom.Ecommerce.API.Services.Mail;
+﻿using System.Net.Mail;
+using System.Net.Mime;
+using Adanom.Ecommerce.API.Services.Mail;
 
 namespace Adanom.Ecommerce.API.Handlers
 {
@@ -7,14 +9,16 @@ namespace Adanom.Ecommerce.API.Handlers
         #region Fields
 
         private readonly IMediator _mediator;
+        private readonly IPdfGeneratorService _pdfGeneratorService;
 
         #endregion
 
         #region Ctor
 
-        public UpdateOrder_OrderStatusTypeNewBehavior(IMediator mediator)
+        public UpdateOrder_OrderStatusTypeNewBehavior(IMediator mediator, IPdfGeneratorService pdfGeneratorService)
         {
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _pdfGeneratorService = pdfGeneratorService ?? throw new ArgumentNullException(nameof(pdfGeneratorService));
         }
 
         #endregion
@@ -65,8 +69,27 @@ namespace Adanom.Ecommerce.API.Handlers
                 }
             };
 
-            // TODO: Send documents when order payment successful
-            // TODO: Attach documents
+            var orderDocumentsResponse = await _mediator.Send(
+            new Order_CreateOrderDocuments(
+                user,
+                order,
+                command.OrderPaymentType,
+                order.OrderShippingAddressId,
+                order.OrderBillingAddressId));
+
+            var distanceSellingContractPdf = _pdfGeneratorService.GeneratePdf(
+            orderDocumentsResponse.DistanceSellingContractHtmlContent,
+                $"Mesafeli Satış Sözleşmesi.pdf");
+
+            var preliminaryInformationFormPdf = _pdfGeneratorService.GeneratePdf(
+                orderDocumentsResponse.PreliminaryInformationFormHtmlContent,
+                $"Ön Bilgilendirme Formu.pdf");
+
+            sendMailCommand.Attachments =
+            [
+                new Attachment(new MemoryStream(distanceSellingContractPdf), "Mesafeli Satış Sözleşmesi.pdf", MediaTypeNames.Application.Pdf),
+                new Attachment(new MemoryStream(preliminaryInformationFormPdf), "Ön Bilgilendirme Formu.pdf", MediaTypeNames.Application.Pdf),
+            ];
 
             await _mediator.Publish(sendMailCommand);
 

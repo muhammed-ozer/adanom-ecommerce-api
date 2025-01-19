@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DinkToPdf" Version="1.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Adanom.Ecommerce.API.Services.Azure\Adanom.Ecommerce.API.Services.Azure.csproj" />
     <ProjectReference Include="..\Adanom.Ecommerce.API.Services.Mail\Adanom.Ecommerce.API.Services.Mail.csproj" />
   </ItemGroup>
