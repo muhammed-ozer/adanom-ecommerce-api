@@ -11,7 +11,7 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
                     options.MapFrom(e => new DeliveryTypeResponse(e.DeliveryType)));
 
             CreateMap<OrderResponse, Order>()
-                .ForMember(member => member.OrderStatusType, options => 
+                .ForMember(member => member.OrderStatusType, options =>
                     options.MapFrom(e => e.OrderStatusType.Key))
                 .ForMember(member => member.DeliveryType, options =>
                     options.MapFrom(e => e.DeliveryType.Key));
@@ -25,6 +25,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<CreateOrderRequest, CreateOrder>();
 
             CreateMap<CreateOrder, Order>();
+
+            CreateMap<CancelOrderRequest, CancelOrder>();
         }
     }
 }

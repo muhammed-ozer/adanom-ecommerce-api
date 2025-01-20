@@ -19,5 +19,21 @@
         }
 
         #endregion
+
+        #region CancelOrderAsync
+
+        [GraphQLDescription("Cancel an order")]
+        public async Task<bool> CancelOrderAsync(
+            CancelOrderRequest request,
+            [Service] IMediator mediator,
+            [Service] IMapper mapper,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = mapper.Map(request, new CancelOrder(identity));
+
+            return await mediator.Send(command);
+        }
+
+        #endregion
     }
 }

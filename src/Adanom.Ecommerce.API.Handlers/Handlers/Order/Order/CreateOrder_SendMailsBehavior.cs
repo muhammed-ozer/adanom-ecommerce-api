@@ -99,7 +99,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             var sendToManagerMailCommand = new SendMail()
             {
-                To = MailNotificationConstants.Receivers.NewOrder,
+                To = MailNotificationConstants.Receivers.Order,
                 Key = MailTemplateKey.ADMIN_ORDER_RECEIVED,
                 Replacements = new Dictionary<string, string>()
                 {

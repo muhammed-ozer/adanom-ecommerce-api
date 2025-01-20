@@ -4,15 +4,30 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Queries
     [Authorize]
     public class OrderQueries
     {
-        #region GetOrderAsync
+        #region GetOrderByIdAsync
 
-        [GraphQLDescription("Gets an order")]
-        public async Task<OrderResponse?> GetOrderAsync(
+        [GraphQLDescription("Gets an order by id")]
+        public async Task<OrderResponse?> GetOrderByIdAsync(
             long id,
             [Service] IMediator mediator,
             [Identity] ClaimsPrincipal identity)
         {
             var command = new GetOrder(identity, id);
+
+            return await mediator.Send(command);
+        }
+
+        #endregion
+
+        #region GetOrderByOrderNumberAsync
+
+        [GraphQLDescription("Gets an order by order number")]
+        public async Task<OrderResponse?> GetOrderByOrderNumberAsync(
+            string orderNumber,
+            [Service] IMediator mediator,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = new GetOrder(identity, orderNumber);
 
             return await mediator.Send(command);
         }

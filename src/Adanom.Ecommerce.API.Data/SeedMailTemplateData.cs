@@ -123,7 +123,15 @@ namespace Adanom.Ecommerce.API.Data
                     Description = "Siparişi iptal edilen müşteriye gönderilir",
                     Subject = "Siparişiniz iptal edildi",
                     Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
-                                <p><strong>{ORDER_NUMBER}</strong> numaralı siparişiniz iptal edildi.</p>"
+                                <p><strong>{ORDER_NUMBER}</strong> numaralı siparişiniz iptal edildi. En kısa sürede sizinle iletişime geçilecektir.</p>"
+                },
+                new()
+                {
+                    Key = MailTemplateKey.ORDER_USER_CANCEL,
+                    Description = "Siparişi iptal eden müşteriye gönderilir",
+                    Subject = "Siparişiniz iptal edildi",
+                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
+                                <p><strong>{ORDER_NUMBER}</strong> numaralı siparişiniz iptal edildi. Ödemeniz en kısa süre içerisinde size iade edilecektir.</p>"
                 },
                 new()
                 {
@@ -185,6 +193,13 @@ namespace Adanom.Ecommerce.API.Data
                     Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{ORDER_NUMBER}</strong> numaralı sipariş oluşturdu.</p>
                                 <p><strong>Teslimat yöntemi:</strong> {DELIVERY_TYPE}</p>
                                 <p><strong>Ödeme yöntemi:</strong> {ORDER_PAYMENT_TYPE}</p>"
+                },
+                new()
+                {
+                    Key = MailTemplateKey.ADMIN_ORDER_USER_CANCEL,
+                    Description = "Müşteri sipariş iptal ettiği zaman yöneticiye gönderilir.",
+                    Subject = "Sipariş iptali",
+                    Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{ORDER_NUMBER}</strong> numaralı sipariş iptal edildi.</p>"
                 }
             };
         }

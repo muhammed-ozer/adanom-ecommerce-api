@@ -14,7 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
             UIClientConstants.Admin.BaseURL = uiClientConstantsSection.GetValue<string>("Admin:BaseURL")!;
 
             MailNotificationConstants.Receivers.NewReturnRequest = mailNotificationConstantsSection.GetValue<string>("Receivers:NewReturnRequest")!;
-            MailNotificationConstants.Receivers.NewOrder = mailNotificationConstantsSection.GetValue<string>("Receivers:NewOrder")!;
+            MailNotificationConstants.Receivers.Order = mailNotificationConstantsSection.GetValue<string>("Receivers:Order")!;
 
             services.AddApplicationData(configuration);
 
