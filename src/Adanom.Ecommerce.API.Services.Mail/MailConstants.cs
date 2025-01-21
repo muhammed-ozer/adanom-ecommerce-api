@@ -28,6 +28,8 @@
             public static class ReturnRequest
             {
                 public const string Number = "{RETURN_REQUEST_NUMBER}";
+
+                public const string DisapprovedReasonMessage = "{DISAPPROVED_REASON_MESSAGE}";
             }
         }
     }

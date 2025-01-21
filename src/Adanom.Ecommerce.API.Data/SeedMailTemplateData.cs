@@ -135,21 +135,28 @@ namespace Adanom.Ecommerce.API.Data
                 },
                 new()
                 {
+                    Key = MailTemplateKey.ADMIN_ORDER_RECEIVED,
+                    Description = "Sipariş oluştuktan sonra yöneticiye gönderilir",
+                    Subject = "Yeni sipariş",
+                    Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{ORDER_NUMBER}</strong> numaralı sipariş oluşturdu.</p>
+                                <p><strong>Teslimat yöntemi:</strong> {DELIVERY_TYPE}</p>
+                                <p><strong>Ödeme yöntemi:</strong> {ORDER_PAYMENT_TYPE}</p>"
+                },
+                new()
+                {
+                    Key = MailTemplateKey.ADMIN_ORDER_USER_CANCEL,
+                    Description = "Müşteri sipariş iptal ettiği zaman yöneticiye gönderilir.",
+                    Subject = "Sipariş iptali",
+                    Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{ORDER_NUMBER}</strong> numaralı sipariş iptal edildi.</p>"
+                },
+                new()
+                {
                     Key = MailTemplateKey.RETURN_REQUEST_RECEIVED,
                     Description = "İade talebi oluşturan kullanıcıya gönderilir",
                     Subject = "İade talebiniz oluşturuldu",
                     Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
                                 <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebiniz oluşturuldu.</p>
                                 <p>......... İade kargo bilgileri........</p>"
-                },
-                new()
-                {
-                    Key = MailTemplateKey.RETURN_REQUEST_IN_PROGRESS,
-                    Description = "İade talebi bize ulaştığı zaman kullanıcıya gönderilir",
-                    Subject = "İade talebiniz elimize ulaştı",
-                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
-                                <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebiniz elimize ulaştı.</p>
-                                <p>Gerekli incelemeler sonrası en kısa sürede sizlere dönüş yapılacaktır.</p>"
                 },
                 new()
                 {
@@ -167,6 +174,7 @@ namespace Adanom.Ecommerce.API.Data
                     Subject = "İade talebiniz onaylanmadı",
                     Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
                                 <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebiniz onaylanmadı.</p>
+                                <p><strong>İade nedeni</strong>: {DISAPPROVED_REASON_MESSAGE}</p>
                                 <p>En kısa sürede sizinle iletişime geçeceğiz.</p>"
                 },
                 new()
@@ -176,7 +184,7 @@ namespace Adanom.Ecommerce.API.Data
                     Subject = "İade talebiniz için geri ödeme gerçekleşti",
                     Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
                                 <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebinizin geri ödemesi yapıldı.</p>
-                                <p>Bu geri ödemenin kartınıza/hesabınıza yansıması bankanıza göre değişiklik gösterebilir. Lütfen bankanızla iletişime geçiniz.</p>"
+                                <p>Bu geri ödemenin kartınıza/hesabınıza yansıması bankanıza göre değişiklik gösterebilir..</p>"
                 },
                 new()
                 {
@@ -184,22 +192,6 @@ namespace Adanom.Ecommerce.API.Data
                     Description = "İade talebi oluştuktan sonra yöneticiye gönderilir",
                     Subject = "Yeni iade talebi",
                     Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebini oluşturdu.</p>"
-                },
-                new()
-                {
-                    Key = MailTemplateKey.ADMIN_ORDER_RECEIVED,
-                    Description = "Sipariş oluştuktan sonra yöneticiye gönderilir",
-                    Subject = "Yeni sipariş",
-                    Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{ORDER_NUMBER}</strong> numaralı sipariş oluşturdu.</p>
-                                <p><strong>Teslimat yöntemi:</strong> {DELIVERY_TYPE}</p>
-                                <p><strong>Ödeme yöntemi:</strong> {ORDER_PAYMENT_TYPE}</p>"
-                },
-                new()
-                {
-                    Key = MailTemplateKey.ADMIN_ORDER_USER_CANCEL,
-                    Description = "Müşteri sipariş iptal ettiği zaman yöneticiye gönderilir.",
-                    Subject = "Sipariş iptali",
-                    Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{ORDER_NUMBER}</strong> numaralı sipariş iptal edildi.</p>"
                 }
             };
         }

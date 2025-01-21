@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
             UIClientConstants.Auth.BaseURL = uiClientConstantsSection.GetValue<string>("Auth:BaseURL")!;
             UIClientConstants.Admin.BaseURL = uiClientConstantsSection.GetValue<string>("Admin:BaseURL")!;
 
-            MailNotificationConstants.Receivers.NewReturnRequest = mailNotificationConstantsSection.GetValue<string>("Receivers:NewReturnRequest")!;
+            MailNotificationConstants.Receivers.ReturnRequest = mailNotificationConstantsSection.GetValue<string>("Receivers:ReturnRequest")!;
             MailNotificationConstants.Receivers.Order = mailNotificationConstantsSection.GetValue<string>("Receivers:Order")!;
 
             services.AddApplicationData(configuration);

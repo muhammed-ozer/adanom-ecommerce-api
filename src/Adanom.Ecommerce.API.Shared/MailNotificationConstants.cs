@@ -6,7 +6,7 @@
         {
             public static string Order = "";
 
-            public static string NewReturnRequest = "";
+            public static string ReturnRequest = "";
         }
     }
 }

@@ -72,10 +72,6 @@ namespace Adanom.Ecommerce.API.Handlers
             {
                 sendMailCommand.Key = MailTemplateKey.RETURN_REQUEST_RECEIVED;
             }
-            else if (returnRequestStatusType == ReturnRequestStatusType.IN_PROGRESS)
-            {
-                sendMailCommand.Key = MailTemplateKey.RETURN_REQUEST_IN_PROGRESS;
-            }
             else if (returnRequestStatusType == ReturnRequestStatusType.APPROVED)
             {
                 sendMailCommand.Key = MailTemplateKey.RETURN_REQUEST_APPROVED;
@@ -83,6 +79,10 @@ namespace Adanom.Ecommerce.API.Handlers
             else if (returnRequestStatusType == ReturnRequestStatusType.DISAPPROVED)
             {
                 sendMailCommand.Key = MailTemplateKey.RETURN_REQUEST_DISAPPROVED;
+
+                sendMailCommand.Replacements.Add(
+                    new KeyValuePair<string, string>(
+                        MailConstants.Replacements.ReturnRequest.DisapprovedReasonMessage, returnRequest.DisapprovedReasonMessage!));
             }
             else if (returnRequestStatusType == ReturnRequestStatusType.REFUND_MADE)
             {
