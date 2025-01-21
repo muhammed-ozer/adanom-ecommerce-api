@@ -7,6 +7,8 @@ namespace Adanom.Ecommerce.API.Commands.Models
         NAME_ASC,
         NAME_DESC,
         STOCK_QUANTITY_ASC,
-        STOCK_QUANTITY_DESC
+        STOCK_QUANTITY_DESC,
+        PRICE_ASC,
+        PRICE_DESC,
     }
 }
