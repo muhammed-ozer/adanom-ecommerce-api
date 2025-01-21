@@ -30,6 +30,8 @@ namespace Adanom.Ecommerce.API.Commands
 
         public string? ShippingTrackingCode { get; set; }
 
+        public DateTime? DeliveredAtUtc { get; set; }
+
         #endregion
     }
 }
