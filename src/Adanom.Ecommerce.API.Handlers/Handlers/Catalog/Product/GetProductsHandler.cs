@@ -137,7 +137,7 @@
 
                 if (command.Filter.MinimumPrice != null)
                 {
-                    productsQuery = productsQuery.Where(e => 
+                    productsQuery = productsQuery.Where(e =>
                             e.ProductSKU.ProductPrice.OriginalPrice > command.Filter.MinimumPrice ||
                             e.ProductSKU.ProductPrice.DiscountedPrice > command.Filter.MinimumPrice);
                 }
@@ -175,6 +175,14 @@
                         productsQuery.OrderBy(e => e.ProductSKU.StockQuantity),
                     GetProductsOrderByEnum.STOCK_QUANTITY_DESC =>
                         productsQuery.OrderByDescending(e => e.ProductSKU.StockQuantity),
+                    GetProductsOrderByEnum.PRICE_ASC =>
+                        productsQuery.OrderBy(e => e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
+                                e.ProductSKU.ProductPrice.DiscountedPrice.Value :
+                                e.ProductSKU.ProductPrice.OriginalPrice),
+                    GetProductsOrderByEnum.PRICE_DESC =>
+                        productsQuery.OrderByDescending(e => e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
+                            e.ProductSKU.ProductPrice.DiscountedPrice.Value :
+                            e.ProductSKU.ProductPrice.OriginalPrice),
                     _ =>
                         productsQuery.OrderBy(e => e.DisplayOrder)
                 };
@@ -198,7 +206,7 @@
 
             var productResponses = _mapper.Map<IEnumerable<ProductResponse>>(await productsQuery.ToListAsync());
 
-            productCatalogResponse.PaginatedDataOfProducts = 
+            productCatalogResponse.PaginatedDataOfProducts =
                 new PaginatedData<ProductResponse>(
                     productResponses,
                     totalCount,
@@ -252,7 +260,7 @@
             }
 
             return childProductCategoriesIds;
-        }  
+        }
 
         #endregion
 
@@ -265,9 +273,9 @@
                 return productFilterResponse;
             }
 
-            productFilterResponse.MinimumPrice = await productsQuery.MinAsync(e => 
-                e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ? 
-                e.ProductSKU.ProductPrice.DiscountedPrice.Value : 
+            productFilterResponse.MinimumPrice = await productsQuery.MinAsync(e =>
+                e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
+                e.ProductSKU.ProductPrice.DiscountedPrice.Value :
                 e.ProductSKU.ProductPrice.OriginalPrice);
 
             productFilterResponse.MaximumPrice = await productsQuery.MaxAsync(e =>
