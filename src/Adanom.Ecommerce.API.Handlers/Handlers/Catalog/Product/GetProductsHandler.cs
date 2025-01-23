@@ -166,25 +166,33 @@
                 productsQuery = command.Filter.OrderBy switch
                 {
                     GetProductsOrderByEnum.DISPLAY_ORDER_DESC =>
-                        productsQuery.OrderByDescending(e => e.DisplayOrder),
+                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
+                            .ThenByDescending(e => e.DisplayOrder),
                     GetProductsOrderByEnum.NAME_ASC =>
-                        productsQuery.OrderBy(e => e.Name),
+                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
+                            .ThenBy(e => e.Name),
                     GetProductsOrderByEnum.NAME_DESC =>
-                        productsQuery.OrderByDescending(e => e.Name),
+                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
+                            .ThenByDescending(e => e.Name),
                     GetProductsOrderByEnum.STOCK_QUANTITY_ASC =>
-                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity),
+                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
+                            .ThenBy(e => e.ProductSKU.StockQuantity),
                     GetProductsOrderByEnum.STOCK_QUANTITY_DESC =>
-                        productsQuery.OrderByDescending(e => e.ProductSKU.StockQuantity),
+                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
+                            .ThenByDescending(e => e.ProductSKU.StockQuantity),
                     GetProductsOrderByEnum.PRICE_ASC =>
-                        productsQuery.OrderBy(e => e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
+                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
+                            .ThenBy(e => e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
                                 e.ProductSKU.ProductPrice.DiscountedPrice.Value :
                                 e.ProductSKU.ProductPrice.OriginalPrice),
                     GetProductsOrderByEnum.PRICE_DESC =>
-                        productsQuery.OrderByDescending(e => e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
-                            e.ProductSKU.ProductPrice.DiscountedPrice.Value :
-                            e.ProductSKU.ProductPrice.OriginalPrice),
+                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
+                            .ThenByDescending(e => e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
+                                e.ProductSKU.ProductPrice.DiscountedPrice.Value :
+                                e.ProductSKU.ProductPrice.OriginalPrice),
                     _ =>
-                        productsQuery.OrderBy(e => e.DisplayOrder)
+                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
+                            .ThenBy(e => e.DisplayOrder)
                 };
 
                 #endregion
