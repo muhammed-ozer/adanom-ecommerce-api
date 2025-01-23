@@ -41,6 +41,7 @@ namespace Adanom.Ecommerce.API.Handlers
                     target.DeliveryType = orderResponse.DeliveryType.Key;
                     target.PickUpStoreId = orderResponse.PickUpStoreId;
                     target.ShippingProviderId = orderResponse.ShippingProviderId;
+                    target.LocalDeliveryProviderId = orderResponse.LocalDeliveryProviderId;
                     target.ReturnRequestNumber = await _mediator.Send(new CreateReturnRequestNumber());
                     target.ReturnRequestStatusType = ReturnRequestStatusType.RECEIVED;
                     target.CreatedAtUtc = DateTime.UtcNow;

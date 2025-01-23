@@ -7,5 +7,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public ReturnRequestStatusType NewReturnRequestStatusType { get; set; }
 
         public string? ShippingTrackingCode { get; set; }
+
+        public string? DisapprovedReasonMessage { get; set; }
     }
 }

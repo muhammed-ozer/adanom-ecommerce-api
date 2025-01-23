@@ -7,9 +7,6 @@ namespace Adanom.Ecommerce.API.Data.Models
         [EnumDisplayName("İade talebi oluşturuldu")]
         RECEIVED,
 
-        [EnumDisplayName("Paket bekleniyor")]
-        PACKAGE_PENDING,
-
         [EnumDisplayName("İşlemde")]
         IN_PROGRESS,
 
@@ -19,10 +16,10 @@ namespace Adanom.Ecommerce.API.Data.Models
         [EnumDisplayName("İade ödemesi gerçekleştirildi")]
         REFUND_MADE,
 
-        [EnumDisplayName("Onaylanmadı")]
+        [EnumDisplayName("Reddedildi")]
         DISAPPROVED,
 
-        [EnumDisplayName("İptal")]
+        [EnumDisplayName("İptal Edildi")]
         CANCEL
     }
 }

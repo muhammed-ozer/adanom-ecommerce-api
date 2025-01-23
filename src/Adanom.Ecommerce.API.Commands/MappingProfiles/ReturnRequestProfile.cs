@@ -11,7 +11,7 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
                     options.MapFrom(e => new DeliveryTypeResponse(e.DeliveryType)));
 
             CreateMap<ReturnRequestResponse, ReturnRequest>()
-                .ForMember(member => member.ReturnRequestStatusType, options => 
+                .ForMember(member => member.ReturnRequestStatusType, options =>
                     options.MapFrom(e => e.ReturnRequestStatusType.Key))
                 .ForMember(member => member.DeliveryType, options =>
                     options.MapFrom(e => e.DeliveryType.Key));
@@ -25,6 +25,8 @@ namespace Adanom.Ecommerce.API.Commands.Models.MappingProfiles
             CreateMap<UpdateReturnRequest_ReturnRequestStatusType, ReturnRequest>()
                 .ForMember(member => member.ReturnRequestStatusType, options =>
                     options.MapFrom(e => e.NewReturnRequestStatusType));
+
+            CreateMap<CancelReturnRequestRequest, CancelReturnRequest>();
         }
     }
 }

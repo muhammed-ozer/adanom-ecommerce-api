@@ -18,6 +18,12 @@
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                     .WithMessage("İade talebi bulunamadı.")
                 .CustomAsync(ValidateDoesReturnRequestExistsAsync);
+
+            RuleFor(e => e.DisapprovedReasonMessage)
+                .NotNull()
+                    .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
+                    .WithMessage("İade talebi reddedildiği için reddedilme sebebi gereklidir.")
+                .When(e => e.NewReturnRequestStatusType == ReturnRequestStatusType.DISAPPROVED);
         }
 
         #region Private Methods

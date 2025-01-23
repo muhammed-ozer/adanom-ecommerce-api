@@ -135,58 +135,6 @@ namespace Adanom.Ecommerce.API.Data
                 },
                 new()
                 {
-                    Key = MailTemplateKey.RETURN_REQUEST_RECEIVED,
-                    Description = "İade talebi oluşturan kullanıcıya gönderilir",
-                    Subject = "İade talebiniz oluşturuldu",
-                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
-                                <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebiniz oluşturuldu.</p>
-                                <p>......... İade kargo bilgileri........</p>"
-                },
-                new()
-                {
-                    Key = MailTemplateKey.RETURN_REQUEST_IN_PROGRESS,
-                    Description = "İade talebi bize ulaştığı zaman kullanıcıya gönderilir",
-                    Subject = "İade talebiniz elimize ulaştı",
-                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
-                                <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebiniz elimize ulaştı.</p>
-                                <p>Gerekli incelemeler sonrası en kısa sürede sizlere dönüş yapılacaktır.</p>"
-                },
-                new()
-                {
-                    Key = MailTemplateKey.RETURN_REQUEST_APPROVED,
-                    Description = "İade talebi onaylandığı zaman kullanıcıya gönderilir",
-                    Subject = "İade talebiniz onaylandı",
-                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
-                                <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebiniz onaylandı.</p>
-                                <p>En kısa sürede geri ödemesi yapılacaktır.</p>"
-                },
-                new()
-                {
-                    Key = MailTemplateKey.RETURN_REQUEST_DISAPPROVED,
-                    Description = "İade talebi onaylanmadığı zaman kullanıcıya gönderilir",
-                    Subject = "İade talebiniz onaylanmadı",
-                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
-                                <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebiniz onaylanmadı.</p>
-                                <p>En kısa sürede sizinle iletişime geçeceğiz.</p>"
-                },
-                new()
-                {
-                    Key = MailTemplateKey.RETURN_REQUEST_REFUND_MADE,
-                    Description = "İade talebi ödemesi yapıldığı zaman kullanıcıya gönderilir",
-                    Subject = "İade talebiniz için geri ödeme gerçekleşti",
-                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
-                                <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebinizin geri ödemesi yapıldı.</p>
-                                <p>Bu geri ödemenin kartınıza/hesabınıza yansıması bankanıza göre değişiklik gösterebilir. Lütfen bankanızla iletişime geçiniz.</p>"
-                },
-                new()
-                {
-                    Key = MailTemplateKey.ADMIN_RETURN_REQUEST_RECEIVED,
-                    Description = "İade talebi oluştuktan sonra yöneticiye gönderilir",
-                    Subject = "Yeni iade talebi",
-                    Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebini oluşturdu.</p>"
-                },
-                new()
-                {
                     Key = MailTemplateKey.ADMIN_ORDER_RECEIVED,
                     Description = "Sipariş oluştuktan sonra yöneticiye gönderilir",
                     Subject = "Yeni sipariş",
@@ -200,6 +148,73 @@ namespace Adanom.Ecommerce.API.Data
                     Description = "Müşteri sipariş iptal ettiği zaman yöneticiye gönderilir.",
                     Subject = "Sipariş iptali",
                     Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{ORDER_NUMBER}</strong> numaralı sipariş iptal edildi.</p>"
+                },
+                new()
+                {
+                    Key = MailTemplateKey.RETURN_REQUEST_RECEIVED,
+                    Description = "İade talebi oluşturan kullanıcıya gönderilir",
+                    Subject = "İade talebiniz oluşturuldu",
+                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
+                                <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebiniz oluşturuldu.</p>
+                                <p>{RETURN_REQUEST_DELIVERY_INFORMATIONS}</p>"
+                },
+                new()
+                {
+                    Key = MailTemplateKey.RETURN_REQUEST_APPROVED,
+                    Description = "İade talebi onaylandığı zaman kullanıcıya gönderilir",
+                    Subject = "İade talebiniz onaylandı",
+                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
+                                <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebiniz onaylandı.</p>
+                                <p>En kısa sürede geri ödemesi yapılacaktır.</p>"
+                },
+                new()
+                {
+                    Key = MailTemplateKey.RETURN_REQUEST_DISAPPROVED,
+                    Description = "İade talebi reddeildiği zaman kullanıcıya gönderilir",
+                    Subject = "İade talebiniz reddedildi",
+                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
+                                <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebiniz reddeildi.</p>
+                                <p><strong>Red sebebi</strong>: {DISAPPROVED_REASON_MESSAGE}</p>
+                                <p>En kısa sürede sizinle iletişime geçeceğiz.</p>"
+                },
+                new()
+                {
+                    Key = MailTemplateKey.RETURN_REQUEST_REFUND_MADE,
+                    Description = "İade talebi ödemesi yapıldığı zaman kullanıcıya gönderilir",
+                    Subject = "İade talebiniz için geri ödeme gerçekleşti",
+                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
+                                <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebinizin geri ödemesi yapıldı.</p>
+                                <p>Bu geri ödemenin kartınıza/hesabınıza yansıması bankanıza göre değişiklik gösterebilir.</p>"
+                },
+                new()
+                {
+                    Key = MailTemplateKey.RETURN_REQUEST_CANCEL,
+                    Description = "İade talebi iptal edildiği zaman kullanıcıya gönderilir",
+                    Subject = "İade talebiniz iptal edildi",
+                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
+                                <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebiniz iptal edildi. En kısa sürede sizinle iletişime geçilecektir.</p></p>"
+                },
+                new()
+                {
+                    Key = MailTemplateKey.RETURN_REQUEST_USER_CANCEL,
+                    Description = "İade talebini iptal eden müşteriye gönderilir",
+                    Subject = "İade talebiniz iptal edildi",
+                    Content = @"<p>Sayın <strong>{USER_FULL_NAME}&nbsp;</strong></p>
+                                <p><strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebiniz iptal edildi.</p>"
+                },
+                new()
+                {
+                    Key = MailTemplateKey.ADMIN_RETURN_REQUEST_RECEIVED,
+                    Description = "İade talebi oluştuktan sonra yöneticiye gönderilir",
+                    Subject = "Yeni iade talebi",
+                    Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebi oluşturuldu.</p>"
+                },
+                new()
+                {
+                    Key = MailTemplateKey.ADMIN_RETURN_REQUEST_USER_CANCEL,
+                    Description = "Müşteri iade talebini iptal ettiği zaman yöneticiye gönderilir.",
+                    Subject = "İade talebi iptali",
+                    Content = @"<p><strong>{USER_FULL_NAME}&nbsp;</strong> tarafından <strong>{RETURN_REQUEST_NUMBER}</strong> numaralı iade talebi iptal edildi.</p>"
                 }
             };
         }

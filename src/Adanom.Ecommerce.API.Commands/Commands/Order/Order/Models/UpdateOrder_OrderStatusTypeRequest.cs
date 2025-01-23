@@ -11,5 +11,7 @@ namespace Adanom.Ecommerce.API.Commands.Models
         public OrderPaymentType OrderPaymentType { get; set; }
 
         public string? ShippingTrackingCode { get; set; }
+
+        public DateTime? DeliveredAtUtc { get; set; }
     }
 }

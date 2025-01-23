@@ -4,15 +4,30 @@ namespace Adanom.Ecommerce.API.Graphql.Store.Queries
     [Authorize]
     public class ReturnRequestQueries
     {
-        #region GetReturnRequestAsync
+        #region GetReturnRequestByIdAsync
 
-        [GraphQLDescription("Gets a return request")]
-        public async Task<ReturnRequestResponse?> GetReturnRequestAsync(
+        [GraphQLDescription("Gets a return request by id")]
+        public async Task<ReturnRequestResponse?> GetReturnRequestByIdAsync(
             long id,
             [Service] IMediator mediator,
             [Identity] ClaimsPrincipal identity)
         {
             var command = new GetReturnRequest(identity, id);
+
+            return await mediator.Send(command);
+        }
+
+        #endregion
+
+        #region GetReturnRequestByReturnRequestNumberAsync
+
+        [GraphQLDescription("Gets a return request by return request number")]
+        public async Task<ReturnRequestResponse?> GetReturnRequestByReturnRequestNumberAsync(
+            string returnRequestNumber,
+            [Service] IMediator mediator,
+            [Identity] ClaimsPrincipal identity)
+        {
+            var command = new GetReturnRequest(identity, returnRequestNumber);
 
             return await mediator.Send(command);
         }

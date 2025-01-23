@@ -40,6 +40,14 @@ namespace Adanom.Ecommerce.API.Handlers
 
             command.OldOrderStatusType = order.OrderStatusType;
 
+            if (command.NewOrderStatusType == OrderStatusType.DONE)
+            {
+                if (command.DeliveredAtUtc == null)
+                {
+                    command.DeliveredAtUtc = DateTime.UtcNow;
+                }
+            }
+
             order = _mapper.Map(command, order);
 
             order.UpdatedAtUtc = DateTime.UtcNow;

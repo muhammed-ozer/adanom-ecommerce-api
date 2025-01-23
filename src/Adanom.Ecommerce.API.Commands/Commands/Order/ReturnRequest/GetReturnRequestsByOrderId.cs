@@ -1,10 +1,10 @@
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class GetReturnRequestByOrderId : IRequest<ReturnRequestResponse?>
+    public class GetReturnRequestsByOrderId : IRequest<IEnumerable<ReturnRequestResponse>>
     {
         #region Ctor
 
-        public GetReturnRequestByOrderId(long id)
+        public GetReturnRequestsByOrderId(long id)
         {
             Id = id;
         }

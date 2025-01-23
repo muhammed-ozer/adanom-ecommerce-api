@@ -71,21 +71,27 @@
                 return;
             }
 
-            var returnRequest = await _mediator.Send(new GetReturnRequestByOrderId(order.Id));
-            List<ReturnRequestItemResponse>? returnRequestItems = null;
+            var returnRequests = await _mediator.Send(new GetReturnRequestsByOrderId(order.Id));
 
-            if (returnRequest != null)
+            if (!returnRequests.Any())
             {
-                var returnRequestItemsAsEnumerable = await _mediator.Send(new GetReturnRequestItems(
-                new GetReturnRequestItemsFilter()
-                {
-                    ReturnRequestId = returnRequest.Id
-                }));
+                return;
+            }
 
-                if (returnRequestItemsAsEnumerable.Any())
-                {
-                    returnRequestItems = returnRequestItemsAsEnumerable.ToList();
-                }
+            // Get all active return requests (not cancelled)
+            var activeReturnRequests = returnRequests.Where(r => r.ReturnRequestStatusType.Key != ReturnRequestStatusType.CANCEL).ToList();
+
+            // Get all return request items for active requests
+            var allReturnRequestItems = new List<ReturnRequestItemResponse>();
+            foreach (var activeReturnRequest in activeReturnRequests)
+            {
+                var items = await _mediator.Send(new GetReturnRequestItems(
+                    new GetReturnRequestItemsFilter
+                    {
+                        ReturnRequestId = activeReturnRequest.Id
+                    }));
+
+                allReturnRequestItems.AddRange(items);
             }
 
             foreach (var createReturnRequestItemRequest in value.CreateReturnRequest_ItemRequests)
@@ -97,7 +103,6 @@
                         ErrorCode = ValidationErrorCodesEnum.NOT_EXISTS.ToString(),
                         ErrorMessage = "İade için 1 adet veya daha fazla talep oluşturmanız gerekmektedir."
                     });
-
                     return;
                 }
 
@@ -110,36 +115,22 @@
                         ErrorCode = ValidationErrorCodesEnum.NOT_EXISTS.ToString(),
                         ErrorMessage = "Sipariş ürünü bulunamadı."
                     });
-
                     return;
                 }
 
-                var existedReturnRequestItem = returnRequestItems?
+                // Calculate total previously returned amount for this item
+                var totalReturnedAmount = allReturnRequestItems
                     .Where(e => e.OrderItemId == orderItem.Id)
-                    .SingleOrDefault();
+                    .Sum(e => e.Amount);
 
-                if (existedReturnRequestItem != null)
-                {
-                    if (createReturnRequestItemRequest.Amount > orderItem.Amount - existedReturnRequestItem.Amount)
-                    {
-                        context.AddFailure(new ValidationFailure(nameof(CreateReturnRequest.OrderId), null)
-                        {
-                            ErrorCode = ValidationErrorCodesEnum.NOT_EXISTS.ToString(),
-                            ErrorMessage = "İade talebi daha önce oluşturduğunuz iade talebi adetiyle sipariş adeti farkında fazla olamaz."
-                        });
-
-                        return;
-                    }
-                }
-
-                if (createReturnRequestItemRequest.Amount > orderItem.Amount)
+                // Check if new return request amount exceeds remaining available amount
+                if (createReturnRequestItemRequest.Amount > orderItem.Amount - totalReturnedAmount)
                 {
                     context.AddFailure(new ValidationFailure(nameof(CreateReturnRequest.OrderId), null)
                     {
                         ErrorCode = ValidationErrorCodesEnum.NOT_EXISTS.ToString(),
-                        ErrorMessage = "Sipariş ürün adetinden fazla adette iade talebi oluşturamazsınız."
+                        ErrorMessage = "Toplam iade miktarı sipariş ürün adetini aşamaz."
                     });
-
                     return;
                 }
 
