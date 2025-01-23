@@ -32,6 +32,19 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         #endregion
 
+        #region GetOrderAsync
+
+        public async Task<OrderResponse?> GetOrderAsync(
+           [Parent] ReturnRequestResponse returnRequestResponse,
+           [Service] IMediator mediator)
+        {
+            var order = await mediator.Send(new GetOrder(returnRequestResponse.OrderId));
+
+            return order;
+        }
+
+        #endregion
+
         #region GetDeliveryTypeAsync
 
         public async Task<DeliveryTypeResponse> GetDeliveryTypeAsync(
@@ -45,15 +58,56 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         #endregion
 
-        #region GetOrderAsync
+        #region GetShippingProviderAsync
 
-        public async Task<OrderResponse?> GetOrderAsync(
+        public async Task<ShippingProviderResponse?> GetShippingProviderAsync(
            [Parent] ReturnRequestResponse returnRequestResponse,
            [Service] IMediator mediator)
         {
-            var order = await mediator.Send(new GetOrder(returnRequestResponse.OrderId));
+            if (!returnRequestResponse.ShippingProviderId.HasValue)
+            {
+                return null;
+            }
 
-            return order;
+            var shippingProvider = await mediator.Send(new GetShippingProvider(returnRequestResponse.ShippingProviderId.Value));
+
+            return shippingProvider;
+        }
+
+        #endregion
+
+        #region GetPickUpStoreAsync
+
+        public async Task<PickUpStoreResponse?> GetPickUpStoreAsync(
+           [Parent] ReturnRequestResponse returnRequestResponse,
+           [Service] IMediator mediator)
+        {
+            if (!returnRequestResponse.PickUpStoreId.HasValue)
+            {
+                return null;
+            }
+
+            var pickUpStore = await mediator.Send(new GetPickUpStore(returnRequestResponse.PickUpStoreId.Value));
+
+            return pickUpStore;
+        }
+
+        #endregion
+
+        #region GetLocalDeliveryProviderAsync
+
+        public async Task<LocalDeliveryProviderResponse?> GetLocalDeliveryProviderAsync(
+           [Parent] ReturnRequestResponse returnRequestResponse,
+           [Service] IMediator mediator)
+        {
+            if (!returnRequestResponse.LocalDeliveryProviderId.HasValue)
+            {
+                return null;
+            }
+
+            var localDeliveryProvider = await mediator.Send(new GetLocalDeliveryProvider(returnRequestResponse.LocalDeliveryProviderId.Value));
+
+            return localDeliveryProvider;
         }
 
         #endregion

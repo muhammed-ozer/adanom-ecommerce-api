@@ -1,6 +1,6 @@
 namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class GetReturnRequestByOrderIdHandler : IRequestHandler<GetReturnRequestByOrderId, ReturnRequestResponse?>
+    public sealed class GetReturnRequestsByOrderIdHandler : IRequestHandler<GetReturnRequestsByOrderId, IEnumerable<ReturnRequestResponse>>
 
     {
         #region Fields
@@ -12,7 +12,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region Ctor
 
-        public GetReturnRequestByOrderIdHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMapper mapper)
+        public GetReturnRequestsByOrderIdHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory, IMapper mapper)
         {
             _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -22,18 +22,18 @@ namespace Adanom.Ecommerce.API.Handlers
 
         #region IRequestHandler Members
 
-        public async Task<ReturnRequestResponse?> Handle(GetReturnRequestByOrderId command, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ReturnRequestResponse>> Handle(GetReturnRequestsByOrderId command, CancellationToken cancellationToken)
         {
             await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
 
             var returnRequest = await applicationDbContext.ReturnRequests
                 .AsNoTracking()
                 .Where(e => e.OrderId == command.Id)
-                .SingleOrDefaultAsync();
+                .ToListAsync();
 
-            var returnRequestResponse = _mapper.Map<ReturnRequestResponse>(returnRequest);
+            var returnRequestResponses = _mapper.Map<IEnumerable<ReturnRequestResponse>>(returnRequest);
 
-            return returnRequestResponse;
+            return returnRequestResponses;
         }
 
         #endregion

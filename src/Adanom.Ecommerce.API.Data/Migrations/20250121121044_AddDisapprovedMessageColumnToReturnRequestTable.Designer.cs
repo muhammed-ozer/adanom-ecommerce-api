@@ -4,6 +4,7 @@ using Adanom.Ecommerce.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Adanom.Ecommerce.API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250121121044_AddDisapprovedMessageColumnToReturnRequestTable")]
+    partial class AddDisapprovedMessageColumnToReturnRequestTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1365,9 +1368,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<long?>("LocalDeliveryProviderId")
-                        .HasColumnType("bigint");
-
                     b.Property<long>("OrderId")
                         .HasColumnType("bigint");
 
@@ -1399,8 +1399,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LocalDeliveryProviderId");
 
                     b.HasIndex("OrderId");
 
@@ -2565,11 +2563,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
 
             modelBuilder.Entity("Adanom.Ecommerce.API.Data.Models.ReturnRequest", b =>
                 {
-                    b.HasOne("Adanom.Ecommerce.API.Data.Models.LocalDeliveryProvider", "LocalDeliveryProvider")
-                        .WithMany()
-                        .HasForeignKey("LocalDeliveryProviderId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
                     b.HasOne("Adanom.Ecommerce.API.Data.Models.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId")
@@ -2590,8 +2583,6 @@ namespace Adanom.Ecommerce.API.Data.Migrations
                         .WithMany("ReturnRequests")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("LocalDeliveryProvider");
 
                     b.Navigation("Order");
 

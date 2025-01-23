@@ -30,6 +30,8 @@
                 public const string Number = "{RETURN_REQUEST_NUMBER}";
 
                 public const string DisapprovedReasonMessage = "{DISAPPROVED_REASON_MESSAGE}";
+
+                public const string DeliveryInformations = "{RETURN_REQUEST_DELIVERY_INFORMATIONS}";
             }
         }
     }

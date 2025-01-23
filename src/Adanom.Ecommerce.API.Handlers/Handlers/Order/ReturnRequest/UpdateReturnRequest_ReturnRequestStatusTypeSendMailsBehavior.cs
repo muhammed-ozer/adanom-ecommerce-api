@@ -30,16 +30,19 @@ namespace Adanom.Ecommerce.API.Handlers
                 return updateReturnRequest_ReturnRequestStatusTypeResponse;
             }
 
-            var returnRequest = await _mediator.Send(new GetReturnRequest(command.Id));
-
-            if (returnRequest == null)
+            if (command.OldReturnRequestStatusType == command.NewReturnRequestStatusType)
             {
                 return updateReturnRequest_ReturnRequestStatusTypeResponse;
             }
 
-            var returnRequestStatusType = returnRequest.ReturnRequestStatusType.Key;
+            if (command.NewReturnRequestStatusType == ReturnRequestStatusType.IN_PROGRESS)
+            {
+                return updateReturnRequest_ReturnRequestStatusTypeResponse;
+            }
 
-            if (returnRequestStatusType == command.OldReturnRequestStatusType)
+            var returnRequest = await _mediator.Send(new GetReturnRequest(command.Id));
+
+            if (returnRequest == null)
             {
                 return updateReturnRequest_ReturnRequestStatusTypeResponse;
             }
@@ -68,30 +71,21 @@ namespace Adanom.Ecommerce.API.Handlers
                 }
             };
 
-            if (returnRequestStatusType == ReturnRequestStatusType.RECEIVED)
+            sendMailCommand.Key = returnRequest.ReturnRequestStatusType.Key switch
             {
-                sendMailCommand.Key = MailTemplateKey.RETURN_REQUEST_RECEIVED;
-            }
-            else if (returnRequestStatusType == ReturnRequestStatusType.APPROVED)
-            {
-                sendMailCommand.Key = MailTemplateKey.RETURN_REQUEST_APPROVED;
-            }
-            else if (returnRequestStatusType == ReturnRequestStatusType.DISAPPROVED)
-            {
-                sendMailCommand.Key = MailTemplateKey.RETURN_REQUEST_DISAPPROVED;
+                ReturnRequestStatusType.RECEIVED => MailTemplateKey.RETURN_REQUEST_RECEIVED,
+                ReturnRequestStatusType.APPROVED => MailTemplateKey.RETURN_REQUEST_APPROVED,
+                ReturnRequestStatusType.REFUND_MADE => MailTemplateKey.RETURN_REQUEST_REFUND_MADE,
+                ReturnRequestStatusType.DISAPPROVED => MailTemplateKey.RETURN_REQUEST_DISAPPROVED,
+                ReturnRequestStatusType.CANCEL => MailTemplateKey.RETURN_REQUEST_CANCEL,
+                _ => throw new Exception("Invalid return request status type")
+            };
 
+            if (returnRequest.ReturnRequestStatusType.Key == ReturnRequestStatusType.DISAPPROVED)
+            {
                 sendMailCommand.Replacements.Add(
-                    new KeyValuePair<string, string>(
-                        MailConstants.Replacements.ReturnRequest.DisapprovedReasonMessage, returnRequest.DisapprovedReasonMessage!));
-            }
-            else if (returnRequestStatusType == ReturnRequestStatusType.REFUND_MADE)
-            {
-                sendMailCommand.Key = MailTemplateKey.RETURN_REQUEST_REFUND_MADE;
-            }
-
-            if (sendMailCommand.Key == MailTemplateKey.AUTH_NEW_USER)
-            {
-                return updateReturnRequest_ReturnRequestStatusTypeResponse;
+                            new KeyValuePair<string, string>(
+                                MailConstants.Replacements.ReturnRequest.DisapprovedReasonMessage, returnRequest.DisapprovedReasonMessage!));
             }
 
             await _mediator.Publish(sendMailCommand);

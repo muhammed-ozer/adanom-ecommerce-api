@@ -2,6 +2,7 @@ using System.Security.Claims;
 
 namespace Adanom.Ecommerce.API.Commands
 {
+    [Transactional]
     public class UpdateReturnRequest_ReturnRequestStatusType : IRequest<bool>
     {
         #region Ctor
@@ -24,6 +25,8 @@ namespace Adanom.Ecommerce.API.Commands
         public ReturnRequestStatusType? OldReturnRequestStatusType { get; set; }
 
         public string? ShippingTrackingCode { get; set; }
+
+        public string? DisapprovedReasonMessage { get; set; }
 
         #endregion
     }

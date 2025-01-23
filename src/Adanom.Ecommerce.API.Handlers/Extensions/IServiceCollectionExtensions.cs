@@ -144,6 +144,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 options.AddBehavior<IPipelineBehavior<UpdateReturnRequest_ReturnRequestStatusType, bool>, UpdateReturnRequest_ReturnRequestStatusTypeSendMailsBehavior>();
 
+                options.AddBehavior<IPipelineBehavior<CancelReturnRequest, bool>, CancelReturnRequest_SendMailsBehavior>();
+
                 #endregion
 
                 #region ShoppingCart

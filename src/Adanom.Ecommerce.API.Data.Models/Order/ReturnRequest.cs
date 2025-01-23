@@ -17,6 +17,8 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public long? PickUpStoreId { get; set; }
 
+        public long? LocalDeliveryProviderId { get; set; }
+
         public ReturnRequestStatusType ReturnRequestStatusType { get; set; }
 
         public DeliveryType DeliveryType { get; set; }
@@ -29,6 +31,9 @@ namespace Adanom.Ecommerce.API.Data.Models
         [StringLength(250)]
         public string? ShippingTrackingCode { get; set; }
 
+        [StringLength(500)]
+        public string? DisapprovedReasonMessage { get; set; }
+
         public DateTime CreatedAtUtc { get; set; }
 
         public DateTime? UpdatedAtUtc { get; set; }
@@ -40,6 +45,8 @@ namespace Adanom.Ecommerce.API.Data.Models
         public ShippingProvider? ShippingProvider { get; set; }
 
         public PickUpStore? PickUpStore { get; set; }
+
+        public LocalDeliveryProvider? LocalDeliveryProvider { get; set; }
 
         public ICollection<ReturnRequestItem> Items { get; set; }
     }

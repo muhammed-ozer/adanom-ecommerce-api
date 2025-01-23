@@ -50,6 +50,26 @@ namespace Adanom.Ecommerce.API.Handlers
                 }
             };
 
+            switch (returnRequestResponse.DeliveryType.Key)
+            {
+                case DeliveryType.CARGO_SHIPMENT:
+                    sendToUserMailCommand.Replacements.Add(
+                            new KeyValuePair<string, string>(
+                                MailConstants.Replacements.ReturnRequest.DeliveryInformations, "//TODO: Add shipping informations"));
+                    break;
+                case DeliveryType.PICK_UP_FROM_STORE:
+                    sendToUserMailCommand.Replacements.Add(
+                            new KeyValuePair<string, string>(
+                                MailConstants.Replacements.ReturnRequest.DeliveryInformations,
+                                @$"İade işleminiz, siparişi teslim aldığınız mağazadan yapılacaktır."));
+                    break;
+                case DeliveryType.LOCAL_DELIVERY:
+                    sendToUserMailCommand.Replacements.Add(
+                            new KeyValuePair<string, string>(
+                                MailConstants.Replacements.ReturnRequest.DeliveryInformations, "İade talebiniz için ekibimiz en kısa sürede adresinizden iadelerinizi teslim alacaktır."));
+                    break;
+            }
+
             await _mediator.Publish(sendToUserMailCommand);
 
             var sendToManagerMailCommand = new SendMail()
