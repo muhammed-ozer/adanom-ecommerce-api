@@ -25,14 +25,14 @@
         {
             await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
 
-            var productPrice = await applicationDbContext.Products
+            var productPrice = await applicationDbContext.Product_ProductSKU_Mappings
                 .AsNoTracking()
-                .Where(e => e.DeletedAtUtc == null && e.Id == command.Id)
+                .Where(e => e.Product.DeletedAtUtc == null && e.Product.Id == command.Id)
                 .Select(e => e.ProductSKU.ProductPrice)
                 .SingleOrDefaultAsync();
-           
+
             return _mapper.Map<ProductPriceResponse>(productPrice);
-        } 
+        }
 
         #endregion
     }

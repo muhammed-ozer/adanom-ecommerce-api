@@ -118,21 +118,30 @@
 
             #endregion
 
-            var product = await applicationDbContext.Products
-                .Where(e => e.Id == command.Id)
-                .SingleAsync();
-
             #region ProductSKU
 
-            var deleteProductSKURequest = new DeleteProductSKURequest()
+            var product_productSKUMappings = await applicationDbContext.Product_ProductSKU_Mappings
+                .Where(e => e.ProductId == command.Id)
+                .ToListAsync();
+
+            foreach (var product_productSKUMapping in product_productSKUMappings)
             {
-                Id = product.ProductSKUId,
-            };
+                var deleteProductSKURequest = new DeleteProductSKURequest()
+                {
+                    Id = product_productSKUMapping.ProductSKUId,
+                };
 
-            var deleteProductSKUCommand = _mapper
-                .Map(deleteProductSKURequest, new DeleteProductSKU(command.Identity));
+                var deleteProductSKUCommand = _mapper
+                    .Map(deleteProductSKURequest, new DeleteProductSKU(command.Identity));
 
-            await _mediator.Send(deleteProductSKUCommand);
+                await _mediator.Send(deleteProductSKUCommand);
+
+                await _mediator.Send(new DeleteProduct_ProductSKU(command.Identity)
+                {
+                    ProductId = command.Id,
+                    ProductSKUId = product_productSKUMapping.ProductSKUId
+                });
+            }
 
             #endregion
 

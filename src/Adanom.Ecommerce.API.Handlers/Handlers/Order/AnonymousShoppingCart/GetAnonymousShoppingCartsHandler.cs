@@ -67,10 +67,10 @@ namespace Adanom.Ecommerce.API.Handlers
             var mappingConfiguration = new MapperConfiguration(config =>
             {
                 config.CreateProjection<AnonymousShoppingCart, AnonymousShoppingCartResponse>()
-                        .ForMember(member => member.Total, options =>
-                            options.MapFrom(e => e.Items
-                            .Sum(e => e.Amount * e.Product.ProductSKU.ProductPrice.DiscountedPrice ?? e.Amount * e.Product.ProductSKU.ProductPrice.OriginalPrice)))
-                        .ForMember(e => e.Items, options => options.Ignore());
+                   .ForMember(member => member.Total, options =>
+                       options.MapFrom(e => e.Items.Sum(item =>
+                           (item.DiscountedPrice ?? item.OriginalPrice) * item.Amount)))
+                   .ForMember(e => e.Items, options => options.Ignore());
             });
 
             var anonymousShoppingCartResponses = await anonymousShoppingCartsQuery.ProjectTo<AnonymousShoppingCartResponse>(mappingConfiguration).ToListAsync();

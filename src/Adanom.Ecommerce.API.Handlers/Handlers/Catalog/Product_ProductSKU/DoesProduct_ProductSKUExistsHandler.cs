@@ -1,6 +1,6 @@
 ﻿namespace Adanom.Ecommerce.API.Handlers
 {
-    public sealed class DoesProductSKUInUseHandler : IRequestHandler<DoesEntityInUse<ProductSKUResponse>, bool>
+    public sealed class DoesProduct_ProductSKUExistsHandler : IRequestHandler<DoesProduct_ProductSKUExists, bool>
     {
         #region Fields
 
@@ -10,7 +10,7 @@
 
         #region Ctor
 
-        public DoesProductSKUInUseHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
+        public DoesProduct_ProductSKUExistsHandler(IDbContextFactory<ApplicationDbContext> applicationDbContextFactory)
         {
             _applicationDbContextFactory = applicationDbContextFactory ?? throw new ArgumentNullException(nameof(applicationDbContextFactory));
         }
@@ -19,13 +19,14 @@
 
         #region IRequestHandler Members
 
-        public async Task<bool> Handle(DoesEntityInUse<ProductSKUResponse> command, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DoesProduct_ProductSKUExists command, CancellationToken cancellationToken)
         {
             await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
 
-            return await applicationDbContext.OrderItems
-                .Where(e => e.Product.Product_ProductSKU_Mappings.Any(e => e.ProductSKUId == command.Id))
-                .AnyAsync();
+            return await applicationDbContext.Product_ProductSKU_Mappings
+                .AnyAsync(e =>
+                    e.ProductId == command.ProductId &&
+                    e.ProductSKUId == command.ProductSKUId);
         }
 
         #endregion

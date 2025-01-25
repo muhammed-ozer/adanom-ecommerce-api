@@ -2,11 +2,11 @@ using System.Security.Claims;
 
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class DeleteProductSKU : IRequest<bool>
+    public class CreateProduct_ProductSKU : IRequest<bool>
     {
         #region Ctor
 
-        public DeleteProductSKU(ClaimsPrincipal identity)
+        public CreateProduct_ProductSKU(ClaimsPrincipal identity)
         {
             Identity = identity ?? throw new ArgumentNullException(nameof(identity));
         }
@@ -17,7 +17,9 @@ namespace Adanom.Ecommerce.API.Commands
 
         public ClaimsPrincipal Identity { get; }
 
-        public long Id { get; set; }
+        public long ProductId { get; set; }
+
+        public long ProductSKUId { get; set; }
 
         #endregion
     }

@@ -25,14 +25,28 @@
         {
             await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
 
-            var productSKU = await applicationDbContext.Products
+            var result = await applicationDbContext.Product_ProductSKU_Mappings
+                .Where(e => e.ProductId == command.Id && e.Product.DeletedAtUtc == null)
+                .Select(e => new
+                {
+                    e.ProductSKU,
+                    ReservedStock = applicationDbContext.StockReservations
+                        .Where(r => r.ProductId == applicationDbContext.Product_ProductSKU_Mappings
+                            .Where(m => m.ProductSKUId == e.ProductSKU.Id)
+                            .Select(m => m.ProductId)
+                            .FirstOrDefault())
+                        .Sum(e => e.Amount)
+                })
                 .AsNoTracking()
-                .Where(e => e.DeletedAtUtc == null && e.Id == command.Id)
-                .Select(e => e.ProductSKU)
                 .SingleOrDefaultAsync();
-           
-            return _mapper.Map<ProductSKUResponse>(productSKU);
-        } 
+
+            if (result != null)
+            {
+                result.ProductSKU.StockQuantity -= result.ReservedStock;
+            }
+
+            return _mapper.Map<ProductSKUResponse>(result?.ProductSKU);
+        }
 
         #endregion
     }

@@ -25,26 +25,30 @@
 
         public async Task<ProductSKUResponse?> Handle(GetProductSKU command, CancellationToken cancellationToken)
         {
-            ProductSKU? productSKU = null;
-
             await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
 
-            if (command.Code.IsNotNullOrEmpty())
+            var result = await applicationDbContext.ProductSKUs
+                .Where(e => e.DeletedAtUtc == null &&
+                    (command.Code.IsNotNullOrEmpty() ? e.Code == command.Code : e.Id == command.Id))
+                .Select(sku => new
+                {
+                    ProductSKU = sku,
+                    ReservedStock = applicationDbContext.StockReservations
+                        .Where(r => r.ProductId == applicationDbContext.Product_ProductSKU_Mappings
+                            .Where(m => m.ProductSKUId == sku.Id)
+                            .Select(m => m.ProductId)
+                            .FirstOrDefault())
+                        .Sum(e => e.Amount)
+                })
+                .AsNoTracking()
+                .SingleOrDefaultAsync();
+
+            if (result != null)
             {
-                productSKU = await applicationDbContext.ProductSKUs
-                    .Where(e => e.DeletedAtUtc == null && e.Code == command.Code)
-                    .AsNoTracking()
-                    .SingleOrDefaultAsync();
-            }
-            else
-            {
-                productSKU = await applicationDbContext.ProductSKUs
-                    .Where(e => e.DeletedAtUtc == null && e.Id == command.Id)
-                    .AsNoTracking()
-                    .SingleOrDefaultAsync();
+                result.ProductSKU.StockQuantity -= result.ReservedStock;
             }
 
-            return _mapper.Map<ProductSKUResponse>(productSKU);
+            return _mapper.Map<ProductSKUResponse>(result?.ProductSKU ?? null);
         }
 
         #endregion

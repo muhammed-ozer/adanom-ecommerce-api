@@ -13,8 +13,6 @@ namespace Adanom.Ecommerce.API.Commands.Models
 
         public long? BrandId { get; set; }
 
-        public long ProductSKUId { get; set; }
-
         public string Name { get; set; } = null!;
 
         public string UrlSlug { get; set; } = null!;

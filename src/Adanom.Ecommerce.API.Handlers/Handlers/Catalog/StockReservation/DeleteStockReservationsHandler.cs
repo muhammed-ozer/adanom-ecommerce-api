@@ -40,9 +40,10 @@
             {
                 foreach (var stockReservation in stockReservations)
                 {
-                    var productSKU = await applicationDbContext.Products
+                    var productSKU = await applicationDbContext.Product_ProductSKU_Mappings
+                        .Where(e => e.Product.Id == stockReservation.ProductId && e.Product.DeletedAtUtc == null)
                         .Select(e => e.ProductSKU)
-                        .SingleOrDefaultAsync(e => e.Id == stockReservation.ProductId && e.DeletedAtUtc == null, cancellationToken);
+                        .SingleOrDefaultAsync(cancellationToken);
 
                     if (productSKU == null)
                     {
