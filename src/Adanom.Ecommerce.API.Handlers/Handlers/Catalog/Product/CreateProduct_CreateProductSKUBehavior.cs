@@ -25,6 +25,13 @@
 
         public async Task<ProductResponse?> Handle(CreateProduct command, RequestHandlerDelegate<ProductResponse?> next, CancellationToken cancellationToken)
         {
+            var productResponse = await next();
+
+            if (productResponse == null)
+            {
+                return null;
+            }
+
             var createProductSKUCommand = _mapper.Map(command.CreateProductSKURequest, new CreateProductSKU(command.Identity));
 
             var productSKUResponse = await _mediator.Send(createProductSKUCommand);
@@ -34,11 +41,13 @@
                 return null;
             }
 
-            command.ProductSKUId = productSKUResponse.Id;
+            var createProduct_ProductSKUResponse = await _mediator.Send(new CreateProduct_ProductSKU(command.Identity)
+            {
+                ProductId = productResponse.Id,
+                ProductSKUId = productSKUResponse.Id
+            });
 
-            var productResponse = await next();
-
-            if (productResponse == null)
+            if (!createProduct_ProductSKUResponse)
             {
                 return null;
             }

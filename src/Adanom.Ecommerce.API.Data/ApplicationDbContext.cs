@@ -34,6 +34,13 @@ namespace Adanom.Ecommerce.API.Data
 
             #endregion
 
+            #region ProductSKUMapping
+
+            modelBuilder.Entity<Product_ProductSKU_Mapping>()
+                    .HasKey(e => new { e.ProductId, e.ProductSKUId });
+
+            #endregion
+
             #region ProductTagMapping
 
             modelBuilder.Entity<Product_ProductTag_Mapping>()
@@ -90,6 +97,18 @@ namespace Adanom.Ecommerce.API.Data
             #endregion
 
             #region Relations
+
+            #region Product - ProductSKU
+
+            modelBuilder.Entity<Product>()
+                .HasMany(e => e.Product_ProductSKU_Mappings)
+                .WithOne(e => e.Product);
+
+            modelBuilder.Entity<ProductSKU>()
+                .HasMany(e => e.Product_ProductSKU_Mappings)
+                .WithOne(e => e.ProductSKU);
+
+            #endregion
 
             #region Product - ProductSpecificationAttribute
 
@@ -256,6 +275,8 @@ namespace Adanom.Ecommerce.API.Data
         public DbSet<Product_ProductSpecificationAttribute_Mapping> Product_ProductSpecificationAttribute_Mappings { get; set; } = null!;
 
         public DbSet<ProductSKU> ProductSKUs { get; set; } = null!;
+
+        public DbSet<Product_ProductSKU_Mapping> Product_ProductSKU_Mappings { get; set; } = null!;
 
         public DbSet<ProductTag> ProductTags { get; set; } = null!;
 

@@ -41,11 +41,11 @@ namespace Adanom.Ecommerce.API.Graphql.Admin.Resolvers
 
         public async Task<ProductSKUResponse?> GetProductSKUAsync(
            [Parent] ProductResponse productResponse,
-           [Service] ProductSKUByIdDataLoader dataLoader,
+           [Service] ProductSKUByProductIdDataLoader dataLoader,
            [Service] IMediator mediator,
            [Service] IMapper mapper)
         {
-            var productSKU = await dataLoader.LoadAsync(productResponse.ProductSKUId);
+            var productSKU = await dataLoader.LoadAsync(productResponse.Id);
 
             return mapper.Map<ProductSKUResponse>(productSKU);
         }

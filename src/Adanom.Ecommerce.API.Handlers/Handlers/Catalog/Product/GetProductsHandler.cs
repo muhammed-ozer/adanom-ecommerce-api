@@ -71,14 +71,14 @@
                     {
                         productsQuery = productsQuery.Where(e =>
                            e.Name.Contains(command.Filter.Query) ||
-                           e.ProductSKU.Code.Contains(command.Filter.Query) ||
+                           e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.Code.Contains(command.Filter.Query)) ||
                            e.Product_ProductTag_Mappings.Any(e => e.ProductTag.Value.Contains(command.Filter.Query)));
                     }
                     else
                     {
                         productsQuery = productsQuery.Where(e =>
                            e.Name.Contains(command.Filter.Query) ||
-                           e.ProductSKU.Code.Contains(command.Filter.Query));
+                           e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.Code.Contains(command.Filter.Query)));
                     }
                 }
 
@@ -86,11 +86,11 @@
                 {
                     if (command.Filter.OutOfStock.Value)
                     {
-                        productsQuery = productsQuery.Where(e => e.ProductSKU.StockQuantity == 0);
+                        productsQuery = productsQuery.Where(e => e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.StockQuantity == 0));
                     }
                     else
                     {
-                        productsQuery = productsQuery.Where(e => e.ProductSKU.StockQuantity > 0);
+                        productsQuery = productsQuery.Where(e => e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.StockQuantity > 0));
                     }
                 }
 
@@ -138,15 +138,15 @@
                 if (command.Filter.MinimumPrice != null)
                 {
                     productsQuery = productsQuery.Where(e =>
-                            e.ProductSKU.ProductPrice.OriginalPrice > command.Filter.MinimumPrice ||
-                            e.ProductSKU.ProductPrice.DiscountedPrice > command.Filter.MinimumPrice);
+                            e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.ProductPrice.OriginalPrice > command.Filter.MinimumPrice) ||
+                            e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.ProductPrice.DiscountedPrice > command.Filter.MinimumPrice));
                 }
 
                 if (command.Filter.MaximumPrice != null)
                 {
                     productsQuery = productsQuery.Where(e =>
-                            e.ProductSKU.ProductPrice.OriginalPrice < command.Filter.MaximumPrice ||
-                            e.ProductSKU.ProductPrice.DiscountedPrice < command.Filter.MaximumPrice);
+                            e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.ProductPrice.OriginalPrice < command.Filter.MaximumPrice) ||
+                            e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.ProductPrice.DiscountedPrice < command.Filter.MaximumPrice));
                 }
 
                 if (command.Filter.ReviewPoint != null)
@@ -166,32 +166,32 @@
                 productsQuery = command.Filter.OrderBy switch
                 {
                     GetProductsOrderByEnum.DISPLAY_ORDER_DESC =>
-                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
+                        productsQuery.OrderBy(e => e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.StockQuantity == 0))
                             .ThenByDescending(e => e.DisplayOrder),
                     GetProductsOrderByEnum.NAME_ASC =>
-                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
+                        productsQuery.OrderBy(e => e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.StockQuantity == 0))
                             .ThenBy(e => e.Name),
                     GetProductsOrderByEnum.NAME_DESC =>
-                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
+                        productsQuery.OrderBy(e => e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.StockQuantity == 0))
                             .ThenByDescending(e => e.Name),
                     GetProductsOrderByEnum.STOCK_QUANTITY_ASC =>
-                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
-                            .ThenBy(e => e.ProductSKU.StockQuantity),
+                        productsQuery.OrderBy(e => e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.StockQuantity == 0))
+                            .ThenBy(e => e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.StockQuantity > 0)),
                     GetProductsOrderByEnum.STOCK_QUANTITY_DESC =>
-                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
-                            .ThenByDescending(e => e.ProductSKU.StockQuantity),
+                        productsQuery.OrderBy(e => e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.StockQuantity == 0))
+                            .ThenByDescending(e => e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.StockQuantity > 0)),
                     GetProductsOrderByEnum.PRICE_ASC =>
-                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
-                            .ThenBy(e => e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
+                        productsQuery.OrderBy(e => e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.StockQuantity == 0))
+                            .ThenBy(e => e.Product_ProductSKU_Mappings.Select(e => e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
                                 e.ProductSKU.ProductPrice.DiscountedPrice.Value :
-                                e.ProductSKU.ProductPrice.OriginalPrice),
+                                e.ProductSKU.ProductPrice.OriginalPrice)),
                     GetProductsOrderByEnum.PRICE_DESC =>
-                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
-                            .ThenByDescending(e => e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
+                        productsQuery.OrderBy(e => e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.StockQuantity == 0))
+                            .ThenByDescending(e => e.Product_ProductSKU_Mappings.Select(e => e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
                                 e.ProductSKU.ProductPrice.DiscountedPrice.Value :
-                                e.ProductSKU.ProductPrice.OriginalPrice),
+                                e.ProductSKU.ProductPrice.OriginalPrice)),
                     _ =>
-                        productsQuery.OrderBy(e => e.ProductSKU.StockQuantity == 0)
+                        productsQuery.OrderBy(e => e.Product_ProductSKU_Mappings.Any(e => e.ProductSKU.StockQuantity == 0))
                             .ThenBy(e => e.DisplayOrder)
                 };
 
@@ -281,15 +281,14 @@
                 return productFilterResponse;
             }
 
-            productFilterResponse.MinimumPrice = await productsQuery.MinAsync(e =>
-                e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
-                e.ProductSKU.ProductPrice.DiscountedPrice.Value :
-                e.ProductSKU.ProductPrice.OriginalPrice);
+            var prices = await productsQuery
+                .SelectMany(p => p.Product_ProductSKU_Mappings
+                    .Select(m => m.ProductSKU.ProductPrice.DiscountedPrice ??
+                                 m.ProductSKU.ProductPrice.OriginalPrice))
+                .ToListAsync();
 
-            productFilterResponse.MaximumPrice = await productsQuery.MaxAsync(e =>
-                e.ProductSKU.ProductPrice.DiscountedPrice.HasValue ?
-                e.ProductSKU.ProductPrice.DiscountedPrice.Value :
-                e.ProductSKU.ProductPrice.OriginalPrice);
+            productFilterResponse.MinimumPrice = prices.Min();
+            productFilterResponse.MaximumPrice = prices.Max();
 
             var productCategoriesQuery = productsQuery
                 .SelectMany(e => e.Product_ProductCategory_Mappings)

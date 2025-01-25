@@ -23,19 +23,19 @@
         {
             await using var applicationDbContext = await _applicationDbContextFactory.CreateDbContextAsync(cancellationToken);
 
-            var productStockQuantity = await applicationDbContext.Products
-                .Where(e => e.DeletedAtUtc == null && e.Id == command.Id)
-                .Select(e => e.ProductSKU.StockQuantity)
-                .SingleOrDefaultAsync();
-
-            var reservedStocks = await applicationDbContext.StockReservations
-                .Where(e => e.ProductId == command.Id)
-                .SumAsync(e => e.Amount);
-
-            var stocks = productStockQuantity - reservedStocks;
-
-            return stocks;
-        } 
+            return await applicationDbContext.Product_ProductSKU_Mappings
+                .AsNoTracking()
+                .Where(e => e.Product.DeletedAtUtc == null && e.ProductId == command.Id)
+                .Select(e => new
+                {
+                    Stock = e.ProductSKU.StockQuantity,
+                    Reserved = applicationDbContext.StockReservations
+                        .Where(r => r.ProductId == command.Id)
+                        .Sum(r => r.Amount)
+                })
+                .Select(x => x.Stock - x.Reserved)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
 
         #endregion
     }

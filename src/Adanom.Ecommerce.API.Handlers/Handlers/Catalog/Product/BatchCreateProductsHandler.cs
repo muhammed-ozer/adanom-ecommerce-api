@@ -102,7 +102,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 try
                 {
                     var createProductResponse = await _mediator.Send(createProductCommand);
-                } catch
+                }
+                catch
                 {
                     continue;
                 }

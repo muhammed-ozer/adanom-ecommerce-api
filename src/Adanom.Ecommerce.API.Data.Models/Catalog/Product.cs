@@ -9,12 +9,11 @@ namespace Adanom.Ecommerce.API.Data.Models
         public Product()
         {
             ProductReviews = new List<ProductReview>();
+            Product_ProductSKU_Mappings = new List<Product_ProductSKU_Mapping>();
             Product_ProductCategory_Mappings = new List<Product_ProductCategory_Mapping>();
             Product_ProductSpecificationAttribute_Mappings = new List<Product_ProductSpecificationAttribute_Mapping>();
             Product_ProductTag_Mappings = new List<Product_ProductTag_Mapping>();
         }
-
-        public long ProductSKUId { get; set; }
 
         public long? BrandId { get; set; }
 
@@ -51,11 +50,11 @@ namespace Adanom.Ecommerce.API.Data.Models
 
         public Guid? DeletedByUserId { get; set; }
 
-        public ProductSKU ProductSKU { get; set; } = null!;
-
         public ICollection<ProductReview> ProductReviews { get; set; }
 
         public Brand? Brand { get; set; }
+
+        public ICollection<Product_ProductSKU_Mapping> Product_ProductSKU_Mappings { get; set; }
 
         public ICollection<Product_ProductCategory_Mapping> Product_ProductCategory_Mappings { get; set; }
 
