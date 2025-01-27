@@ -3,12 +3,22 @@ namespace Adanom.Ecommerce.API.Handlers
     public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
+        #region Fields
+
         private readonly IMemoryCacheManager _memoryCacheManager;
+
+        #endregion
+
+        #region Ctor
 
         public CachingBehavior(IMemoryCacheManager memoryCacheManager)
         {
             _memoryCacheManager = memoryCacheManager;
         }
+
+        #endregion
+
+        #region CachingBehavior Members
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
@@ -41,5 +51,7 @@ namespace Adanom.Ecommerce.API.Handlers
 
             return response;
         }
+
+        #endregion
     }
 }
