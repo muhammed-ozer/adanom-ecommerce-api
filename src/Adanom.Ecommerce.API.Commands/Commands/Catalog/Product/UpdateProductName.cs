@@ -2,8 +2,14 @@ using System.Security.Claims;
 
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class UpdateProductName : IRequest<ProductResponse?>
+    public class UpdateProductName : IRequest<ProductResponse?>, ICacheInvalidator
     {
+        #region Fields
+
+        private readonly List<string> _cacheKeys = new List<string>();
+
+        #endregion
+
         #region Ctor
 
         public UpdateProductName(ClaimsPrincipal identity)
@@ -22,5 +28,22 @@ namespace Adanom.Ecommerce.API.Commands
         public string Name { get; set; } = null!;
 
         #endregion
+
+        #region ICacheInvalidator Properties
+
+        public string[] CacheKeys => _cacheKeys.ToArray();
+
+        public string Region => CacheKeyConstants.Product.Region;
+
+        public bool InvalidateRegion => false;
+
+        public string? Pattern => null;
+
+        #endregion
+
+        public void AddCacheKey(string cacheKey)
+        {
+            _cacheKeys.Add(cacheKey);
+        }
     }
 }

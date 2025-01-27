@@ -12,6 +12,8 @@
 
             applicationBuilder.UseApplicationSecurity();
 
+            applicationBuilder.UseApplicationCaching();
+
             applicationBuilder.UseApplicationCommands();
 
             applicationBuilder.UseApplicationValidations();
