@@ -10,6 +10,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(TransactionalBehavior<,>));
 
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CacheInvalidationBehavior<,>));
+
             services.AddMediatR(options =>
             {
                 options.Lifetime = ServiceLifetime.Scoped;

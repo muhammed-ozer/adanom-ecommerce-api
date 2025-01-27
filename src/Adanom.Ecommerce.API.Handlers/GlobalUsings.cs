@@ -1,3 +1,4 @@
+global using Adanom.Ecommerce.API.Caching;
 global using Adanom.Ecommerce.API.Commands;
 global using Adanom.Ecommerce.API.Commands.Models;
 global using Adanom.Ecommerce.API.Data;

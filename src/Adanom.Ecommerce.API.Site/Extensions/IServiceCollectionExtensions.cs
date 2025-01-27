@@ -24,6 +24,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddApplicationSecurity(configuration);
 
+            services.AddApplicationCaching(configuration);
+
             services.AddApplicationCommands(configuration);
 
             services.AddApplicationValidations(configuration);

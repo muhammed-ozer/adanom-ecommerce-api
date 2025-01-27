@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Adanom.Ecommerce.API.Security\Adanom.Ecommerce.API.Security.csproj" />
+    <ProjectReference Include="..\Adanom.Ecommerce.API.Caching\Adanom.Ecommerce.API.Caching.csproj" />
   </ItemGroup>
 
 </Project>
