@@ -77,6 +77,8 @@ namespace Adanom.Ecommerce.API.Handlers
                 {
                     continue;
                 }
+
+                command.AddCacheKey(CacheKeyConstants.ProductPrice.CacheKeyById(productSKU.ProductPriceId));
             }
 
             return true;

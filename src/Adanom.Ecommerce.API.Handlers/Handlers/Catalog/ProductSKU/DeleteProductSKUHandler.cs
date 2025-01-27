@@ -39,7 +39,10 @@ namespace Adanom.Ecommerce.API.Handlers
             productSKU.DeletedByUserId = userId;
 
             await applicationDbContext.SaveChangesAsync();
-            
+
+            command.AddCacheKey(CacheKeyConstants.ProductSKU.CacheKeyById(productSKU.Id));
+            command.AddCacheKey(CacheKeyConstants.ProductSKU.CacheKeyByCode(productSKU.Code));
+
             return true;
         }
 

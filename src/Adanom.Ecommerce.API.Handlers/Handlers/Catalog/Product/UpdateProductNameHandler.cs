@@ -52,6 +52,9 @@ namespace Adanom.Ecommerce.API.Handlers
 
             var productResponse = _mapper.Map<ProductResponse>(product);
 
+            command.AddCacheKey(CacheKeyConstants.Product.CacheKeyById(product.Id));
+            command.AddCacheKey(CacheKeyConstants.Product.CacheKeyByUrlSlug(product.UrlSlug));
+
             return productResponse;
         }
 

@@ -1,15 +1,13 @@
-using Adanom.Ecommerce.API.Caching;
-
 namespace Adanom.Ecommerce.API.Handlers
 {
     public class CacheInvalidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
-        private readonly IMemoryCacheManager _cacheManager;
+        private readonly IMemoryCacheManager _memoryCacheManager;
 
-        public CacheInvalidationBehavior(IMemoryCacheManager cacheManager)
+        public CacheInvalidationBehavior(IMemoryCacheManager memoryCacheManager)
         {
-            _cacheManager = cacheManager;
+            _memoryCacheManager = memoryCacheManager;
         }
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -23,19 +21,19 @@ namespace Adanom.Ecommerce.API.Handlers
 
             if (invalidator.InvalidateRegion)
             {
-                _cacheManager.RemoveByRegion(invalidator.Region);
+                _memoryCacheManager.RemoveByRegion(invalidator.Region);
             }
 
             if (!string.IsNullOrEmpty(invalidator.Pattern))
             {
-                _cacheManager.RemoveByPattern(invalidator.Pattern);
+                _memoryCacheManager.RemoveByPattern(invalidator.Pattern);
             }
 
             if (invalidator.CacheKeys.Length > 0)
             {
                 foreach (var key in invalidator.CacheKeys)
                 {
-                    _cacheManager.Remove(key);
+                    _memoryCacheManager.Remove(key);
                 }
             }
 

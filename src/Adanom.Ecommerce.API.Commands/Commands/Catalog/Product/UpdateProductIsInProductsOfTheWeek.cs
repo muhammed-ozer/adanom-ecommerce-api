@@ -2,8 +2,14 @@
 
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class UpdateProductIsInProductsOfTheWeek : IRequest<bool>
+    public class UpdateProductIsInProductsOfTheWeek : IRequest<bool>, ICacheInvalidator
     {
+        #region Fields
+
+        private readonly List<string> _cacheKeys = new List<string>();
+
+        #endregion
+
         #region Ctor
 
         public UpdateProductIsInProductsOfTheWeek(ClaimsPrincipal identity)
@@ -22,5 +28,22 @@ namespace Adanom.Ecommerce.API.Commands
         public bool IsInProductsOfTheWeek { get; set; }
 
         #endregion
+
+        #region ICacheInvalidator Properties
+
+        public string[] CacheKeys => _cacheKeys.ToArray();
+
+        public string Region => CacheKeyConstants.Product.Region;
+
+        public bool InvalidateRegion => false;
+
+        public string? Pattern => null;
+
+        #endregion
+
+        public void AddCacheKey(string cacheKey)
+        {
+            _cacheKeys.Add(cacheKey);
+        }
     }
 }

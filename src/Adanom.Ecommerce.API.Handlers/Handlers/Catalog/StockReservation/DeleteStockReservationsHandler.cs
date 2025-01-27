@@ -51,6 +51,9 @@
                     }
 
                     productSKU.StockQuantity -= stockReservation.Amount;
+
+                    command.AddCacheKey(CacheKeyConstants.ProductSKU.CacheKeyById(productSKU.Id));
+                    command.AddCacheKey(CacheKeyConstants.ProductSKU.CacheKeyByCode(productSKU.Code));
                 }
             }
 

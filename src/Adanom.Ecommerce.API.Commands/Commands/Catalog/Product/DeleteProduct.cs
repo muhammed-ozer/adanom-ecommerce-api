@@ -3,8 +3,14 @@ using System.Security.Claims;
 namespace Adanom.Ecommerce.API.Commands
 {
     [Transactional]
-    public class DeleteProduct : IRequest<bool>
+    public class DeleteProduct : IRequest<bool>, ICacheInvalidator
     {
+        #region Fields
+
+        private readonly List<string> _cacheKeys = new List<string>();
+
+        #endregion
+
         #region Ctor
 
         public DeleteProduct(ClaimsPrincipal identity)
@@ -21,5 +27,22 @@ namespace Adanom.Ecommerce.API.Commands
         public long Id { get; set; }
 
         #endregion
+
+        #region ICacheInvalidator Properties
+
+        public string[] CacheKeys => _cacheKeys.ToArray();
+
+        public string Region => CacheKeyConstants.Product.Region;
+
+        public bool InvalidateRegion => false;
+
+        public string? Pattern => null;
+
+        #endregion
+
+        public void AddCacheKey(string cacheKey)
+        {
+            _cacheKeys.Add(cacheKey);
+        }
     }
 }

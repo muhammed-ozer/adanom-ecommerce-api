@@ -48,6 +48,9 @@ namespace Adanom.Ecommerce.API.Handlers
             applicationDbContext.Update(product);
             await applicationDbContext.SaveChangesAsync();
 
+            command.AddCacheKey(CacheKeyConstants.Product.CacheKeyById(product.Id));
+            command.AddCacheKey(CacheKeyConstants.Product.CacheKeyByUrlSlug(product.UrlSlug));
+
             return true;
         }
 

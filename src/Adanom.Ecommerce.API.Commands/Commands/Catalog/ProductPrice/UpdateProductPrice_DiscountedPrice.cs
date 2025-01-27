@@ -2,7 +2,7 @@ using System.Security.Claims;
 
 namespace Adanom.Ecommerce.API.Commands
 {
-    public class UpdateProductPrice_DiscountedPrice : IRequest<bool>
+    public class UpdateProductPrice_DiscountedPrice : IRequest<bool>, ICacheInvalidator
     {
         #region Ctor
 
@@ -20,6 +20,18 @@ namespace Adanom.Ecommerce.API.Commands
         public long Id { get; set; }
 
         public decimal? DiscountedPrice { get; set; }
+
+        #endregion
+
+        #region ICacheInvalidator Properties
+
+        public string[] CacheKeys => [$"{CacheKeyConstants.ProductPrice.CacheKeyById(Id)}"];
+
+        public string Region => CacheKeyConstants.ProductPrice.Region;
+
+        public bool InvalidateRegion => false;
+
+        public string? Pattern => $"{CacheKeyConstants.ProductPrice.ByProductIdPattern}";
 
         #endregion
     }
