@@ -13,6 +13,9 @@
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
                     .WithMessage("Kullanıcı bilgilerine erişilemiyor.");
 
+            RuleFor(e => e)
+                .CustomAsync(ValidateUserCanCreateProductReviewAsync);
+
             RuleFor(e => e.ProductId)
                 .GreaterThan(0)
                     .WithErrorCode(ValidationErrorCodesEnum.REQUIRED)
@@ -27,6 +30,27 @@
         }
 
         #region Private Methods
+
+        #region ValidateUserCanCreateProductReviewAsync
+
+        private async Task ValidateUserCanCreateProductReviewAsync(
+            CreateProductReview value,
+            ValidationContext<CreateProductReview> context,
+            CancellationToken cancellationToken)
+        {
+            var canCreate = await _mediator.Send(new UserCanCreateProductReview(value.Identity, value.ProductId));
+
+            if (!canCreate)
+            {
+                context.AddFailure(new ValidationFailure(nameof(CreateProductReview.ProductId), null)
+                {
+                    ErrorCode = ValidationErrorCodesEnum.NOT_EXISTS.ToString(),
+                    ErrorMessage = "Ürün değerlendirmesi yapabilmek için ürünü satın almış olmanız gerekmektedir."
+                });
+            }
+        }
+
+        #endregion
 
         #region ValidateDoesProductExistsAsync
 
