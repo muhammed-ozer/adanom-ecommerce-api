@@ -54,5 +54,19 @@
 
         #endregion
 
+        #region GetRelatedProductsAsync
+
+        [AllowAnonymous]
+        [GraphQLDescription("Gets related products")]
+        public async Task<IEnumerable<ProductResponse>> GetRelatedProductsAsync(
+            long id,
+            [Service] IMediator mediator)
+        {
+            var command = new GetRelatedProducts(id);
+
+            return await mediator.Send(command);
+        }
+
+        #endregion
     }
 }
