@@ -134,3 +134,16 @@ pnpm-debug.log*
 *.sw?
 
 Logs/
+
+# Application settings files
+**/appsettings.json
+**/appsettings.*.json
+**/appsettings.Development.json
+**/appsettings.Production.json
+**/appsettings.Staging.json
+**/appsettings.Testing.json
+**/appsettings.Local.json
+**/appsettings.Dev.json
+**/appsettings.Prod.json
+**/appsettings.Stage.json
+**/appsettings.Test.json
